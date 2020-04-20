@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FQ</string>
+    <string name="appTitle">Fast Question</string>
+    <string name="questionLoading">Загружается вопрос...</string>
+    <string name="answerButtonText">Ответить</string>
+    <string name="answerEditTextHint">Ваш ответ...</string>
+    <string name="counterTextView">Осталось вопросов: </string>
+    <string name="askQuestionTextView">Задайте вопрос...</string>
+    <string name="questionEditTextHint">Ваш вопрос...</string>
+    <string name="questionButtonText">Задать вопрос</string>
+</resources>
