@@ -84,7 +84,7 @@ public class QuestionPresenter {
         });
     }
 
-    public void setQuestionLayoutVisibility(boolean isVisible) {
+    public void setLayoutVisibility(boolean isVisible) {
         if (isVisible) {
             questionLayout.setVisibility(View.VISIBLE);
         } else {

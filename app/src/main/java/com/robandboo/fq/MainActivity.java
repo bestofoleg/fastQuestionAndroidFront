@@ -7,7 +7,8 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.ChainManager;
-import com.robandboo.fq.listener.SendAnswerButtonClickListener;
+import com.robandboo.fq.listener.NextStateClickListener;
+import com.robandboo.fq.presenter.AskPresenter;
 import com.robandboo.fq.presenter.QuestionPresenter;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,10 +17,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LinearLayout questionLayout = findViewById(R.id.answerLayout);
+        LinearLayout askLayout = findViewById(R.id.questionLayout);
         QuestionPresenter questionPresenter = new QuestionPresenter(questionLayout);
-        ChainManager chainManager = new ChainManager(questionPresenter, 3, 1);
+        AskPresenter askPresenter = new AskPresenter(askLayout);
+        ChainManager chainManager = new ChainManager(questionPresenter, askPresenter,3, 1);
         Button sendAnswerButton = findViewById(R.id.answerButton);
-        sendAnswerButton.setOnClickListener(new SendAnswerButtonClickListener(chainManager));
-        chainManager.next(false);
+        Button sendQuestionButton = findViewById(R.id.askButton);
+        NextStateClickListener nextStateClickListener =
+                new NextStateClickListener(chainManager);
+        sendAnswerButton.setOnClickListener(nextStateClickListener);
+        sendQuestionButton.setOnClickListener(nextStateClickListener);
+        chainManager.init();
     }
 }
