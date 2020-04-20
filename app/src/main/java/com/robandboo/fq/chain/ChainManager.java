@@ -1,71 +1,37 @@
 package com.robandboo.fq.chain;
 
-import com.robandboo.fq.util.activity.LayoutManager;
-
-import java.util.Queue;
+import com.robandboo.fq.presenter.QuestionPresenter;
 
 public class ChainManager {
-    private LayoutManager layoutManager;
+    private QuestionPresenter questionLayoutPresenter;
 
-    private Queue<String> layoutIdsFlow;
+    private int maxQuestions;
 
-    private int questionsQuantity;
+    private int maxAnswers;
 
-    private int maxQuestionsQuantity;
+    private int questionCounter;
 
-    private int answersQuantity;
+    private int answerCounter;
 
-    private int maxAnswersQuantity;
-
-    private QuestionLayoutPresenter questionLayoutPresenter;
-
-    public ChainManager(QuestionLayoutPresenter questionLayoutPresenter) {
+    public ChainManager(QuestionPresenter questionLayoutPresenter, int maxQuestions, int maxAnswers) {
         this.questionLayoutPresenter = questionLayoutPresenter;
+        this.maxAnswers = maxAnswers;
+        this.maxQuestions = maxQuestions;
+        questionCounter = 0;
+        answerCounter = 0;
     }
 
-    public int getQuestionsQuantity() {
-        return questionsQuantity;
-    }
-
-    public void setQuestionsQuantity(int questionsQuantity) {
-        this.questionsQuantity = questionsQuantity;
-    }
-
-    public int getMaxQuestionsQuantity() {
-        return maxQuestionsQuantity;
-    }
-
-    public void setMaxQuestionsQuantity(int maxQuestionsQuantity) {
-        this.maxQuestionsQuantity = maxQuestionsQuantity;
-    }
-
-    public int getAnswersQuantity() {
-        return answersQuantity;
-    }
-
-    public void setAnswersQuantity(int answersQuantity) {
-        this.answersQuantity = answersQuantity;
-    }
-
-    public int getMaxAnswersQuantity() {
-        return maxAnswersQuantity;
-    }
-
-    public void setMaxAnswersQuantity(int maxAnswersQuantity) {
-        this.maxAnswersQuantity = maxAnswersQuantity;
-    }
-
-    public void next() {
-        if (questionsQuantity < maxQuestionsQuantity) {
-            questionLayoutPresenter.loadQuestion();
-            questionsQuantity ++;
-        } else {
-            if (answersQuantity < maxAnswersQuantity) {
-                answersQuantity ++;
-            } else {
-                answersQuantity = 0;
-                questionsQuantity = 0;
+    public void next(boolean isSendAnswer) {
+        if (questionCounter < maxQuestions) {
+            questionLayoutPresenter.loadRandomQuestion();
+            if (isSendAnswer) {
+                questionLayoutPresenter.sendAnswer();
             }
+            questionLayoutPresenter.clearAnswerTextEdit();
+            questionCounter ++;
+        } else {
+            questionCounter = 0;
+            questionLayoutPresenter.setQuestionLayoutVisibility(false);
         }
     }
 }

@@ -1,27 +1,58 @@
 package com.robandboo.fq.dto;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Answer {
-    private String message;
+    @SerializedName("id")
+    @Expose
+    private long id;
+
+    @SerializedName("text")
+    @Expose
+    private String text;
+
+    @SerializedName("question")
+    @Expose
+    private Question question;
 
     public Answer() {
     }
 
-    public Answer(String message) {
-        this.message = message;
+    public Answer(String text) {
+        this.text = text;
     }
 
-    public String getMessage() {
-        return message;
+    public long getId() {
+        return id;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     @Override
     public String toString() {
         return "Answer{" +
-                "message='" + message + '\'' +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", question=" + question +
                 '}';
     }
 }
