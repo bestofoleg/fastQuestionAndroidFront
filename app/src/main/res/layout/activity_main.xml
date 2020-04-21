@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/counterTextView"
                 android:textAlignment="textEnd"
-                android:textSize="24sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/questionTextView"
@@ -52,8 +52,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:gravity="top|left"
                 android:hint="@string/answerEditTextHint"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine|textPersonName"
+                android:lines="@integer/minMulilineTextSize"
+                android:maxLines="@integer/maxMulilineTextSize"
+                android:minLines="@integer/minMulilineTextSize"
+                android:scrollbars="vertical"
                 android:textSize="24sp" />
 
             <Button
