@@ -1,12 +1,12 @@
 package com.robandboo.fq.chain;
 
-import com.robandboo.fq.presenter.AskPresenter;
-import com.robandboo.fq.presenter.QuestionPresenter;
+import com.robandboo.fq.presenter.AskQuestionPresenter;
+import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 
 public class ChainManager {
-    private QuestionPresenter questionPresenter;
+    private AnswerToQuestionsPresenter answerToQuestionsPresenter;
 
-    private AskPresenter askPresenter;
+    private AskQuestionPresenter askQuestionPresenter;
 
     private int maxQuestions;
 
@@ -17,13 +17,13 @@ public class ChainManager {
     private int askCounter;
 
     public ChainManager(
-            QuestionPresenter questionPresenter,
-            AskPresenter askPresenter,
+            AnswerToQuestionsPresenter answerToQuestionsPresenter,
+            AskQuestionPresenter askQuestionPresenter,
             int maxQuestions,
             int maxAsks
     ) {
-        this.questionPresenter = questionPresenter;
-        this.askPresenter = askPresenter;
+        this.answerToQuestionsPresenter = answerToQuestionsPresenter;
+        this.askQuestionPresenter = askQuestionPresenter;
         this.maxAsks = maxAsks;
         this.maxQuestions = maxQuestions;
         questionCounter = 0;
@@ -31,34 +31,34 @@ public class ChainManager {
     }
 
     public void init() {
-        questionPresenter.setLayoutVisibility(true);
-        askPresenter.setLayoutVisibility(false);
-        questionPresenter.clearAnswerTextEdit();
-        questionPresenter.loadRandomQuestion();
+        answerToQuestionsPresenter.setLayoutVisibility(true);
+        askQuestionPresenter.setLayoutVisibility(false);
+        answerToQuestionsPresenter.clearAnswerTextEdit();
+        answerToQuestionsPresenter.loadRandomQuestion();
         questionCounter ++;
     }
 
     public void next() {
         if (questionCounter < maxQuestions) {
-            questionPresenter.sendAnswer();
-            questionPresenter.clearAnswerTextEdit();
-            questionPresenter.loadRandomQuestion();
+            answerToQuestionsPresenter.sendAnswer();
+            answerToQuestionsPresenter.clearAnswerTextEdit();
+            answerToQuestionsPresenter.loadRandomQuestion();
             questionCounter ++;
         } else {
             if (askCounter == 0) {
-                questionPresenter.clearAnswerTextEdit();
-                questionPresenter.setLayoutVisibility(false);
-                askPresenter.setLayoutVisibility(true);
+                answerToQuestionsPresenter.clearAnswerTextEdit();
+                answerToQuestionsPresenter.setLayoutVisibility(false);
+                askQuestionPresenter.setLayoutVisibility(true);
             } else {
                 if (askCounter < maxAsks) {
-                    askPresenter.sendQuestion();
-                    askPresenter.clearQuestionEditText();
+                    askQuestionPresenter.sendQuestion();
+                    askQuestionPresenter.clearQuestionEditText();
                 } else {
-                    askPresenter.sendQuestion();
+                    askQuestionPresenter.sendQuestion();
                     questionCounter = 1;
                     askCounter = -1;
-                    askPresenter.setLayoutVisibility(false);
-                    questionPresenter.setLayoutVisibility(true);
+                    askQuestionPresenter.setLayoutVisibility(false);
+                    answerToQuestionsPresenter.setLayoutVisibility(true);
                 }
             }
             askCounter ++;

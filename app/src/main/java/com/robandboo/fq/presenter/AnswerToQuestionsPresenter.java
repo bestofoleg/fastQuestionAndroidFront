@@ -5,7 +5,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
@@ -17,12 +16,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QuestionPresenter {
+public class AnswerToQuestionsPresenter {
     private static final String FAILURE_TO_LOAD_QUESTION_ERROR_MESSAGE = "Failure to load question...";
 
     private static final String FAILURE_TO_SEND_ANSWER_ERROR_MESSAGE = "Failure to send answer...";
 
-    private LinearLayout questionLayout;
+    private LinearLayout askToQuestionLayout;
 
     private QuestionService questionService;
 
@@ -34,14 +33,14 @@ public class QuestionPresenter {
 
     private Question currentQuestion;
 
-    public QuestionPresenter(LinearLayout questionLayout) {
-        this.questionLayout = questionLayout;
+    public AnswerToQuestionsPresenter(LinearLayout askToQuestionLayout) {
+        this.askToQuestionLayout = askToQuestionLayout;
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         answerService = NetworkSingleton.getInstance().getRetrofit()
                 .create(AnswerService.class);
-        questionTextView = questionLayout.findViewById(R.id.questionTextView);
-        answerEditText = questionLayout.findViewById(R.id.answerTextEdit);
+        questionTextView = askToQuestionLayout.findViewById(R.id.questionTextView);
+        answerEditText = askToQuestionLayout.findViewById(R.id.answerTextEdit);
         currentQuestion = null;
     }
 
@@ -86,9 +85,9 @@ public class QuestionPresenter {
 
     public void setLayoutVisibility(boolean isVisible) {
         if (isVisible) {
-            questionLayout.setVisibility(View.VISIBLE);
+            askToQuestionLayout.setVisibility(View.VISIBLE);
         } else {
-            questionLayout.setVisibility(View.GONE);
+            askToQuestionLayout.setVisibility(View.GONE);
         }
     }
 

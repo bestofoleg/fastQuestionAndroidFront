@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AskPresenter {
+public class AskQuestionPresenter {
     private final String FAILURE_TO_ASK_QUESTION_ERROR_MESSAGE = "Failure to ask question...";
 
     private QuestionService questionService;
@@ -22,7 +22,7 @@ public class AskPresenter {
 
     private EditText askQuestionEditText;
 
-    public AskPresenter(LinearLayout askLayout) {
+    public AskQuestionPresenter(LinearLayout askLayout) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()

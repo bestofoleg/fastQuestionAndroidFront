@@ -55,20 +55,8 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "id=" + id +
-                ", message='" + text + '\'' +
+                ", text='" + text + '\'' +
+                ", answers=" + answers +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return id == question.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

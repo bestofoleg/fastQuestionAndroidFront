@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.listener.NextStateClickListener;
-import com.robandboo.fq.presenter.AskPresenter;
-import com.robandboo.fq.presenter.QuestionPresenter;
+import com.robandboo.fq.presenter.AskQuestionPresenter;
+import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -18,9 +18,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         LinearLayout questionLayout = findViewById(R.id.answerLayout);
         LinearLayout askLayout = findViewById(R.id.questionLayout);
-        QuestionPresenter questionPresenter = new QuestionPresenter(questionLayout);
-        AskPresenter askPresenter = new AskPresenter(askLayout);
-        ChainManager chainManager = new ChainManager(questionPresenter, askPresenter,3, 1);
+        AnswerToQuestionsPresenter answerToQuestionsPresenter =
+                new AnswerToQuestionsPresenter(questionLayout);
+        AskQuestionPresenter askQuestionPresenter =
+                new AskQuestionPresenter(askLayout);
+        ChainManager chainManager =
+                new ChainManager(
+                        answerToQuestionsPresenter,
+                        askQuestionPresenter,
+                        3,
+                        1
+                );
         Button sendAnswerButton = findViewById(R.id.answerButton);
         Button sendQuestionButton = findViewById(R.id.askButton);
         NextStateClickListener nextStateClickListener =
