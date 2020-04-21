@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,6 +34,8 @@ public class AnswerToQuestionsPresenter {
 
     private Question currentQuestion;
 
+    private TextView questionsQuantityTextView;
+
     public AnswerToQuestionsPresenter(LinearLayout askToQuestionLayout) {
         this.askToQuestionLayout = askToQuestionLayout;
         questionService = NetworkSingleton.getInstance().getRetrofit()
@@ -41,6 +44,7 @@ public class AnswerToQuestionsPresenter {
                 .create(AnswerService.class);
         questionTextView = askToQuestionLayout.findViewById(R.id.questionTextView);
         answerEditText = askToQuestionLayout.findViewById(R.id.answerTextEdit);
+        questionsQuantityTextView = askToQuestionLayout.findViewById(R.id.counterTextView);
         currentQuestion = null;
     }
 
@@ -93,5 +97,15 @@ public class AnswerToQuestionsPresenter {
 
     public void clearAnswerTextEdit() {
         answerEditText.getText().clear();
+    }
+
+    public void setQuestionNumber(int number) {
+        String labelTemplate = askToQuestionLayout
+                .getResources()
+                .getString(
+                        R.string.counterTextView,
+                        number
+                );
+        questionsQuantityTextView.setText(labelTemplate);
     }
 }

@@ -31,6 +31,7 @@ public class ChainManager {
     }
 
     public void init() {
+        answerToQuestionsPresenter.setQuestionNumber(maxQuestions - questionCounter);
         answerToQuestionsPresenter.setLayoutVisibility(true);
         askQuestionPresenter.setLayoutVisibility(false);
         answerToQuestionsPresenter.clearAnswerTextEdit();
@@ -47,6 +48,7 @@ public class ChainManager {
         } else {
             if (askCounter == 0) {
                 answerToQuestionsPresenter.clearAnswerTextEdit();
+                askQuestionPresenter.clearQuestionEditText();
                 answerToQuestionsPresenter.setLayoutVisibility(false);
                 askQuestionPresenter.setLayoutVisibility(true);
             } else {
@@ -63,5 +65,6 @@ public class ChainManager {
             }
             askCounter ++;
         }
+        answerToQuestionsPresenter.setQuestionNumber(maxQuestions - questionCounter + 1);
     }
 }
