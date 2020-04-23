@@ -129,13 +129,13 @@ public class MyQuestionsLocalRepository {
             myQuestionsConfig.setPageNumber(myQuestionsConfig.getPageNumber() + 1);
         } else {
             file = getMyQuestionsPageFileByNumber(myQuestionsConfig.getPageNumber());
-            myQuestionsConfig.setQuestionNumberInPage(myQuestionsConfig.getPageNumber() + 1);
+            myQuestionsConfig.setQuestionNumberInPage(
+                    myQuestionsConfig.getQuestionNumberInPage() + 1
+            );
             questions.addAll(readAllQuestionsFromPage(myQuestionsConfig.getPageNumber()));
         }
         questions.add(question);
-        JSONArray questionJsonObjects = new JSONArray(
-                convertListToJSONObjectsList(questions)
-        );
+        JSONArray questionJsonObjects = new JSONArray(convertListToJSONObjectsList(questions));
         try (
                 OutputStream outputStream = new FileOutputStream(file);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
@@ -191,13 +191,19 @@ public class MyQuestionsLocalRepository {
                     ex.printStackTrace();
                 }
                 e.printStackTrace();
-                try {
+            }
+            try {
+                if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        questions.add((Question) jsonArray.get(i));
+                        JSONObject object = (JSONObject) jsonArray.get(i);
+                        questions.add(new Question(
+                                object.getInt("id"),
+                                object.getString("text")
+                        ));
                     }
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
                 }
+            } catch (JSONException ex) {
+                ex.printStackTrace();
             }
         }
         return questions;
