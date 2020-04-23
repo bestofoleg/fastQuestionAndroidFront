@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.listener.NextStateClickListener;
-import com.robandboo.fq.presenter.AskQuestionPresenter;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
+import com.robandboo.fq.presenter.AskQuestionPresenter;
+import com.robandboo.fq.presenter.MyQuestionsListPresenter;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -36,5 +37,9 @@ public class MainActivity extends AppCompatActivity {
         sendAnswerButton.setOnClickListener(nextStateClickListener);
         sendQuestionButton.setOnClickListener(nextStateClickListener);
         chainManager.init();
+        LinearLayout myQuestionsLayout = questionLayout;
+        MyQuestionsListPresenter myQuestionsListPresenter =
+                new MyQuestionsListPresenter(myQuestionsLayout);
+        myQuestionsListPresenter.loadAllTopics();
     }
 }

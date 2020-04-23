@@ -2,11 +2,10 @@ package com.robandboo.fq.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.robandboo.fq.localdata.entity.ILocalData;
 
 import java.util.List;
 
-public class Question implements ILocalData {
+public class Question {
     @SerializedName("id")
     @Expose
     private long id;

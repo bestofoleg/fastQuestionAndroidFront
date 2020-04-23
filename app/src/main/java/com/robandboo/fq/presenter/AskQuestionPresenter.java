@@ -22,19 +22,23 @@ public class AskQuestionPresenter {
 
     private EditText askQuestionEditText;
 
+    private ILocalDataRepository myQuestionsLocalDataRepository;
+
     public AskQuestionPresenter(LinearLayout askLayout) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
+        myQuestionsLocalDataRepository = new QuestionsLocalRepository(askLayout.getContext());
     }
 
     public void sendQuestion() {
-        Question askedQuestion = new Question();
+        final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());
         questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
             @Override
             public void onResponse(Call<Question> call, Response<Question> response) {
+                myQuestionsLocalDataRepository.save(askedQuestion);
             }
 
             @Override
