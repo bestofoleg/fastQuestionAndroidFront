@@ -16,8 +16,8 @@ public class MyQuestionsListPresenter {
                 .getRetrofit().create(AnswerService.class);
     }
 
-    public void loadAllTopics() {
+    public void loadTopicsFromPage(int page) {
     }
-
-    public void loadAnswersByQuestionId(int questionId) {}
 }
+
+

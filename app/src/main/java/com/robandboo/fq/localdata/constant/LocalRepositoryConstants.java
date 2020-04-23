@@ -3,7 +3,7 @@ package com.robandboo.fq.localdata.constant;
 public interface LocalRepositoryConstants {
     String PAGE_IS_NOT_EXISTS_ERROR_MESSAGE = "Page with number = {0} is not exists!";
 
-    String MY_QUESTIONS_PATH = "myQuestions/";
+    String MY_QUESTIONS_PATH = "/myQuestions/";
 
     String MY_QUESTION_PAGE_NAME = "myQuestionsPage{0}.json";
 

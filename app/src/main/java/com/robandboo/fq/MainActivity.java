@@ -40,6 +40,5 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout myQuestionsLayout = questionLayout;
         MyQuestionsListPresenter myQuestionsListPresenter =
                 new MyQuestionsListPresenter(myQuestionsLayout);
-        myQuestionsListPresenter.loadAllTopics();
     }
 }

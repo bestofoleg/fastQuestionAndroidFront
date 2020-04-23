@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Question;
+import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 
@@ -22,14 +23,14 @@ public class AskQuestionPresenter {
 
     private EditText askQuestionEditText;
 
-    private ILocalDataRepository myQuestionsLocalDataRepository;
+    private MyQuestionsLocalRepository questionsLocalRepository;
 
     public AskQuestionPresenter(LinearLayout askLayout) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
-        myQuestionsLocalDataRepository = new QuestionsLocalRepository(askLayout.getContext());
+        questionsLocalRepository = new MyQuestionsLocalRepository(askLayout.getContext());
     }
 
     public void sendQuestion() {
@@ -38,7 +39,7 @@ public class AskQuestionPresenter {
         questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
             @Override
             public void onResponse(Call<Question> call, Response<Question> response) {
-                myQuestionsLocalDataRepository.save(askedQuestion);
+                questionsLocalRepository.writeQuestion(response.body());
             }
 
             @Override

@@ -1,5 +1,7 @@
 package com.robandboo.fq.localdata.repository;
 
+import android.content.Context;
+
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.localdata.constant.LocalRepositoryConstants;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
@@ -18,16 +20,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyQuestionsLocalRepository {
+    private Context context;
+
+    public MyQuestionsLocalRepository(Context context) {
+        this.context = context;
+    }
+
     private MyQuestionsConfig readMyQuestionsConfig() {
         MyQuestionsConfig myQuestionsConfig = null;
         StringBuffer configTextBuffer = new StringBuffer();
+        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
+        dir.mkdirs();
         File file = new File(
-                LocalRepositoryConstants.MY_QUESTIONS_PATH +
-                        LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG
+                dir,
+                LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG
         );
         if (!file.exists()) {
             try {
@@ -64,9 +75,9 @@ public class MyQuestionsLocalRepository {
         return myQuestionsConfig;
     }
 
-    public void writeMyQuestionsConfig(MyQuestionsConfig myQuestionsConfig) {
-        File file = new File(LocalRepositoryConstants.MY_QUESTIONS_PATH +
-                LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG);
+    private void writeMyQuestionsConfig(MyQuestionsConfig myQuestionsConfig) {
+        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
+        File file = new File(dir, LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG);
         JSONObject jsonConfigObject = new JSONObject();
         try {
             jsonConfigObject.put("pageNumber", myQuestionsConfig.getPageNumber());
@@ -110,41 +121,57 @@ public class MyQuestionsLocalRepository {
 
     public void writeQuestion(Question question) {
         MyQuestionsConfig myQuestionsConfig = readMyQuestionsConfig();
-        String fileName = String.format(LocalRepositoryConstants.MY_QUESTIONS_PATH +
-                LocalRepositoryConstants.MY_QUESTION_PAGE_NAME, myQuestionsConfig.getPageNumber());
         File file = null;
+        List<Question> questions = new ArrayList<>();
         if (myQuestionsConfig.getQuestionNumberInPage() >= LocalRepositoryConstants.MAX_MY_QUESTIONS_QUANTITY_IN_PAGE) {
             file = createNewQuestionsPageFile(myQuestionsConfig.getPageNumber() + 1);
+            myQuestionsConfig.setQuestionNumberInPage(0);
+            myQuestionsConfig.setPageNumber(myQuestionsConfig.getPageNumber() + 1);
         } else {
             file = getMyQuestionsPageFileByNumber(myQuestionsConfig.getPageNumber());
+            myQuestionsConfig.setQuestionNumberInPage(myQuestionsConfig.getPageNumber() + 1);
+            questions.addAll(readAllQuestionsFromPage(myQuestionsConfig.getPageNumber()));
         }
-        JSONObject questionJsonObject = new JSONObject();
-        try {
-            questionJsonObject.put("id", question.getId());
-            questionJsonObject.put("text", question.getText());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        questions.add(question);
+        JSONArray questionJsonObjects = new JSONArray(
+                convertListToJSONObjectsList(questions)
+        );
         try (
                 OutputStream outputStream = new FileOutputStream(file);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
                 BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)
         ) {
-            bufferedWriter.write(questionJsonObject.toString());
+            bufferedWriter.write(questionJsonObjects.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        writeMyQuestionsConfig(myQuestionsConfig);
+    }
+
+    private List<JSONObject> convertListToJSONObjectsList(List<Question> questions) {
+        List<JSONObject> objects = new ArrayList<>();
+        try {
+            for (Question question : questions) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", question.getId());
+                jsonObject.put("text", question.getText());
+                objects.add(jsonObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return objects;
     }
 
     public List<Question> readAllQuestionsFromPage(int page) {
-        List <Question> questions = new ArrayList<>();
+        List<Question> questions = new ArrayList<>();
         StringBuffer jsonBuffer = new StringBuffer();
         File file = getMyQuestionsPageFileByNumber(page);
         try (
                 InputStream inputStream = new FileInputStream(file);
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(inputStream))
-        ){
+        ) {
             String temp = "";
             while ((temp = bufferedReader.readLine()) != null) {
                 jsonBuffer.append(temp);
@@ -154,7 +181,9 @@ public class MyQuestionsLocalRepository {
         } finally {
             JSONArray jsonArray = null;
             try {
-                jsonArray = new JSONArray(jsonBuffer);
+                if (jsonBuffer.length() > 0) {
+                    jsonArray = new JSONArray(jsonBuffer.toString());
+                }
             } catch (JSONException e) {
                 try {
                     jsonArray = new JSONArray("[]");
@@ -163,7 +192,7 @@ public class MyQuestionsLocalRepository {
                 }
                 e.printStackTrace();
                 try {
-                    for (int i = 0;i < jsonArray.length();i ++) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         questions.add((Question) jsonArray.get(i));
                     }
                 } catch (JSONException ex) {
@@ -175,8 +204,15 @@ public class MyQuestionsLocalRepository {
     }
 
     private File createNewQuestionsPageFile(int newPageNumber) {
-        File file = new File(String.format(LocalRepositoryConstants.MY_QUESTIONS_PATH +
-                        LocalRepositoryConstants.MY_QUESTION_PAGE_NAME, newPageNumber));
+        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
+        dir.mkdirs();
+        File file = new File(
+                dir,
+                MessageFormat.format(
+                        LocalRepositoryConstants.MY_QUESTION_PAGE_NAME,
+                        newPageNumber
+                )
+        );
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -186,12 +222,29 @@ public class MyQuestionsLocalRepository {
     }
 
     private File getMyQuestionsPageFileByNumber(int pageNumber) {
-        File file = new File(String.format(LocalRepositoryConstants.MY_QUESTIONS_PATH +
-                LocalRepositoryConstants.MY_QUESTION_PAGE_NAME, pageNumber));
+        File dir = new File(
+                context.getFilesDir(),
+                LocalRepositoryConstants.MY_QUESTIONS_PATH
+        );
+        dir.mkdirs();
+        File file = new File(dir, MessageFormat.format(
+                LocalRepositoryConstants.MY_QUESTION_PAGE_NAME,
+                pageNumber
+        ));
         if (!file.exists()) {
-            throw new IllegalArgumentException(String.format(
-                    LocalRepositoryConstants.PAGE_IS_NOT_EXISTS_ERROR_MESSAGE, pageNumber
-            ));
+            if (pageNumber == 0) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                throw new IllegalArgumentException(MessageFormat.format(
+                        LocalRepositoryConstants.PAGE_IS_NOT_EXISTS_ERROR_MESSAGE +
+                                " " + file.getAbsolutePath(),
+                        pageNumber
+                ));
+            }
         }
         return file;
     }
