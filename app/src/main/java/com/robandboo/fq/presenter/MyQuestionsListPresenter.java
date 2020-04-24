@@ -1,5 +1,7 @@
 package com.robandboo.fq.presenter;
 
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 
@@ -25,12 +27,19 @@ public class MyQuestionsListPresenter {
 
     private MyQuestionsLocalRepository myQuestionsLocalRepository;
 
+    private ExpandableListView topicsExpandableListView;
+
+    private TopicExpandableListAdapter topicExpandableListAdapter;
+
     public MyQuestionsListPresenter(LinearLayout myQuestionsListRootLayout) {
         this.myQuestionsListRootLayout = myQuestionsListRootLayout;
         answerService = NetworkSingleton.getInstance()
                 .getRetrofit().create(AnswerService.class);
         myQuestionsLocalRepository =
                 new MyQuestionsLocalRepository(myQuestionsListRootLayout.getContext());
+        topicsExpandableListView =
+                new ExpandableListView(myQuestionsListRootLayout.getContext());
+        myQuestionsListRootLayout.addView(topicsExpandableListView);
     }
 
     public void loadTopicsFromPage(int page) {
@@ -42,7 +51,6 @@ public class MyQuestionsListPresenter {
                 @Override
                 public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
                     if (response.body() != null) {
-                        response.body();
                         topics.add(new Topic(question.getText(), response.body()));
                     } else {
                         topics.add(new Topic(question.getText(), new ArrayList<Answer>()));
@@ -55,12 +63,13 @@ public class MyQuestionsListPresenter {
                 }
             });
         }
-        TopicExpandableListAdapter topicExpandableListAdapter =
-                new TopicExpandableListAdapter(topics);
-        ExpandableListView topicsExpandableListView =
-                new ExpandableListView(myQuestionsListRootLayout.getContext());
+        if (topicExpandableListAdapter == null) {
+            topicExpandableListAdapter = new TopicExpandableListAdapter(topics);
+        } else {
+            topicExpandableListAdapter.setNewItems(topics);
+        }
         topicsExpandableListView.setAdapter(topicExpandableListAdapter);
-        myQuestionsListRootLayout.addView(topicsExpandableListView);
+
     }
 }
 

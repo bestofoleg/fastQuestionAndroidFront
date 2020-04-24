@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="maxMulilineTextSize">10</integer>
-    <integer name="minMulilineTextSize">10</integer>
+    <integer name="maxMulilineTextSize">5</integer>
+    <integer name="minMulilineTextSize">5</integer>
+    <integer name="minQuestionSize">5</integer>
+    <integer name="minAnswerSize">5</integer>
 </resources>

@@ -9,21 +9,30 @@
     <LinearLayout
         android:id="@+id/rootTopicLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/topicQuestion"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
+            android:layout_marginLeft="50dp"
+            android:textAlignment="textStart"
             android:textSize="18sp" />
 
         <LinearLayout
-            android:id="@+id/topicAnswers"
+            android:id="@+id/topicLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/topicAnswers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

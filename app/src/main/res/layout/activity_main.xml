@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:scrollbars="vertical"
         tools:visibility="visible">
 
         <TextView
@@ -29,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:scrollbars="vertical"
             android:visibility="visible">
 
             <TextView
@@ -59,7 +61,6 @@
                 android:maxLines="@integer/maxMulilineTextSize"
                 android:minLines="@integer/minMulilineTextSize"
                 android:scrollbars="vertical"
-                android:text="@string/myQuestionsText"
                 android:textSize="24sp" />
 
             <Button
@@ -81,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:scrollbars="vertical"
             android:visibility="gone">
 
             <TextView
@@ -96,9 +98,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:gravity="top|left"
                 android:hint="@string/questionEditTextHint"
-                android:inputType="textPersonName"
-                android:textAlignment="textStart"
+                android:inputType="textMultiLine|textPersonName"
+                android:lines="@integer/minMulilineTextSize"
+                android:maxLines="@integer/maxMulilineTextSize"
+                android:minLines="@integer/minMulilineTextSize"
+                android:scrollbars="vertical"
                 android:textSize="24sp" />
 
             <Button

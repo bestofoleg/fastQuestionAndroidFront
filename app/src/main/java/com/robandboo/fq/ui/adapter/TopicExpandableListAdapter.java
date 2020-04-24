@@ -5,20 +5,22 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.ui.entity.Topic;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
     private List<Topic> topics;
 
     public TopicExpandableListAdapter(List<Topic> topics) {
         this.topics = topics;
+    }
+
+    public void setNewItems(List <Topic> topics) {
+        this.topics = topics;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -62,7 +64,17 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
                 R.layout.topic_question_layout, null, false
         ).getRootView();
         TextView questionText = root.findViewById(R.id.topicQuestion);
-        questionText.setText(topics.get(groupPosition).getQuestionText());
+
+        String questionString = topics.get(groupPosition)
+                .getQuestionText();
+
+        String questionTitle = questionString;
+
+        if (!isExpanded) {
+            questionTitle = questionString.substring(0, questionString.length() % 15) + "...";
+        }
+
+        questionText.setText(questionTitle);
         return root;
     }
 
@@ -72,7 +84,7 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
                 R.layout.topic_answer_layout, null, false
         ).getRootView();
         TextView textView = view.findViewById(R.id.answerText);
-        textView.setText(topics.get(groupPosition).getAnswers().get(childPosition).getText());
+        textView.setText("- " + topics.get(groupPosition).getAnswers().get(childPosition).getText());
         return view;
     }
 
