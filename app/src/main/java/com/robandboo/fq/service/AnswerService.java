@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -13,6 +14,6 @@ public interface AnswerService {
     @POST("/api/v1/answer/saveAnswer")
     Call<Answer> saveAnswer(@Body Answer answer);
 
-    @POST("/api/v1/answer/getAnswerByQuestionId/{id}")
+    @GET("/api/v1/answer/getAnswerByQuestionId/{id}")
     Call<List<Answer>> getAnswerByQuestionId(@Path("id") int id);
 }

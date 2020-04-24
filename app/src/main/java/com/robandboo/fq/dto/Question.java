@@ -8,7 +8,7 @@ import java.util.List;
 public class Question {
     @SerializedName("id")
     @Expose
-    private long id;
+    private int id;
 
     @SerializedName("text")
     @Expose
@@ -21,16 +21,16 @@ public class Question {
     public Question() {
     }
 
-    public Question(long id, String text) {
+    public Question(int id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

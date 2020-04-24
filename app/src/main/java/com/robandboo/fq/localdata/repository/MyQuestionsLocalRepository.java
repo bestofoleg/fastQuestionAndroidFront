@@ -31,7 +31,7 @@ public class MyQuestionsLocalRepository {
         this.context = context;
     }
 
-    private MyQuestionsConfig readMyQuestionsConfig() {
+    public MyQuestionsConfig readMyQuestionsConfig() {
         MyQuestionsConfig myQuestionsConfig = null;
         StringBuffer configTextBuffer = new StringBuffer();
         File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);

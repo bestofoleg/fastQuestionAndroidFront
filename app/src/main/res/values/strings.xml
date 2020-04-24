@@ -8,4 +8,11 @@
     <string name="askQuestionTextView">Задайте вопрос...</string>
     <string name="questionEditTextHint">Ваш вопрос...</string>
     <string name="questionButtonText">Задать вопрос</string>
+    <string name="answerSizeValidationMessageText">
+        Ответ не может содержать менее 5 символов!
+    </string>
+    <string name="questionSizeValidationMessageText">
+        Вопрос не может содержать менее 5 символов!
+    </string>
+    <string name="myQuestionsText">Мои вопросы</string>
 </resources>
