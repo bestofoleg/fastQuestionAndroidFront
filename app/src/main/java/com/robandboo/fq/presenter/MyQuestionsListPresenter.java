@@ -1,7 +1,5 @@
 package com.robandboo.fq.presenter;
 
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 
@@ -15,10 +13,6 @@ import com.robandboo.fq.ui.entity.Topic;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MyQuestionsListPresenter {
     private AnswerService answerService;
@@ -40,36 +34,26 @@ public class MyQuestionsListPresenter {
         topicsExpandableListView =
                 new ExpandableListView(myQuestionsListRootLayout.getContext());
         myQuestionsListRootLayout.addView(topicsExpandableListView);
+        topicExpandableListAdapter =
+                new TopicExpandableListAdapter(new ArrayList<Topic>());
+        topicsExpandableListView.setAdapter(topicExpandableListAdapter);
+        topicsExpandableListView
+                .setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                topicExpandableListAdapter.updateTopicFromServerByGroupId(groupPosition);
+            }
+        });
     }
 
     public void loadTopicsFromPage(int page) {
         List<Question> questions =
                 myQuestionsLocalRepository.readAllQuestionsFromPage(page);
-        final List<Topic> topics = new ArrayList<>();
-        for (final Question question : questions) {
-            answerService.getAnswerByQuestionId(question.getId()).enqueue(new Callback<List<Answer>>() {
-                @Override
-                public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
-                    if (response.body() != null) {
-                        topics.add(new Topic(question.getText(), response.body()));
-                    } else {
-                        topics.add(new Topic(question.getText(), new ArrayList<Answer>()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Answer>> call, Throwable t) {
-                    //TODO: Implement it!
-                }
-            });
+        List<Topic> topics = new ArrayList<>();
+        for (Question question : questions) {
+            topics.add(new Topic(question, new ArrayList<Answer>()));
         }
-        if (topicExpandableListAdapter == null) {
-            topicExpandableListAdapter = new TopicExpandableListAdapter(topics);
-        } else {
-            topicExpandableListAdapter.setNewItems(topics);
-        }
-        topicsExpandableListView.setAdapter(topicExpandableListAdapter);
-
+        topicExpandableListAdapter.setNewItems(topics);
     }
 }
 

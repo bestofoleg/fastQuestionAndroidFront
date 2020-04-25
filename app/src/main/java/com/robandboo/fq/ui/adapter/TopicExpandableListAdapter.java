@@ -7,20 +7,51 @@ import android.widget.TextView;
 
 import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
+import com.robandboo.fq.dto.Answer;
+import com.robandboo.fq.service.AnswerService;
+import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.ui.entity.Topic;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
     private List<Topic> topics;
 
+    private AnswerService answerService;
+
     public TopicExpandableListAdapter(List<Topic> topics) {
         this.topics = topics;
+        answerService = NetworkSingleton.getInstance()
+                .getRetrofit().create(AnswerService.class);
     }
 
     public void setNewItems(List <Topic> topics) {
         this.topics = topics;
         notifyDataSetChanged();
+    }
+
+    public void updateTopicFromServerByGroupId(final int id) {
+        int questionServerId = topics.get(id).getQuestion().getId();
+        answerService.getAnswerByQuestionId(questionServerId)
+                .enqueue(new Callback<List<Answer>>() {
+            @Override
+            public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
+                if (response.body() != null) {
+                    topics.get(id).setAnswers(response.body());
+                }
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Answer>> call, Throwable t) {
+                //TODO: implement it!
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -65,8 +96,7 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
         ).getRootView();
         TextView questionText = root.findViewById(R.id.topicQuestion);
 
-        String questionString = topics.get(groupPosition)
-                .getQuestionText();
+        String questionString = topics.get(groupPosition).getQuestion().getText();
 
         String questionTitle = questionString;
 

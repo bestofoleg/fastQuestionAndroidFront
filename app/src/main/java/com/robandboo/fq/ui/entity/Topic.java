@@ -1,16 +1,17 @@
 package com.robandboo.fq.ui.entity;
 
 import com.robandboo.fq.dto.Answer;
+import com.robandboo.fq.dto.Question;
 
 import java.util.List;
 
 public class Topic {
-    private String questionText;
+    private Question question;
 
     private List<Answer> answers;
 
-    public Topic(String questionText, List<Answer> answers) {
-        this.questionText = questionText;
+    public Topic(Question question, List<Answer> answers) {
+        this.question = question;
         this.answers = answers;
     }
 
@@ -18,12 +19,12 @@ public class Topic {
         answers.add(answer);
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionText(String questionText) {
-        this.questionText = questionText;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public List<Answer> getAnswers() {
