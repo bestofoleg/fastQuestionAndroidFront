@@ -1,7 +1,10 @@
 package com.robandboo.fq.chain;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.robandboo.fq.presenter.AskQuestionPresenter;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
+import com.robandboo.fq.util.validation.Validation;
 
 public class ChainManager {
     private AnswerToQuestionsPresenter answerToQuestionsPresenter;
@@ -16,12 +19,16 @@ public class ChainManager {
 
     private int askCounter;
 
+    private Validation validation;
+
     public ChainManager(
+            AppCompatActivity appCompatActivity,
             AnswerToQuestionsPresenter answerToQuestionsPresenter,
             AskQuestionPresenter askQuestionPresenter,
             int maxQuestions,
             int maxAsks
     ) {
+        this.validation = new Validation(appCompatActivity);
         this.answerToQuestionsPresenter = answerToQuestionsPresenter;
         this.askQuestionPresenter = askQuestionPresenter;
         this.maxAsks = maxAsks;
@@ -40,27 +47,35 @@ public class ChainManager {
     }
 
     public void next() {
-        if (questionCounter < maxQuestions) {
-            answerToQuestionsPresenter.sendAnswer();
-            answerToQuestionsPresenter.clearAnswerTextEdit();
-            answerToQuestionsPresenter.loadRandomQuestion();
-            questionCounter ++;
-        } else {
-            if (askCounter == 0) {
+        if (questionCounter <= maxQuestions) {
+            if (validation.validateAnswer(answerToQuestionsPresenter.getCurrentAnswerText())) {
+                answerToQuestionsPresenter.sendAnswer();
                 answerToQuestionsPresenter.clearAnswerTextEdit();
-                askQuestionPresenter.clearQuestionEditText();
+                answerToQuestionsPresenter.loadRandomQuestion();
+                questionCounter ++;
+            }
+        }
+        if (questionCounter > maxQuestions) {
+            boolean isValidQuestion = validation
+                    .validateQuestion(askQuestionPresenter.getCurrentQuestionText());
+            if (askCounter == 0) {
+                askCounter = 0;
+                answerToQuestionsPresenter.clearAnswerTextEdit();
                 answerToQuestionsPresenter.setLayoutVisibility(false);
                 askQuestionPresenter.setLayoutVisibility(true);
             } else {
-                if (askCounter < maxAsks) {
-                    askQuestionPresenter.sendQuestion();
+                if (isValidQuestion) {
                     askQuestionPresenter.clearQuestionEditText();
-                } else {
-                    askQuestionPresenter.sendQuestion();
-                    questionCounter = 1;
-                    askCounter = -1;
-                    askQuestionPresenter.setLayoutVisibility(false);
-                    answerToQuestionsPresenter.setLayoutVisibility(true);
+                    if (askCounter < maxAsks) {
+                        askQuestionPresenter.sendQuestion();
+                        askQuestionPresenter.clearQuestionEditText();
+                    } else {
+                        askQuestionPresenter.sendQuestion();
+                        questionCounter = 1;
+                        askCounter = -1;
+                        askQuestionPresenter.setLayoutVisibility(false);
+                        answerToQuestionsPresenter.setLayoutVisibility(true);
+                    }
                 }
             }
             askCounter ++;

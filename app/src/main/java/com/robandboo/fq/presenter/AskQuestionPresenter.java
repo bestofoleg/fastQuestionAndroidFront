@@ -61,4 +61,8 @@ public class AskQuestionPresenter {
             askLayout.setVisibility(View.GONE);
         }
     }
+
+    public String getCurrentQuestionText() {
+        return askQuestionEditText.getText().toString();
+    }
 }

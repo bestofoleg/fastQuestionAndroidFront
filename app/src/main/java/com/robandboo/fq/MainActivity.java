@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 new AskQuestionPresenter(askLayout);
         ChainManager chainManager =
                 new ChainManager(
+                        this,
                         answerToQuestionsPresenter,
                         askQuestionPresenter,
                         3,

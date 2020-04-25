@@ -108,4 +108,8 @@ public class AnswerToQuestionsPresenter {
                 );
         questionsQuantityTextView.setText(labelTemplate);
     }
+
+    public String getCurrentAnswerText() {
+        return answerEditText.getText().toString();
+    }
 }
