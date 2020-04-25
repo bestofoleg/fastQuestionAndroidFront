@@ -1,9 +1,11 @@
 package com.robandboo.fq.chain;
 
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.robandboo.fq.presenter.AskQuestionPresenter;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
+import com.robandboo.fq.presenter.AskQuestionPresenter;
 import com.robandboo.fq.util.validation.Validation;
 
 public class ChainManager {
@@ -21,10 +23,12 @@ public class ChainManager {
 
     private Validation validation;
 
+    private boolean isNext;
+
     public ChainManager(
             AppCompatActivity appCompatActivity,
             AnswerToQuestionsPresenter answerToQuestionsPresenter,
-            AskQuestionPresenter askQuestionPresenter,
+            final AskQuestionPresenter askQuestionPresenter,
             int maxQuestions,
             int maxAsks
     ) {
@@ -35,6 +39,23 @@ public class ChainManager {
         this.maxQuestions = maxQuestions;
         questionCounter = 0;
         askCounter = 0;
+        isNext = false;
+        askQuestionPresenter.getNextStateButton()
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChainManager.this.isNext = true;
+                        next();
+                        askQuestionPresenter.setSingleQuestionLayoutVisibility(false);
+                    }
+                });
+        askQuestionPresenter.getUpdateButton()
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        askQuestionPresenter.updateSingleQuestionPage();
+                    }
+                });
     }
 
     public void init() {
@@ -43,7 +64,7 @@ public class ChainManager {
         askQuestionPresenter.setLayoutVisibility(false);
         answerToQuestionsPresenter.clearAnswerTextEdit();
         answerToQuestionsPresenter.loadRandomQuestion();
-        questionCounter ++;
+        questionCounter++;
     }
 
     public void next() {
@@ -52,7 +73,7 @@ public class ChainManager {
                 answerToQuestionsPresenter.sendAnswer();
                 answerToQuestionsPresenter.clearAnswerTextEdit();
                 answerToQuestionsPresenter.loadRandomQuestion();
-                questionCounter ++;
+                questionCounter++;
             }
         }
         if (questionCounter > maxQuestions) {
@@ -65,20 +86,22 @@ public class ChainManager {
                 askQuestionPresenter.setLayoutVisibility(true);
             } else {
                 if (isValidQuestion) {
-                    askQuestionPresenter.clearQuestionEditText();
                     if (askCounter < maxAsks) {
                         askQuestionPresenter.sendQuestion();
-                        askQuestionPresenter.clearQuestionEditText();
                     } else {
                         askQuestionPresenter.sendQuestion();
                         questionCounter = 1;
                         askCounter = -1;
-                        askQuestionPresenter.setLayoutVisibility(false);
-                        answerToQuestionsPresenter.setLayoutVisibility(true);
                     }
+                    askQuestionPresenter.clearQuestionEditText();
                 }
             }
-            askCounter ++;
+            askCounter++;
+        }
+        if (isNext) {
+            askQuestionPresenter.setLayoutVisibility(false);
+            answerToQuestionsPresenter.setLayoutVisibility(true);
+            isNext = false;
         }
         answerToQuestionsPresenter.setQuestionNumber(maxQuestions - questionCounter + 1);
     }

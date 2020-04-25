@@ -12,6 +12,7 @@ import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.listener.NextStateClickListener;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.presenter.AskQuestionPresenter;
+import com.robandboo.fq.presenter.SingleQuestionAnswersPresenter;
 import com.robandboo.fq.util.ActivityManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
                 new AnswerToQuestionsPresenter(questionLayout);
         AskQuestionPresenter askQuestionPresenter =
-                new AskQuestionPresenter(askLayout);
+                new AskQuestionPresenter(askLayout, this);
+        LinearLayout singleQuestionsLayout =
+                findViewById(R.id.singleQuestionAnswersPopup);
         ChainManager chainManager =
                 new ChainManager(
                         this,

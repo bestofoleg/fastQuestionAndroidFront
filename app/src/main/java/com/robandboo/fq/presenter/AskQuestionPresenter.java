@@ -1,8 +1,11 @@
 package com.robandboo.fq.presenter;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Question;
@@ -25,12 +28,36 @@ public class AskQuestionPresenter {
 
     private MyQuestionsLocalRepository questionsLocalRepository;
 
-    public AskQuestionPresenter(LinearLayout askLayout) {
+    private SingleQuestionAnswersPresenter singleQuestionAnswersPresenter;
+
+    private Question lastSentQuestion;
+
+    public AskQuestionPresenter(LinearLayout askLayout, AppCompatActivity appCompatActivity) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         questionsLocalRepository = new MyQuestionsLocalRepository(askLayout.getContext());
+        singleQuestionAnswersPresenter =
+                new SingleQuestionAnswersPresenter(
+                        (LinearLayout) appCompatActivity.findViewById(R.id.singleQuestionAnswersPopup)
+                );
+    }
+
+    public Button getNextStateButton() {
+        return singleQuestionAnswersPresenter.getNextButton();
+    }
+
+    public Button getUpdateButton() {
+        return singleQuestionAnswersPresenter.getUpdateButton();
+    }
+
+    public void setSingleQuestionLayoutVisibility(boolean isVisible) {
+        singleQuestionAnswersPresenter.setVisibility(isVisible);
+    }
+
+    public void updateSingleQuestionPage() {
+        singleQuestionAnswersPresenter.updateData(lastSentQuestion);
     }
 
     public void sendQuestion() {
@@ -40,6 +67,11 @@ public class AskQuestionPresenter {
             @Override
             public void onResponse(Call<Question> call, Response<Question> response) {
                 questionsLocalRepository.writeQuestion(response.body());
+                singleQuestionAnswersPresenter.setVisibility(true);
+                askedQuestion.setId(response.body().getId());
+                singleQuestionAnswersPresenter.updateData(askedQuestion);
+                lastSentQuestion = askedQuestion;
+                setLayoutVisibility(false);
             }
 
             @Override
