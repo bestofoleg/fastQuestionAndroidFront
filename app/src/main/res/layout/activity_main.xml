@@ -5,8 +5,10 @@
     android:id="@+id/activityMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:screenOrientation="portrait">
+    android:background="@drawable/background"
+    android:filterTouchesWhenObscured="false"
+    android:screenOrientation="portrait"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:id="@+id/mainLayout"
@@ -16,14 +18,20 @@
         android:scrollbars="vertical"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/appTitle"
+        <ImageView
+            android:id="@+id/myQuestionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAlignBottom="false"
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+        <ImageView
+            android:id="@+id/logoImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/appTitle"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="30sp" />
+            android:layout_marginTop="40dp"
+            android:contentDescription="@string/appTitle"
+            app:srcCompat="@drawable/fq_logo" />
 
         <LinearLayout
             android:id="@+id/answerLayout"
@@ -34,19 +42,15 @@
             android:visibility="visible">
 
             <TextView
-                android:id="@+id/counterTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/counterTextView"
-                android:textAlignment="textEnd"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/questionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="serif"
                 android:text="@string/questionLoading"
                 android:textAlignment="center"
+                android:textColor="@color/labelTextColor"
                 android:textSize="24sp" />
 
             <EditText
@@ -54,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:fontFamily="serif"
                 android:gravity="top|left"
                 android:hint="@string/answerEditTextHint"
                 android:inputType="textMultiLine|textPersonName"
@@ -61,19 +66,21 @@
                 android:maxLines="@integer/maxMulilineTextSize"
                 android:minLines="@integer/minMulilineTextSize"
                 android:scrollbars="vertical"
+                android:textColor="@color/labelTextColor"
+                android:textColorHint="@color/labelTextColor"
                 android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/answerButton"
+            <TextView
+                android:id="@+id/counterTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/answerButtonText" />
-
-            <Button
-                android:id="@+id/myQuestionsButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/myQuestionsText" />
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="serif"
+                android:text="@string/counterTextView"
+                android:textAlignment="textEnd"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -91,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/askQuestionTextView"
                 android:textAlignment="center"
+                android:textColor="@color/labelTextColor"
                 android:textSize="24sp" />
 
             <EditText
@@ -105,13 +113,8 @@
                 android:maxLines="@integer/maxMulilineTextSize"
                 android:minLines="@integer/minMulilineTextSize"
                 android:scrollbars="vertical"
+                android:textColorHint="@color/labelTextColor"
                 android:textSize="24sp" />
-
-            <Button
-                android:id="@+id/askButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/questionButtonText" />
 
         </LinearLayout>
 
@@ -128,6 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/labelTextColor"
+                android:textColorHint="@color/labelTextColor"
                 android:textSize="24sp"
                 android:visibility="visible" />
 
@@ -135,7 +140,8 @@
                 android:id="@+id/updateSinglePageButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Обновить" />
+                android:text="Обновить"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/singleAnswersList"
@@ -145,12 +151,15 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/singleQuestionPageNextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Далее" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/swipeInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/swipeInfoLabel"
+            android:textAlignment="center"
+            android:textColor="@color/labelTextColor" />
 
     </LinearLayout>
 

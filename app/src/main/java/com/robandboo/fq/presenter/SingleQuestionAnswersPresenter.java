@@ -37,7 +37,6 @@ public class SingleQuestionAnswersPresenter {
                 .create(AnswerService.class);
         questionTextView = singleQuestionLayout.findViewById(R.id.questionTitleSingle);
         answersLayout = singleQuestionLayout.findViewById(R.id.singleAnswersList);
-        nextButton = singleQuestionLayout.findViewById(R.id.singleQuestionPageNextButton);
         updateButton = singleQuestionLayout.findViewById(R.id.updateSinglePageButton);
     }
 

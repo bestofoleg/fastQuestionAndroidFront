@@ -3,17 +3,20 @@ package com.robandboo.fq;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.ChainManager;
-import com.robandboo.fq.listener.NextStateClickListener;
+import com.robandboo.fq.listener.NextStateSwipeListener;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.presenter.AskQuestionPresenter;
-import com.robandboo.fq.presenter.SingleQuestionAnswersPresenter;
 import com.robandboo.fq.util.ActivityManager;
+import com.robandboo.fq.util.swipe.SwipeHandler;
+import com.robandboo.fq.util.swipe.SwipeSettings;
+import com.robandboo.fq.util.swipe.SwipeVector;
 
 public class MainActivity extends AppCompatActivity {
     public static LayoutInflater MAIN_INFLATER;
@@ -29,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
                 new AnswerToQuestionsPresenter(questionLayout);
         AskQuestionPresenter askQuestionPresenter =
                 new AskQuestionPresenter(askLayout, this);
-        LinearLayout singleQuestionsLayout =
-                findViewById(R.id.singleQuestionAnswersPopup);
         ChainManager chainManager =
                 new ChainManager(
                         this,
@@ -39,13 +40,16 @@ public class MainActivity extends AppCompatActivity {
                         3,
                         1
                 );
-        Button sendAnswerButton = findViewById(R.id.answerButton);
-        Button sendQuestionButton = findViewById(R.id.askButton);
-        NextStateClickListener nextStateClickListener =
-                new NextStateClickListener(chainManager);
-        sendAnswerButton.setOnClickListener(nextStateClickListener);
-        sendQuestionButton.setOnClickListener(nextStateClickListener);
-        Button myQuestionsButton = findViewById(R.id.myQuestionsButton);
+        SwipeSettings swipeSettings = new SwipeSettings(
+                50,50, 300,
+                new SwipeVector(-1, 0)
+        );
+        SwipeHandler swipeHandler = new SwipeHandler(swipeSettings);
+        swipeHandler.setSwipeListener(
+                this,
+                (ViewGroup) findViewById(R.id.mainLayout),
+                new NextStateSwipeListener(chainManager));
+        ImageView myQuestionsButton = findViewById(R.id.myQuestionsButton);
         myQuestionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

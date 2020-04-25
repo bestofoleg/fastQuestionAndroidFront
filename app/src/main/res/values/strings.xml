@@ -15,4 +15,5 @@
         Вопрос не может содержать менее %1$d и более %2$d символов!
     </string>
     <string name="myQuestionsText">Мои вопросы</string>
+    <string name="swipeInfoLabel">Листни, что бы продолжить</string>
 </resources>

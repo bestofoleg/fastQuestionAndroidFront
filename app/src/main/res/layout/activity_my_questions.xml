@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyQuestionsActivity"
-    android:screenOrientation="portrait">
+    android:background="@drawable/background"
+    android:screenOrientation="portrait"
+    tools:context=".MyQuestionsActivity">
 
     <LinearLayout
         android:id="@+id/rootTopics"
@@ -14,17 +15,9 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/appTitleMyQuestions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/appTitle"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:background="@color/labelTextColor"
             android:text="@string/myQuestionsText"
             android:textAlignment="center"
             android:textSize="24sp" />
