@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         ));
         ChainManager chainManager = new ChainManager(states);
         SwipeSettings swipeSettings = new SwipeSettings(
-                50,50, 300,
+                20,20, 300,
                 new SwipeVector(-1, 0)
         );
         SwipeHandler swipeHandler = new SwipeHandler(swipeSettings);
