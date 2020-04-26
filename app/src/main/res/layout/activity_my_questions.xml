@@ -17,9 +17,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/labelTextColor"
             android:text="@string/myQuestionsText"
             android:textAlignment="center"
+            android:textColor="@color/labelTextColor"
             android:textSize="24sp" />
 
         <HorizontalScrollView

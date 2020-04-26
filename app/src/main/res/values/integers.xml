@@ -4,6 +4,6 @@
     <integer name="minMulilineTextSize">3</integer>
     <integer name="minQuestionSize">4</integer>
     <integer name="minAnswerSize">4</integer>
-    <integer name="maxQuestionSize">16</integer>
-    <integer name="maxAnswerSize">32</integer>
+    <integer name="maxQuestionSize">64</integer>
+    <integer name="maxAnswerSize">128</integer>
 </resources>

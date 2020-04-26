@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.util.validation.AnswerValidation;
-import com.robandboo.fq.util.validation.QuestionValidation;
 
 public class AnswerToQuestionPageState implements IState {
     private AnswerToQuestionsPresenter answerToQuestionsPresenter;
@@ -22,6 +21,7 @@ public class AnswerToQuestionPageState implements IState {
     public void start() {
         answerToQuestionsPresenter.setLayoutVisibility(true);
         answerToQuestionsPresenter.loadRandomQuestion();
+        answerToQuestionsPresenter.setQuestionNumber(1);
     }
 
     @Override
