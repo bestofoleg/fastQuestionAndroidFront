@@ -2,6 +2,7 @@ package com.robandboo.fq.presenter;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,12 +28,23 @@ public class SingleQuestionAnswersPresenter {
 
     private LinearLayout answersLayout;
 
+    private ImageButton imageButton;
+
+    private Question currentQuestion;
+
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
         answerService = NetworkSingleton.getInstance().getRetrofit()
                 .create(AnswerService.class);
         questionTextView = singleQuestionLayout.findViewById(R.id.questionTitleSingle);
         answersLayout = singleQuestionLayout.findViewById(R.id.singleAnswersList);
+        imageButton = singleQuestionLayout.findViewById(R.id.updateSinglePageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SingleQuestionAnswersPresenter.this.updateData(currentQuestion);
+            }
+        });
     }
 
     public void setVisibility(boolean isVisible) {
@@ -50,11 +62,20 @@ public class SingleQuestionAnswersPresenter {
             public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
                 questionTextView.setText(question.getText());
                 answersLayout.removeAllViews();
-                for (Answer answer : response.body()) {
+                if (response.body().isEmpty()) {
                     TextView answerTextView = new TextView(answersLayout.getContext());
-                    answerTextView.setText("- " + answer.getText());
+                    answerTextView.setText("Ответов пока что нет... Жди...");
                     answerTextView.setTextSize(14);
                     answersLayout.addView(answerTextView);
+                    currentQuestion = question;
+                } else {
+                    for (Answer answer : response.body()) {
+                        TextView answerTextView = new TextView(answersLayout.getContext());
+                        answerTextView.setText("- " + answer.getText());
+                        answerTextView.setTextSize(14);
+                        answersLayout.addView(answerTextView);
+                        currentQuestion = question;
+                    }
                 }
             }
 

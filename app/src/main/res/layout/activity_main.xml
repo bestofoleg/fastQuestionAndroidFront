@@ -121,7 +121,7 @@
         <LinearLayout
             android:id="@+id/singleQuestionAnswersPopup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:scrollbars="vertical"
             android:visibility="gone">
@@ -136,12 +136,11 @@
                 android:textSize="24sp"
                 android:visibility="visible" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/updateSinglePageButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Обновить"
-                android:visibility="visible" />
+                app:srcCompat="@android:drawable/ic_popup_sync" />
 
             <LinearLayout
                 android:id="@+id/singleAnswersList"

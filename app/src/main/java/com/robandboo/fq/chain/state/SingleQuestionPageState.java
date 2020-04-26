@@ -3,7 +3,6 @@ package com.robandboo.fq.chain.state;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.bridge.IDataBridgeFinish;
-import com.robandboo.fq.chain.bridge.IDataBridgeStart;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.presenter.SingleQuestionAnswersPresenter;
 
