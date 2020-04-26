@@ -1,6 +1,5 @@
 package com.robandboo.fq.presenter;
 
-import android.content.res.Resources;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,6 +11,8 @@ import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
+import com.robandboo.fq.util.validation.AnswerValidation;
+import com.robandboo.fq.util.validation.QuestionValidation;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,10 +71,11 @@ public class AnswerToQuestionsPresenter {
         return resultQuestion;
     }
 
-    public void sendAnswer() {
+    public void sendAnswer(AnswerValidation answerValidation) {
         Answer answer = new Answer();
         answer.setQuestion(currentQuestion);
         answer.setText(answerEditText.getText().toString());
+        answerValidation.setDataForValidation(answerEditText.getText().toString());
         answerService.saveAnswer(answer).enqueue(new Callback<Answer>() {
             @Override
             public void onResponse(Call<Answer> call, Response<Answer> response) {

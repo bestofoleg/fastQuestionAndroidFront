@@ -12,6 +12,7 @@ import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
+import com.robandboo.fq.util.validation.QuestionValidation;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,56 +31,38 @@ public class AskQuestionPresenter {
 
     private SingleQuestionAnswersPresenter singleQuestionAnswersPresenter;
 
-    private Question lastSentQuestion;
-
     public AskQuestionPresenter(LinearLayout askLayout, AppCompatActivity appCompatActivity) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         questionsLocalRepository = new MyQuestionsLocalRepository(askLayout.getContext());
-        singleQuestionAnswersPresenter =
+        /*singleQuestionAnswersPresenter =
                 new SingleQuestionAnswersPresenter(
                         (LinearLayout) appCompatActivity.findViewById(R.id.singleQuestionAnswersPopup)
-                );
+                );*/
     }
 
-    public Button getNextStateButton() {
-        return singleQuestionAnswersPresenter.getNextButton();
-    }
-
-    public Button getUpdateButton() {
-        return singleQuestionAnswersPresenter.getUpdateButton();
-    }
-
-    public void setSingleQuestionLayoutVisibility(boolean isVisible) {
-        singleQuestionAnswersPresenter.setVisibility(isVisible);
-    }
-
-    public void updateSingleQuestionPage() {
-        singleQuestionAnswersPresenter.updateData(lastSentQuestion);
-    }
-
-    public void sendQuestion() {
+    public Question sendQuestion(QuestionValidation questionValidation) {
         final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());
-        questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
-            @Override
-            public void onResponse(Call<Question> call, Response<Question> response) {
-                questionsLocalRepository.writeQuestion(response.body());
-                singleQuestionAnswersPresenter.setVisibility(true);
-                askedQuestion.setId(response.body().getId());
-                singleQuestionAnswersPresenter.updateData(askedQuestion);
-                lastSentQuestion = askedQuestion;
-                setLayoutVisibility(false);
-            }
+        questionValidation.setDataForValidation(askQuestionEditText.getText().toString());
+        if (questionValidation.validateWithoutToast()) {
+            questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
+                @Override
+                public void onResponse(Call<Question> call, Response<Question> response) {
+                    questionsLocalRepository.writeQuestion(response.body());
+                    askedQuestion.setId(response.body().getId());
+                }
 
-            @Override
-            public void onFailure(Call<Question> call, Throwable t) {
-                //TODO: throw alert for ask question failure
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<Question> call, Throwable t) {
+                    //TODO: throw alert for ask question failure
+                    t.printStackTrace();
+                }
+            });
+        }
+        return askedQuestion;
     }
 
     public void clearQuestionEditText() {
@@ -92,9 +75,5 @@ public class AskQuestionPresenter {
         } else {
             askLayout.setVisibility(View.GONE);
         }
-    }
-
-    public String getCurrentQuestionText() {
-        return askQuestionEditText.getText().toString();
     }
 }

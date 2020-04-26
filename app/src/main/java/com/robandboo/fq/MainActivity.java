@@ -10,13 +10,22 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.ChainManager;
+import com.robandboo.fq.chain.bridge.QuestionDataBridge;
+import com.robandboo.fq.chain.state.AnswerToQuestionPageState;
+import com.robandboo.fq.chain.state.AskQuestionPageState;
+import com.robandboo.fq.chain.state.IState;
+import com.robandboo.fq.chain.state.SingleQuestionPageState;
 import com.robandboo.fq.listener.NextStateSwipeListener;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.presenter.AskQuestionPresenter;
+import com.robandboo.fq.presenter.SingleQuestionAnswersPresenter;
 import com.robandboo.fq.util.ActivityManager;
 import com.robandboo.fq.util.swipe.SwipeHandler;
 import com.robandboo.fq.util.swipe.SwipeSettings;
 import com.robandboo.fq.util.swipe.SwipeVector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static LayoutInflater MAIN_INFLATER;
@@ -32,14 +41,26 @@ public class MainActivity extends AppCompatActivity {
                 new AnswerToQuestionsPresenter(questionLayout);
         AskQuestionPresenter askQuestionPresenter =
                 new AskQuestionPresenter(askLayout, this);
-        ChainManager chainManager =
-                new ChainManager(
-                        this,
-                        answerToQuestionsPresenter,
-                        askQuestionPresenter,
-                        3,
-                        1
-                );
+        List<IState> states = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            states.add(
+                    new AnswerToQuestionPageState(answerToQuestionsPresenter, this)
+            );
+        }
+        QuestionDataBridge questionDataBridge = new QuestionDataBridge();
+        states.add(new AskQuestionPageState(
+                askQuestionPresenter, this, questionDataBridge
+        ));
+        LinearLayout singleQuestionLayout =
+                findViewById(R.id.singleQuestionAnswersPopup);
+        SingleQuestionAnswersPresenter singleQuestionAnswersPresenter =
+                new SingleQuestionAnswersPresenter(singleQuestionLayout);
+        states.add(new SingleQuestionPageState(
+                singleQuestionAnswersPresenter,
+                this,
+                questionDataBridge
+        ));
+        ChainManager chainManager = new ChainManager(states);
         SwipeSettings swipeSettings = new SwipeSettings(
                 50,50, 300,
                 new SwipeVector(-1, 0)
@@ -59,6 +80,5 @@ public class MainActivity extends AppCompatActivity {
                         .changeActivityTo(MyQuestionsActivity.class);
             }
         });
-        chainManager.init();
     }
 }

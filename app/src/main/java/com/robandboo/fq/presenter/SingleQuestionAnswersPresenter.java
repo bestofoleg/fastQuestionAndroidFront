@@ -27,25 +27,12 @@ public class SingleQuestionAnswersPresenter {
 
     private LinearLayout answersLayout;
 
-    private Button nextButton;
-
-    private Button updateButton;
-
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
         answerService = NetworkSingleton.getInstance().getRetrofit()
                 .create(AnswerService.class);
         questionTextView = singleQuestionLayout.findViewById(R.id.questionTitleSingle);
         answersLayout = singleQuestionLayout.findViewById(R.id.singleAnswersList);
-        updateButton = singleQuestionLayout.findViewById(R.id.updateSinglePageButton);
-    }
-
-    public Button getNextButton() {
-        return nextButton;
-    }
-
-    public Button getUpdateButton() {
-        return updateButton;
     }
 
     public void setVisibility(boolean isVisible) {
