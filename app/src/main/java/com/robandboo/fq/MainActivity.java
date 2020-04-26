@@ -45,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
         int userAnswersQuantity =
                 getResources().getInteger(R.integer.defaultAnswersQuantity);
         for (int i = 0; i < userAnswersQuantity; i++) {
-            states.add(
-                    new AnswerToQuestionPageState(answerToQuestionsPresenter, this)
-            );
+            states.add(new AnswerToQuestionPageState(
+                    answerToQuestionsPresenter,
+                    this,
+                    i+1, userAnswersQuantity
+            ));
         }
         QuestionDataBridge questionDataBridge = new QuestionDataBridge();
         states.add(new AskQuestionPageState(

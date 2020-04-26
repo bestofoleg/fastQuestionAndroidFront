@@ -10,9 +10,16 @@ public class AnswerToQuestionPageState implements IState {
 
     private AnswerValidation answerValidation;
 
+    private int questionNumber;
+
+    private int questionsQuantity;
+
     public AnswerToQuestionPageState(
             AnswerToQuestionsPresenter answerToQuestionsPresenter,
-            AppCompatActivity appCompatActivity) {
+            AppCompatActivity appCompatActivity,
+            int questionNumber, int questionsQuantity) {
+        this.questionNumber = questionNumber;
+        this.questionsQuantity = questionsQuantity;
         this.answerToQuestionsPresenter = answerToQuestionsPresenter;
         answerValidation = new AnswerValidation(appCompatActivity);
     }
@@ -20,8 +27,8 @@ public class AnswerToQuestionPageState implements IState {
     @Override
     public void start() {
         answerToQuestionsPresenter.setLayoutVisibility(true);
+        answerToQuestionsPresenter.setQuestionNumber(questionsQuantity - questionNumber + 1);
         answerToQuestionsPresenter.loadRandomQuestion();
-        answerToQuestionsPresenter.setQuestionNumber(1);
     }
 
     @Override

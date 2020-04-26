@@ -1,12 +1,10 @@
 package com.robandboo.fq;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.fonts.FontStyle;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.listener.LoadTopicsPageClickListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
@@ -33,6 +31,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
         loadLastPage();
         LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
         for (int i = myQuestionsConfig.getPageNumber(); i >= 0;i --) {
+            //TODO:transfer to fragment file
             TextView href = new TextView(pagesView.getContext());
             href.setText(String.valueOf(i));
             href.setTextSize(24f);
