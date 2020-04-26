@@ -94,16 +94,14 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
         View root = MainActivity.MAIN_INFLATER.inflate(
                 R.layout.topic_question_layout, null, false
         ).getRootView();
+        String hiddenMulidot = root.getContext().getResources().getString(R.string.hiddenMulidot);
         TextView questionText = root.findViewById(R.id.topicQuestion);
-
         String questionString = topics.get(groupPosition).getQuestion().getText();
-
         String questionTitle = questionString;
-
         if (!isExpanded) {
-            questionTitle = questionString.substring(0, questionString.length() % 15) + "...";
+            questionTitle =
+                    questionString.substring(0, questionString.length() % 15) + hiddenMulidot;
         }
-
         questionText.setText(questionTitle);
         return root;
     }
@@ -114,7 +112,10 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
                 R.layout.topic_answer_layout, null, false
         ).getRootView();
         TextView textView = view.findViewById(R.id.answerText);
-        textView.setText("- " + topics.get(groupPosition).getAnswers().get(childPosition).getText());
+        String answerPrefix =
+                view.getContext().getResources().getString(R.string.answerPrefix);
+        textView.setText(answerPrefix +
+                topics.get(groupPosition).getAnswers().get(childPosition).getText());
         return view;
     }
 

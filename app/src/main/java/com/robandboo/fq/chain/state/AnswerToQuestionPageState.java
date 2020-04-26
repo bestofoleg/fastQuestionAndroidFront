@@ -38,6 +38,6 @@ public class AnswerToQuestionPageState implements IState {
 
     @Override
     public String toString() {
-        return "AnswerToQuestionPageState";
+        return getClass().getName();
     }
 }

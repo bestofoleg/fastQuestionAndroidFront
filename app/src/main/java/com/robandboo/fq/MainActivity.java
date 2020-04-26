@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
                 new AnswerToQuestionsPresenter(questionLayout);
         AskQuestionPresenter askQuestionPresenter =
-                new AskQuestionPresenter(askLayout, this);
+                new AskQuestionPresenter(askLayout);
         List<IState> states = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        int userAnswersQuantity =
+                getResources().getInteger(R.integer.defaultAnswersQuantity);
+        for (int i = 0; i < userAnswersQuantity; i++) {
             states.add(
                     new AnswerToQuestionPageState(answerToQuestionsPresenter, this)
             );

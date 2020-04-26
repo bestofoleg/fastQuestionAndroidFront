@@ -1,11 +1,9 @@
 package com.robandboo.fq.presenter;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Question;
@@ -29,18 +27,15 @@ public class AskQuestionPresenter {
 
     private MyQuestionsLocalRepository questionsLocalRepository;
 
-    private SingleQuestionAnswersPresenter singleQuestionAnswersPresenter;
+    private String errorSendAskMessage;
 
-    public AskQuestionPresenter(LinearLayout askLayout, AppCompatActivity appCompatActivity) {
+    public AskQuestionPresenter(LinearLayout askLayout) {
         this.askLayout = askLayout;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         questionsLocalRepository = new MyQuestionsLocalRepository(askLayout.getContext());
-        /*singleQuestionAnswersPresenter =
-                new SingleQuestionAnswersPresenter(
-                        (LinearLayout) appCompatActivity.findViewById(R.id.singleQuestionAnswersPopup)
-                );*/
+        errorSendAskMessage = askLayout.getResources().getString(R.string.errorSendAskMessage);
     }
 
     public Question sendQuestion(QuestionValidation questionValidation) {
@@ -57,7 +52,11 @@ public class AskQuestionPresenter {
 
                 @Override
                 public void onFailure(Call<Question> call, Throwable t) {
-                    //TODO: throw alert for ask question failure
+                    Toast.makeText(
+                            askLayout.getContext(),
+                            errorSendAskMessage,
+                            Toast.LENGTH_SHORT
+                    ).show();
                     t.printStackTrace();
                 }
             });

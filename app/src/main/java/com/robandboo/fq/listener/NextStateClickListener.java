@@ -12,7 +12,7 @@ public class NextStateClickListener implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         chainManager.next();
     }
 }

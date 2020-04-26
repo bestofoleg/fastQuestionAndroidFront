@@ -6,4 +6,6 @@
     <integer name="minAnswerSize">4</integer>
     <integer name="maxQuestionSize">64</integer>
     <integer name="maxAnswerSize">128</integer>
+    <integer name="defaultAnswersQuantity">3</integer>
+    <integer name="maxMyQuestionsQuantityInPage">5</integer>
 </resources>

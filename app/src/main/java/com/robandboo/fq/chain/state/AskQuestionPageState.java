@@ -42,6 +42,6 @@ public class AskQuestionPageState implements IState {
 
     @Override
     public String toString() {
-        return "AskQuestionPageState";
+        return getClass().getName();
     }
 }

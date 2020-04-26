@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,17 +13,12 @@ import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.validation.AnswerValidation;
-import com.robandboo.fq.util.validation.QuestionValidation;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AnswerToQuestionsPresenter {
-    private static final String FAILURE_TO_LOAD_QUESTION_ERROR_MESSAGE = "Failure to load question...";
-
-    private static final String FAILURE_TO_SEND_ANSWER_ERROR_MESSAGE = "Failure to send answer...";
-
     private LinearLayout askToQuestionLayout;
 
     private QuestionService questionService;
@@ -37,6 +33,10 @@ public class AnswerToQuestionsPresenter {
 
     private TextView questionsQuantityTextView;
 
+    private String failureToLoadQuestionErrorMessage;
+
+    private String failureToSendAnswerErrorMessage;
+
     public AnswerToQuestionsPresenter(LinearLayout askToQuestionLayout) {
         this.askToQuestionLayout = askToQuestionLayout;
         questionService = NetworkSingleton.getInstance().getRetrofit()
@@ -46,6 +46,12 @@ public class AnswerToQuestionsPresenter {
         questionTextView = askToQuestionLayout.findViewById(R.id.questionTextView);
         answerEditText = askToQuestionLayout.findViewById(R.id.answerTextEdit);
         questionsQuantityTextView = askToQuestionLayout.findViewById(R.id.counterTextView);
+        failureToLoadQuestionErrorMessage =
+                askToQuestionLayout.getContext().getResources()
+                        .getString(R.string.failureToLoadQuestionErrorMessage);
+        failureToSendAnswerErrorMessage =
+                askToQuestionLayout.getContext().getResources()
+                        .getString(R.string.failureToSendAnswerErrorMessage);
         currentQuestion = null;
     }
 
@@ -58,13 +64,16 @@ public class AnswerToQuestionsPresenter {
                 resultQuestion.setText(response.body().getText());
                 resultQuestion.setAnswers(response.body().getAnswers());
                 questionTextView.setText(resultQuestion.getText());
+                questionTextView.setTextColor(askToQuestionLayout.getResources()
+                        .getColor(R.color.labelTextColor));
                 currentQuestion = resultQuestion;
             }
 
             @Override
             public void onFailure(Call<Question> call, Throwable t) {
-                resultQuestion.setText(FAILURE_TO_LOAD_QUESTION_ERROR_MESSAGE);
-                questionTextView.setText(FAILURE_TO_LOAD_QUESTION_ERROR_MESSAGE);
+                resultQuestion.setText(failureToLoadQuestionErrorMessage);
+                questionTextView.setText(failureToLoadQuestionErrorMessage);
+                questionTextView.setTextColor(Color.RED);
                 t.printStackTrace();
             }
         });
@@ -83,7 +92,7 @@ public class AnswerToQuestionsPresenter {
 
             @Override
             public void onFailure(Call<Answer> call, Throwable t) {
-                answerEditText.setText(FAILURE_TO_SEND_ANSWER_ERROR_MESSAGE);
+                answerEditText.setText(failureToSendAnswerErrorMessage);
                 t.printStackTrace();
             }
         });
@@ -109,9 +118,5 @@ public class AnswerToQuestionsPresenter {
                         number
                 );
         questionsQuantityTextView.setText(labelTemplate);
-    }
-
-    public String getCurrentAnswerText() {
-        return answerEditText.getText().toString();
     }
 }

@@ -1,15 +1,14 @@
 package com.robandboo.fq.presenter;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.listener.NextStateClickListener;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 
@@ -32,6 +31,12 @@ public class SingleQuestionAnswersPresenter {
 
     private Question currentQuestion;
 
+    private String answerPrefix;
+
+    private String emptyAnswersDataMessage;
+
+    private String failureToLoadAnswers;
+
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
         answerService = NetworkSingleton.getInstance().getRetrofit()
@@ -45,6 +50,12 @@ public class SingleQuestionAnswersPresenter {
                 SingleQuestionAnswersPresenter.this.updateData(currentQuestion);
             }
         });
+        answerPrefix = singleQuestionLayout.getContext()
+                .getResources().getString(R.string.answerPrefix);
+        emptyAnswersDataMessage = singleQuestionLayout.getContext()
+                .getResources().getString(R.string.emptyAnswersDataMessage);
+        failureToLoadAnswers = singleQuestionLayout.getContext()
+                .getResources().getString(R.string.failureToLoadAnswers);
     }
 
     public void setVisibility(boolean isVisible) {
@@ -64,14 +75,14 @@ public class SingleQuestionAnswersPresenter {
                 answersLayout.removeAllViews();
                 if (response.body().isEmpty()) {
                     TextView answerTextView = new TextView(answersLayout.getContext());
-                    answerTextView.setText("Ответов пока что нет... Жди...");
+                    answerTextView.setText(emptyAnswersDataMessage);
                     answerTextView.setTextSize(14);
                     answersLayout.addView(answerTextView);
                     currentQuestion = question;
                 } else {
                     for (Answer answer : response.body()) {
                         TextView answerTextView = new TextView(answersLayout.getContext());
-                        answerTextView.setText("- " + answer.getText());
+                        answerTextView.setText(answerPrefix + answer.getText());
                         answerTextView.setTextSize(14);
                         answersLayout.addView(answerTextView);
                         currentQuestion = question;
@@ -81,7 +92,10 @@ public class SingleQuestionAnswersPresenter {
 
             @Override
             public void onFailure(Call<List<Answer>> call, Throwable t) {
-                //TODO: implement it!
+                Toast.makeText(
+                        singleQuestionLayout.getContext(),
+                        failureToLoadAnswers,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

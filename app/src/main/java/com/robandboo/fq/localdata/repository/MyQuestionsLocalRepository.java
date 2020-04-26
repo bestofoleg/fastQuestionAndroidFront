@@ -2,8 +2,8 @@ package com.robandboo.fq.localdata.repository;
 
 import android.content.Context;
 
+import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.localdata.constant.LocalRepositoryConstants;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 
 import org.json.JSONArray;
@@ -27,18 +27,62 @@ import java.util.List;
 public class MyQuestionsLocalRepository {
     private Context context;
 
+    private String pageNumberParamName;
+
+    private String questionNumberInPageParamName;
+
+    private String idParamName;
+
+    private String textParamName;
+
+    private String emptyJsonObject;
+
+    private String emptyJsonArray;
+
+    private String myQuestionsPath;
+
+    private String myQuestionsDataConfig;
+
+    private String pageIsNotExistsErrorMessage;
+
+    private int maxQuestionsQuantityInPage;
+
+    private String myQuestionPageName;
+
     public MyQuestionsLocalRepository(Context context) {
         this.context = context;
+        pageNumberParamName =
+                context.getResources().getString(R.string.pageNumberParamName);
+        questionNumberInPageParamName =
+                context.getResources().getString(R.string.questionNumberInPageParamName);
+        idParamName =
+                context.getResources().getString(R.string.idParamName);
+        textParamName =
+                context.getResources().getString(R.string.textParamName);
+        emptyJsonObject =
+                context.getResources().getString(R.string.emptyJsonObject);
+        emptyJsonArray =
+                context.getResources().getString(R.string.emptyJsonArray);
+        myQuestionsPath =
+                context.getResources().getString(R.string.myQuestionsPath);
+        myQuestionsDataConfig =
+                context.getResources().getString(R.string.myQuestionDataConfig);
+        pageIsNotExistsErrorMessage =
+                context.getResources().getString(R.string.pageIsNotExistsErrorMessage);
+        maxQuestionsQuantityInPage =
+                context.getResources().getInteger(R.integer.maxMyQuestionsQuantityInPage);
+        myQuestionPageName =
+                context.getResources().getString(R.string.myQuestionPageName);
     }
 
     public MyQuestionsConfig readMyQuestionsConfig() {
         MyQuestionsConfig myQuestionsConfig = null;
         StringBuffer configTextBuffer = new StringBuffer();
-        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
+        File dir = new File(context.getFilesDir(), myQuestionsPath);
         dir.mkdirs();
         File file = new File(
                 dir,
-                LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG
+                myQuestionsDataConfig
         );
         if (!file.exists()) {
             try {
@@ -52,7 +96,7 @@ public class MyQuestionsLocalRepository {
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(inputStream))
         ) {
-            String currentLine = "";
+            String currentLine;
             while ((currentLine = bufferedReader.readLine()) != null) {
                 configTextBuffer.append(currentLine);
             }
@@ -63,9 +107,9 @@ public class MyQuestionsLocalRepository {
             if (configTextBuffer.length() > 0) {
                 JSONObject jsonObject = getJSONObjectByString(configTextBuffer.toString());
                 try {
-                    myQuestionsConfig.setPageNumber(jsonObject.getInt("pageNumber"));
+                    myQuestionsConfig.setPageNumber(jsonObject.getInt(pageNumberParamName));
                     myQuestionsConfig.setQuestionNumberInPage(
-                            jsonObject.getInt("questionNumberInPage")
+                            jsonObject.getInt(questionNumberInPageParamName)
                     );
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -76,12 +120,12 @@ public class MyQuestionsLocalRepository {
     }
 
     private void writeMyQuestionsConfig(MyQuestionsConfig myQuestionsConfig) {
-        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
-        File file = new File(dir, LocalRepositoryConstants.MY_QUESTIONS_DATA_CONFIG);
+        File dir = new File(context.getFilesDir(), myQuestionsPath);
+        File file = new File(dir, myQuestionsDataConfig);
         JSONObject jsonConfigObject = new JSONObject();
         try {
-            jsonConfigObject.put("pageNumber", myQuestionsConfig.getPageNumber());
-            jsonConfigObject.put("questionNumberInPage", myQuestionsConfig.getQuestionNumberInPage());
+            jsonConfigObject.put(pageNumberParamName, myQuestionsConfig.getPageNumber());
+            jsonConfigObject.put(questionNumberInPageParamName, myQuestionsConfig.getQuestionNumberInPage());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -110,7 +154,7 @@ public class MyQuestionsLocalRepository {
         } catch (JSONException e) {
             e.printStackTrace();
             try {
-                jsonObject = new JSONObject("{}");
+                jsonObject = new JSONObject(emptyJsonObject);
             } catch (JSONException eInside) {
                 eInside.printStackTrace();
             }
@@ -123,7 +167,7 @@ public class MyQuestionsLocalRepository {
         MyQuestionsConfig myQuestionsConfig = readMyQuestionsConfig();
         File file = null;
         List<Question> questions = new ArrayList<>();
-        if (myQuestionsConfig.getQuestionNumberInPage() >= LocalRepositoryConstants.MAX_MY_QUESTIONS_QUANTITY_IN_PAGE) {
+        if (myQuestionsConfig.getQuestionNumberInPage() >= maxQuestionsQuantityInPage) {
             file = createNewQuestionsPageFile(myQuestionsConfig.getPageNumber() + 1);
             myQuestionsConfig.setQuestionNumberInPage(0);
             myQuestionsConfig.setPageNumber(myQuestionsConfig.getPageNumber() + 1);
@@ -153,8 +197,8 @@ public class MyQuestionsLocalRepository {
         try {
             for (Question question : questions) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", question.getId());
-                jsonObject.put("text", question.getText());
+                jsonObject.put(idParamName, question.getId());
+                jsonObject.put(textParamName, question.getText());
                 objects.add(jsonObject);
             }
         } catch (JSONException e) {
@@ -172,7 +216,7 @@ public class MyQuestionsLocalRepository {
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(inputStream))
         ) {
-            String temp = "";
+            String temp;
             while ((temp = bufferedReader.readLine()) != null) {
                 jsonBuffer.append(temp);
             }
@@ -186,7 +230,7 @@ public class MyQuestionsLocalRepository {
                 }
             } catch (JSONException e) {
                 try {
-                    jsonArray = new JSONArray("[]");
+                    jsonArray = new JSONArray(emptyJsonArray);
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
@@ -197,8 +241,8 @@ public class MyQuestionsLocalRepository {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = (JSONObject) jsonArray.get(i);
                         questions.add(new Question(
-                                object.getInt("id"),
-                                object.getString("text")
+                                object.getInt(idParamName),
+                                object.getString(textParamName)
                         ));
                     }
                 }
@@ -210,12 +254,12 @@ public class MyQuestionsLocalRepository {
     }
 
     private File createNewQuestionsPageFile(int newPageNumber) {
-        File dir = new File(context.getFilesDir(), LocalRepositoryConstants.MY_QUESTIONS_PATH);
+        File dir = new File(context.getFilesDir(), myQuestionsPath);
         dir.mkdirs();
         File file = new File(
                 dir,
                 MessageFormat.format(
-                        LocalRepositoryConstants.MY_QUESTION_PAGE_NAME,
+                        myQuestionPageName,
                         newPageNumber
                 )
         );
@@ -230,11 +274,11 @@ public class MyQuestionsLocalRepository {
     private File getMyQuestionsPageFileByNumber(int pageNumber) {
         File dir = new File(
                 context.getFilesDir(),
-                LocalRepositoryConstants.MY_QUESTIONS_PATH
+                myQuestionsPath
         );
         dir.mkdirs();
         File file = new File(dir, MessageFormat.format(
-                LocalRepositoryConstants.MY_QUESTION_PAGE_NAME,
+                myQuestionPageName,
                 pageNumber
         ));
         if (!file.exists()) {
@@ -246,8 +290,8 @@ public class MyQuestionsLocalRepository {
                 }
             } else {
                 throw new IllegalArgumentException(MessageFormat.format(
-                        LocalRepositoryConstants.PAGE_IS_NOT_EXISTS_ERROR_MESSAGE +
-                                " " + file.getAbsolutePath(),
+                        pageIsNotExistsErrorMessage +
+                                file.getAbsolutePath(),
                         pageNumber
                 ));
             }

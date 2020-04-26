@@ -5,7 +5,6 @@ import com.robandboo.fq.chain.state.IState;
 import java.util.List;
 
 public class ChainManager {
-
     private List<IState> states;
 
     private int statePointer;
@@ -14,7 +13,6 @@ public class ChainManager {
         this.states = states;
         statePointer = 0;
         states.get(statePointer).start();
-        //statePointer = (statePointer + 1) % states.size();
     }
 
     public void next() {

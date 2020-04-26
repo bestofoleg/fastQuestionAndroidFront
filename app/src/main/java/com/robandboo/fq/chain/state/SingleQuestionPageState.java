@@ -37,4 +37,9 @@ public class SingleQuestionPageState implements IState {
     public void finish() {
         singleQuestionAnswersPresenter.setVisibility(false);
     }
+
+    @Override
+    public String toString() {
+        return getClass().getName();
+    }
 }

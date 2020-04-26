@@ -16,4 +16,35 @@
     </string>
     <string name="myQuestionsText">Мои вопросы</string>
     <string name="swipeInfoLabel">Листни, что бы продолжить</string>
+    <string name="pageNumberParamName">pageNumber</string>
+    <string name="questionNumberInPageParamName">questionNumberInPage</string>
+    <string name="idParamName">id</string>
+    <string name="textParamName">text</string>
+    <string name="emptyJsonObject">{}</string>
+    <string name="emptyJsonArray">[]</string>
+    <string name="pageIsNotExistsErrorMessage">
+        Page with number = {0} is not exists! File path = {1}
+    </string>
+    <string name="myQuestionsPath">
+        /myQuestions/
+    </string>
+    <string name="myQuestionPageName">
+        myQuestionsPage{0}.json
+    </string>
+    <string name="myQuestionDataConfig">
+        config.json
+    </string>
+    <string name="failureToLoadQuestionErrorMessage">
+        Ошибка загрузки вопроса
+    </string>
+    <string name="failureToSendAnswerErrorMessage">
+        Ошибка отправки ответа
+    </string>
+    <string name="errorSendAskMessage">
+        Ошибка отправки вопроса
+    </string>
+    <string name="answerPrefix">- </string>
+    <string name="emptyAnswersDataMessage">Ответов пока что нет... Жди...</string>
+    <string name="failureToLoadAnswers">Произошла ошибка загрузки ответов на этот вопрос</string>
+    <string name="hiddenMulidot">...</string>
 </resources>
