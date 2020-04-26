@@ -1,5 +1,6 @@
 package com.robandboo.fq;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.chain.bridge.QuestionDataBridge;
@@ -26,15 +28,38 @@ import com.robandboo.fq.util.swipe.SwipeVector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     public static LayoutInflater MAIN_INFLATER;
+
+    private static CoordinatorLayout activityLayout;
+
+    public static final int[] backgroundResourcesIds = new int[] {
+            R.drawable.back1,
+            R.drawable.back2,
+            R.drawable.back4,
+            R.drawable.back5,
+            R.drawable.back6,
+            R.drawable.back7,
+            R.drawable.back8,
+            R.drawable.back9,
+            R.drawable.back10
+    };
+
+    public static void changeBackground() {
+        Random random = new Random();
+        int backgroundId = random.nextInt(9);
+        activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MAIN_INFLATER = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         setContentView(R.layout.activity_main);
+        activityLayout = findViewById(R.id.activityMainLayout);
+        changeBackground();
         LinearLayout questionLayout = findViewById(R.id.answerLayout);
         LinearLayout askLayout = findViewById(R.id.questionLayout);
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
@@ -53,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         }
         QuestionDataBridge questionDataBridge = new QuestionDataBridge();
         states.add(new AskQuestionPageState(
-                askQuestionPresenter, this, questionDataBridge
+                askQuestionPresenter, answerToQuestionsPresenter,
+                this, questionDataBridge
         ));
         LinearLayout singleQuestionLayout =
                 findViewById(R.id.singleQuestionAnswersPopup);

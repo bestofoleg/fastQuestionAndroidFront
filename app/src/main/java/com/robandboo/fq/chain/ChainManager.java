@@ -1,5 +1,12 @@
 package com.robandboo.fq.chain;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.robandboo.fq.R;
 import com.robandboo.fq.chain.state.IState;
 
 import java.util.List;

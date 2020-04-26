@@ -5,11 +5,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.robandboo.fq.listener.LoadTopicsPageClickListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.presenter.MyQuestionsListPresenter;
+
+import java.util.Random;
 
 public class MyQuestionsActivity extends AppCompatActivity {
     private MyQuestionsListPresenter myQuestionsListPresenter;
@@ -18,10 +22,32 @@ public class MyQuestionsActivity extends AppCompatActivity {
 
     private MyQuestionsConfig myQuestionsConfig;
 
+    private static ConstraintLayout activityLayout;
+
+    public static final int[] backgroundResourcesIds = new int[] {
+            R.drawable.back1,
+            R.drawable.back2,
+            R.drawable.back4,
+            R.drawable.back5,
+            R.drawable.back6,
+            R.drawable.back7,
+            R.drawable.back8,
+            R.drawable.back9,
+            R.drawable.back10
+    };
+
+    public static void changeBackground() {
+        Random random = new Random();
+        int backgroundId = random.nextInt(9);
+        activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_questions);
+        activityLayout = findViewById(R.id.myQuestionsActivity);
+        changeBackground();
         LinearLayout myQuestionsLayout = findViewById(R.id.mainMyQuestionsLayout);
         myQuestionsListPresenter =
                 new MyQuestionsListPresenter(myQuestionsLayout);

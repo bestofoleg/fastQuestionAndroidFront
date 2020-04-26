@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Answer;
@@ -55,6 +56,10 @@ public class AnswerToQuestionsPresenter {
         currentQuestion = null;
     }
 
+    public LinearLayout getAskToQuestionLayout() {
+        return askToQuestionLayout;
+    }
+
     public Question loadRandomQuestion() {
         final Question resultQuestion = new Question();
         questionService.getRandomQuestion().enqueue(new Callback<Question>() {
@@ -64,8 +69,7 @@ public class AnswerToQuestionsPresenter {
                 resultQuestion.setText(response.body().getText());
                 resultQuestion.setAnswers(response.body().getAnswers());
                 questionTextView.setText(resultQuestion.getText());
-                questionTextView.setTextColor(askToQuestionLayout.getResources()
-                        .getColor(R.color.labelTextColor));
+                questionTextView.setTextColor(Color.parseColor("grey"));
                 currentQuestion = resultQuestion;
             }
 
@@ -92,7 +96,11 @@ public class AnswerToQuestionsPresenter {
 
             @Override
             public void onFailure(Call<Answer> call, Throwable t) {
-                answerEditText.setText(failureToSendAnswerErrorMessage);
+                Toast.makeText(
+                        askToQuestionLayout.getContext(),
+                        failureToSendAnswerErrorMessage,
+                        Toast.LENGTH_SHORT
+                ).show();
                 t.printStackTrace();
             }
         });

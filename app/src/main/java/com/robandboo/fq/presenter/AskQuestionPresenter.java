@@ -38,6 +38,10 @@ public class AskQuestionPresenter {
         errorSendAskMessage = askLayout.getResources().getString(R.string.errorSendAskMessage);
     }
 
+    public LinearLayout getAskLayout() {
+        return askLayout;
+    }
+
     public Question sendQuestion(QuestionValidation questionValidation) {
         final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());

@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -85,7 +86,11 @@ public class SingleQuestionAnswersPresenter {
                 if (response.body().isEmpty()) {
                     TextView answerTextView = new TextView(answersLayout.getContext());
                     answerTextView.setText(emptyAnswersDataMessage);
-                    answerTextView.setTextSize(14);
+                    answerTextView.setTextSize(24);
+                    answerTextView.setTextColor(Color.parseColor("grey"));
+                    answerTextView.setShadowLayer(
+                            1.6f, 1.5f, 1.3f, 0
+                    );
                     answersLayout.addView(answerTextView);
                     currentQuestion = question;
                 } else {
