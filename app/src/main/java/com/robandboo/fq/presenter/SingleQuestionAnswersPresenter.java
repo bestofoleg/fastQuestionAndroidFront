@@ -1,6 +1,8 @@
 package com.robandboo.fq.presenter;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +39,8 @@ public class SingleQuestionAnswersPresenter {
 
     private String failureToLoadAnswers;
 
+    private Animation animation;
+
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
         answerService = NetworkSingleton.getInstance().getRetrofit()
@@ -56,11 +60,16 @@ public class SingleQuestionAnswersPresenter {
                 .getResources().getString(R.string.emptyAnswersDataMessage);
         failureToLoadAnswers = singleQuestionLayout.getContext()
                 .getResources().getString(R.string.failureToLoadAnswers);
+        animation = AnimationUtils.loadAnimation(
+                singleQuestionLayout.getContext(),
+                R.anim.single_question_page_anim
+        );
     }
 
     public void setVisibility(boolean isVisible) {
         if (isVisible) {
             singleQuestionLayout.setVisibility(View.VISIBLE);
+            singleQuestionLayout.startAnimation(animation);
         } else {
             singleQuestionLayout.setVisibility(View.GONE);
         }
