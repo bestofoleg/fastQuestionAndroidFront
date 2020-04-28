@@ -1,5 +1,7 @@
 package com.robandboo.fq;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,9 +44,11 @@ public class MyQuestionsActivity extends AppCompatActivity {
         activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_my_questions);
         activityLayout = findViewById(R.id.myQuestionsActivity);
         //changeBackground();
