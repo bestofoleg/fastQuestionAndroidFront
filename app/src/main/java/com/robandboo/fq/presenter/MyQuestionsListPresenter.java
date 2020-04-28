@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 
@@ -14,7 +15,7 @@ import com.robandboo.fq.ui.entity.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyQuestionsListPresenter {
+public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout> {
     private AnswerService answerService;
 
     private LinearLayout myQuestionsListRootLayout;
@@ -54,6 +55,25 @@ public class MyQuestionsListPresenter {
             topics.add(new Topic(question, new ArrayList<Answer>()));
         }
         topicExpandableListAdapter.setNewItems(topics);
+    }
+
+    @Override
+    public void focus() {
+        myQuestionsListRootLayout.requestFocus();
+    }
+
+    @Override
+    public LinearLayout getRootLayout() {
+        return myQuestionsListRootLayout;
+    }
+
+    @Override
+    public void setLayoutVisibility(boolean visibility) {
+        if (visibility) {
+            myQuestionsListRootLayout.setVisibility(View.VISIBLE);
+        } else {
+            myQuestionsListRootLayout.setVisibility(View.GONE);
+        }
     }
 }
 

@@ -16,7 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AskQuestionPresenter {
+public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
     private final String FAILURE_TO_ASK_QUESTION_ERROR_MESSAGE = "Failure to ask question...";
 
     private QuestionService questionService;
@@ -36,10 +36,6 @@ public class AskQuestionPresenter {
                 .create(QuestionService.class);
         questionsLocalRepository = new MyQuestionsLocalRepository(askLayout.getContext());
         errorSendAskMessage = askLayout.getResources().getString(R.string.errorSendAskMessage);
-    }
-
-    public LinearLayout getAskLayout() {
-        return askLayout;
     }
 
     public Question sendQuestion(QuestionValidation questionValidation) {
@@ -72,11 +68,22 @@ public class AskQuestionPresenter {
         askQuestionEditText.getText().clear();
     }
 
+    @Override
     public void setLayoutVisibility(boolean isVisible) {
         if (isVisible) {
             askLayout.setVisibility(View.VISIBLE);
         } else {
             askLayout.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void focus() {
+        askQuestionEditText.requestFocus();
+    }
+
+    @Override
+    public LinearLayout getRootLayout() {
+        return askLayout;
     }
 }

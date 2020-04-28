@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SingleQuestionAnswersPresenter {
+public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearLayout> {
     private LinearLayout singleQuestionLayout;
 
     private AnswerService answerService;
@@ -39,8 +39,6 @@ public class SingleQuestionAnswersPresenter {
     private String emptyAnswersDataMessage;
 
     private String failureToLoadAnswers;
-
-    private Animation animation;
 
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
@@ -61,19 +59,11 @@ public class SingleQuestionAnswersPresenter {
                 .getResources().getString(R.string.emptyAnswersDataMessage);
         failureToLoadAnswers = singleQuestionLayout.getContext()
                 .getResources().getString(R.string.failureToLoadAnswers);
-        animation = AnimationUtils.loadAnimation(
-                singleQuestionLayout.getContext(),
-                R.anim.single_question_page_anim
-        );
     }
 
-    public void setVisibility(boolean isVisible) {
-        if (isVisible) {
-            singleQuestionLayout.setVisibility(View.VISIBLE);
-            singleQuestionLayout.startAnimation(animation);
-        } else {
-            singleQuestionLayout.setVisibility(View.GONE);
-        }
+    @Override
+    public void focus() {
+        singleQuestionLayout.requestFocus();
     }
 
     public void updateData(final Question question) {
@@ -112,5 +102,19 @@ public class SingleQuestionAnswersPresenter {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public LinearLayout getRootLayout() {
+        return singleQuestionLayout;
+    }
+
+    @Override
+    public void setLayoutVisibility(boolean visibility) {
+        if (visibility) {
+            singleQuestionLayout.setVisibility(View.VISIBLE);
+        } else {
+            singleQuestionLayout.setVisibility(View.GONE);
+        }
     }
 }

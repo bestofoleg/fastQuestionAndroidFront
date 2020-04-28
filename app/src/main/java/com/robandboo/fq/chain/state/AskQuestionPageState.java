@@ -34,8 +34,8 @@ public class AskQuestionPageState implements IState {
 
     @Override
     public void start() {
-        answerToQuestionsPresenter.setLayoutVisibility(false);
-        askQuestionPresenter.setLayoutVisibility(true);
+        askQuestionPresenter.clearQuestionEditText();
+        askQuestionPresenter.focus();
     }
 
     @Override
@@ -46,8 +46,6 @@ public class AskQuestionPageState implements IState {
 
     @Override
     public void finish() {
-        askQuestionPresenter.setLayoutVisibility(false);
-        askQuestionPresenter.clearQuestionEditText();
     }
 
     @Override

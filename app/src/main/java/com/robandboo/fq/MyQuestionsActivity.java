@@ -47,7 +47,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_questions);
         activityLayout = findViewById(R.id.myQuestionsActivity);
-        changeBackground();
+        //changeBackground();
         LinearLayout myQuestionsLayout = findViewById(R.id.mainMyQuestionsLayout);
         myQuestionsListPresenter =
                 new MyQuestionsListPresenter(myQuestionsLayout);

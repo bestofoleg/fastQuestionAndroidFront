@@ -24,8 +24,8 @@ public class SingleQuestionPageState implements IState {
 
     @Override
     public void start() {
-        singleQuestionAnswersPresenter.setVisibility(true);
         singleQuestionAnswersPresenter.updateData(questionIDataBridgeFinish.getData());
+        singleQuestionAnswersPresenter.focus();
     }
 
     @Override
@@ -35,7 +35,6 @@ public class SingleQuestionPageState implements IState {
 
     @Override
     public void finish() {
-        singleQuestionAnswersPresenter.setVisibility(false);
     }
 
     @Override

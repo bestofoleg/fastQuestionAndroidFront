@@ -19,8 +19,6 @@ public class AnswerToQuestionPageState implements IState {
 
     private int questionsQuantity;
 
-    private Animation swipeAnim;
-
     public AnswerToQuestionPageState(
             AnswerToQuestionsPresenter answerToQuestionsPresenter,
             AppCompatActivity appCompatActivity,
@@ -29,14 +27,14 @@ public class AnswerToQuestionPageState implements IState {
         this.questionsQuantity = questionsQuantity;
         this.answerToQuestionsPresenter = answerToQuestionsPresenter;
         answerValidation = new AnswerValidation(appCompatActivity);
-        swipeAnim = AnimationUtils.loadAnimation(appCompatActivity, R.anim.swipe_to_left_anim);
     }
 
     @Override
     public void start() {
-        answerToQuestionsPresenter.setLayoutVisibility(true);
+        answerToQuestionsPresenter.clearAnswerTextEdit();
         answerToQuestionsPresenter.setQuestionNumber(questionsQuantity - questionNumber + 1);
         answerToQuestionsPresenter.loadRandomQuestion();
+        answerToQuestionsPresenter.focus();
     }
 
     @Override
@@ -48,9 +46,6 @@ public class AnswerToQuestionPageState implements IState {
     @Override
     public void finish() {
         MainActivity.changeBackground();
-        answerToQuestionsPresenter.clearAnswerTextEdit();
-        answerToQuestionsPresenter.getAskToQuestionLayout()
-                .startAnimation(swipeAnim);
     }
 
     @Override

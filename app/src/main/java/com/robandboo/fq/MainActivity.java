@@ -1,10 +1,11 @@
 package com.robandboo.fq;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -13,6 +14,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.chain.bridge.QuestionDataBridge;
+import com.robandboo.fq.chain.state.AnimationTransitionState;
 import com.robandboo.fq.chain.state.AnswerToQuestionPageState;
 import com.robandboo.fq.chain.state.AskQuestionPageState;
 import com.robandboo.fq.chain.state.IState;
@@ -60,22 +62,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         activityLayout = findViewById(R.id.activityMainLayout);
         changeBackground();
-        LinearLayout questionLayout = findViewById(R.id.answerLayout);
+        LinearLayout answerLayout = findViewById(R.id.answerLayout);
         LinearLayout askLayout = findViewById(R.id.questionLayout);
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
-                new AnswerToQuestionsPresenter(questionLayout);
+                new AnswerToQuestionsPresenter(answerLayout);
         AskQuestionPresenter askQuestionPresenter =
                 new AskQuestionPresenter(askLayout);
         List<IState> states = new ArrayList<>();
         int userAnswersQuantity =
                 getResources().getInteger(R.integer.defaultAnswersQuantity);
-        for (int i = 0; i < userAnswersQuantity; i++) {
+        AnimationTransitionState answerToAnswerTransitionState = new AnimationTransitionState(
+                R.anim.swipe_to_left_anim,
+                R.anim.layout_introduce_anim,
+                answerToQuestionsPresenter,
+                answerToQuestionsPresenter
+        );
+        AnimationTransitionState answerToQuestionTransitionState = new AnimationTransitionState(
+                R.anim.swipe_to_left_anim,
+                R.anim.layout_introduce_anim,
+                answerToQuestionsPresenter,
+                askQuestionPresenter
+        );
+        answerToAnswerTransitionState.setChangePageTransition(true);
+        answerToQuestionTransitionState.setChangePageTransition(true);
+        states.add(new AnimationTransitionState(
+                -1,
+                R.anim.layout_introduce_anim,
+                null,
+                answerToQuestionsPresenter
+        ));
+        states.add(new AnswerToQuestionPageState(
+                answerToQuestionsPresenter,
+                this,
+                1, userAnswersQuantity
+        ));
+        for (int i = 1; i < userAnswersQuantity; i++) {
+            states.add(answerToAnswerTransitionState);
             states.add(new AnswerToQuestionPageState(
                     answerToQuestionsPresenter,
                     this,
                     i+1, userAnswersQuantity
             ));
         }
+        states.add(answerToQuestionTransitionState);
         QuestionDataBridge questionDataBridge = new QuestionDataBridge();
         states.add(new AskQuestionPageState(
                 askQuestionPresenter, answerToQuestionsPresenter,
@@ -85,16 +114,34 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.singleQuestionAnswersPopup);
         SingleQuestionAnswersPresenter singleQuestionAnswersPresenter =
                 new SingleQuestionAnswersPresenter(singleQuestionLayout);
+        AnimationTransitionState questionToSingleTransitionState =
+                new AnimationTransitionState(
+                        R.anim.swipe_to_left_anim,
+                        R.anim.single_question_page_anim,
+                        askQuestionPresenter,
+                        singleQuestionAnswersPresenter
+                );
+        questionToSingleTransitionState.setChangePageTransition(true);
+        states.add(questionToSingleTransitionState);
         states.add(new SingleQuestionPageState(
                 singleQuestionAnswersPresenter,
                 this,
                 questionDataBridge
         ));
-        ChainManager chainManager = new ChainManager(states);
+        AnimationTransitionState singleToAnswerTransitionState =
+                new AnimationTransitionState(
+                        R.anim.swipe_to_left_anim,
+                        R.anim.layout_introduce_anim,
+                        singleQuestionAnswersPresenter,
+                        answerToQuestionsPresenter
+                );
+        singleToAnswerTransitionState.setChangePageTransition(true);
+        states.add(singleToAnswerTransitionState);
         SwipeSettings swipeSettings = new SwipeSettings(
                 20,20, 300,
                 new SwipeVector(-1, 0)
         );
+        ChainManager chainManager = new ChainManager(states);
         SwipeHandler swipeHandler = new SwipeHandler(swipeSettings);
         swipeHandler.setSwipeListener(
                 this,

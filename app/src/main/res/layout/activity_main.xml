@@ -5,6 +5,7 @@
     android:id="@+id/activityMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     android:filterTouchesWhenObscured="false"
     android:screenOrientation="portrait"
     tools:context=".MainActivity">
@@ -24,164 +25,42 @@
             android:baselineAlignBottom="false"
             app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
-        <ImageView
-            android:id="@+id/logoImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:contentDescription="@string/appTitle"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/fq_logo" />
-
-        <LinearLayout
-            android:id="@+id/answerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:visibility="visible">
-
-            <TextView
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="24sp"
-                android:id="@+id/questionTextView"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="serif"
-                android:text="@string/questionLoading"
-                android:textAlignment="center"
-                android:textAllCaps="false"/>
-
-            <EditText
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:id="@+id/answerTextEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:fontFamily="serif"
-                android:gravity="top|left"
-                android:hint="@string/answerEditTextHint"
-                android:inputType="textMultiLine|textPersonName"
-                android:lines="@integer/minMulilineTextSize"
-                android:maxLines="@integer/maxMulilineTextSize"
-                android:minLines="@integer/minMulilineTextSize"
-                android:scrollbars="vertical"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="24sp" />
-
-            <TextView
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:id="@+id/counterTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="serif"
-                android:text="@string/counterTextView"
-                android:textAlignment="textEnd"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/questionLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:id="@+id/askQuestionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/askQuestionTextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="24sp" />
-
-            <EditText
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:id="@+id/questionTextEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="top|left"
-                android:hint="@string/questionEditTextHint"
-                android:inputType="textMultiLine|textPersonName"
-                android:lines="@integer/minMulilineTextSize"
-                android:maxLines="@integer/maxMulilineTextSize"
-                android:minLines="@integer/minMulilineTextSize"
-                android:scrollbars="vertical"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="24sp" />
-
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/singleQuestionAnswersPopup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="10dp"
             android:scrollbars="vertical"
             android:visibility="gone">
 
-            <TextView
-                android:shadowColor="@android:color/black"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
-                android:id="@+id/questionTitleSingle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHighlight="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColorLink="@android:color/darker_gray"
-                android:textSize="24sp"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/updateSinglePageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/stat_notify_sync" />
+                <ImageButton
+                    android:id="@+id/updateSinglePageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@android:drawable/stat_notify_sync" />
+
+                <TextView
+                    android:id="@+id/questionTitleSingle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@android:color/black"
+                    android:shadowDx="1.5"
+                    android:shadowDy="1.3"
+                    android:shadowRadius="1.6"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/darker_gray"
+                    android:textColorHighlight="@android:color/darker_gray"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textColorLink="@android:color/darker_gray"
+                    android:textSize="24sp"
+                    android:visibility="visible" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/singleAnswersList"
@@ -193,18 +72,134 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/answerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0.9"
+        android:background="@drawable/rounded"
+        android:elevation="10dp"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        app:layout_anchor="@+id/mainLayout"
+        app:layout_anchorGravity="center">
+
         <TextView
-            android:shadowColor="@android:color/black"
-            android:shadowDx="1.5"
-            android:shadowDy="1.3"
-            android:shadowRadius="1.6"
-            android:id="@+id/swipeInfo"
+            android:id="@+id/questionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/swipeInfoLabel"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="serif"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="0"
+            android:text="@string/questionLoading"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="@android:color/black"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/answerTextEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="serif"
+            android:gravity="top|left"
+            android:hint="@string/answerEditTextHint"
+            android:inputType="textMultiLine|textPersonName"
+            android:lines="@integer/minMulilineTextSize"
+            android:maxLines="@integer/maxMulilineTextSize"
+            android:minLines="@integer/minMulilineTextSize"
+            android:scrollbars="vertical"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="0"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/darker_gray"
+            android:textColorHint="?attr/colorButtonNormal"
+            android:textColorLink="@android:color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/counterTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="serif"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="0"
+            android:text="@string/counterTextView"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="@android:color/black"
+            android:textSize="8sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/questionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0.9"
+        android:background="@drawable/rounded"
+        android:elevation="10dp"
+        android:orientation="vertical"
+        android:padding="40dp"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_anchor="@+id/mainLayout"
+        app:layout_anchorGravity="center">
+
+        <TextView
+            android:id="@+id/askQuestionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="0"
+            android:text="@string/askQuestionTextView"
             android:textAlignment="center"
             android:textColor="@android:color/black"
-            android:visibility="gone" />
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="@android:color/black"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/questionTextEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:hint="@string/questionEditTextHint"
+            android:inputType="textMultiLine|textPersonName"
+            android:lines="@integer/minMulilineTextSize"
+            android:maxLines="@integer/maxMulilineTextSize"
+            android:minLines="@integer/minMulilineTextSize"
+            android:scrollbars="vertical"
+            android:textColor="@android:color/darker_gray"
+            android:textColorHighlight="@android:color/darker_gray"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColorLink="@android:color/darker_gray"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

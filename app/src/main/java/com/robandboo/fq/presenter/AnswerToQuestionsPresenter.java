@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AnswerToQuestionsPresenter {
+public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayout>{
     private LinearLayout askToQuestionLayout;
 
     private QuestionService questionService;
@@ -56,8 +56,9 @@ public class AnswerToQuestionsPresenter {
         currentQuestion = null;
     }
 
-    public LinearLayout getAskToQuestionLayout() {
-        return askToQuestionLayout;
+    @Override
+    public void focus() {
+        answerEditText.requestFocus();
     }
 
     public Question loadRandomQuestion() {
@@ -106,6 +107,7 @@ public class AnswerToQuestionsPresenter {
         });
     }
 
+    @Override
     public void setLayoutVisibility(boolean isVisible) {
         if (isVisible) {
             askToQuestionLayout.setVisibility(View.VISIBLE);
@@ -126,5 +128,10 @@ public class AnswerToQuestionsPresenter {
                         number
                 );
         questionsQuantityTextView.setText(labelTemplate);
+    }
+
+    @Override
+    public LinearLayout getRootLayout() {
+        return askToQuestionLayout;
     }
 }
