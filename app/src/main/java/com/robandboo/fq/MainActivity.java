@@ -1,5 +1,7 @@
 package com.robandboo.fq;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
         activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         MAIN_INFLATER = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         setContentView(R.layout.activity_main);
         activityLayout = findViewById(R.id.activityMainLayout);
