@@ -7,20 +7,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.robandboo.fq.R;
+import com.robandboo.fq.chain.AnswerToQuestionChainManager;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.validation.AnswerValidation;
+import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayout>{
-    private LinearLayout askToQuestionLayout;
+    private LinearLayout answerToQuestionLayout;
 
     private QuestionService questionService;
 
@@ -38,22 +42,38 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     private String failureToSendAnswerErrorMessage;
 
-    public AnswerToQuestionsPresenter(LinearLayout askToQuestionLayout) {
-        this.askToQuestionLayout = askToQuestionLayout;
+    private AnswerTextEnterWatcher answerTextEnterWatcher;
+
+    private AnswerToQuestionChainManager answerToQuestionChainManager;
+
+    private LinearLayout sendAnswerModeLayout;
+
+    private LinearLayout loadAnswersModeLayout;
+
+    public AnswerToQuestionsPresenter(LinearLayout answerToQuestionLayout, AppCompatActivity appCompatActivity) {
+        this.answerToQuestionLayout = answerToQuestionLayout;
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         answerService = NetworkSingleton.getInstance().getRetrofit()
                 .create(AnswerService.class);
-        questionTextView = askToQuestionLayout.findViewById(R.id.questionTextView);
-        answerEditText = askToQuestionLayout.findViewById(R.id.answerTextEdit);
-        questionsQuantityTextView = askToQuestionLayout.findViewById(R.id.counterTextView);
+        questionTextView = answerToQuestionLayout.findViewById(R.id.questionTextView);
+        answerEditText = answerToQuestionLayout.findViewById(R.id.answerTextEdit);
+        questionsQuantityTextView = answerToQuestionLayout.findViewById(R.id.counterTextView);
         failureToLoadQuestionErrorMessage =
-                askToQuestionLayout.getContext().getResources()
+                answerToQuestionLayout.getContext().getResources()
                         .getString(R.string.failureToLoadQuestionErrorMessage);
         failureToSendAnswerErrorMessage =
-                askToQuestionLayout.getContext().getResources()
+                answerToQuestionLayout.getContext().getResources()
                         .getString(R.string.failureToSendAnswerErrorMessage);
         currentQuestion = null;
+        answerToQuestionChainManager =
+                new AnswerToQuestionChainManager(this);
+        answerTextEnterWatcher =
+                new AnswerTextEnterWatcher(answerEditText, answerToQuestionChainManager);
+        answerEditText.addTextChangedListener(answerTextEnterWatcher);
+        sendAnswerModeLayout = answerToQuestionLayout.findViewById(R.id.answerInputLayout);
+        loadAnswersModeLayout = answerToQuestionLayout.findViewById(R.id.usersAnswersLayout);
+        answerTextEnterWatcher.setAppCompatActivity(appCompatActivity);
     }
 
     @Override
@@ -70,8 +90,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
                 resultQuestion.setText(response.body().getText());
                 resultQuestion.setAnswers(response.body().getAnswers());
                 questionTextView.setText(resultQuestion.getText());
-                questionTextView.setTextColor(Color.parseColor("grey"));
                 currentQuestion = resultQuestion;
+                answerTextEnterWatcher.setQuestion(resultQuestion);
             }
 
             @Override
@@ -98,7 +118,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
             @Override
             public void onFailure(Call<Answer> call, Throwable t) {
                 Toast.makeText(
-                        askToQuestionLayout.getContext(),
+                        answerToQuestionLayout.getContext(),
                         failureToSendAnswerErrorMessage,
                         Toast.LENGTH_SHORT
                 ).show();
@@ -110,9 +130,25 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
     @Override
     public void setLayoutVisibility(boolean isVisible) {
         if (isVisible) {
-            askToQuestionLayout.setVisibility(View.VISIBLE);
+            answerToQuestionLayout.setVisibility(View.VISIBLE);
         } else {
-            askToQuestionLayout.setVisibility(View.GONE);
+            answerToQuestionLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setInputAnswerLayoutVisibility(boolean visibility) {
+        if (visibility) {
+            sendAnswerModeLayout.setVisibility(View.VISIBLE);
+        } else {
+            sendAnswerModeLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setLoadAnswersLayoutVisibility(boolean visibility) {
+        if (visibility) {
+            loadAnswersModeLayout.setVisibility(View.VISIBLE);
+        } else {
+            loadAnswersModeLayout.setVisibility(View.GONE);
         }
     }
 
@@ -121,7 +157,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
     }
 
     public void setQuestionNumber(int number) {
-        String labelTemplate = askToQuestionLayout
+        String labelTemplate = answerToQuestionLayout
                 .getResources()
                 .getString(
                         R.string.counterTextView,
@@ -132,6 +168,6 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     @Override
     public LinearLayout getRootLayout() {
-        return askToQuestionLayout;
+        return answerToQuestionLayout;
     }
 }

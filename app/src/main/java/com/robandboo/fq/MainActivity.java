@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout answerLayout = findViewById(R.id.answerLayout);
         LinearLayout askLayout = findViewById(R.id.questionLayout);
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
-                new AnswerToQuestionsPresenter(answerLayout);
+                new AnswerToQuestionsPresenter(answerLayout, this);
         AskQuestionPresenter askQuestionPresenter =
                 new AskQuestionPresenter(askLayout);
         List<IState> states = new ArrayList<>();

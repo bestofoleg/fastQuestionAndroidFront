@@ -34,6 +34,8 @@ public class AnswerToQuestionPageState implements IState {
         answerToQuestionsPresenter.clearAnswerTextEdit();
         answerToQuestionsPresenter.setQuestionNumber(questionsQuantity - questionNumber + 1);
         answerToQuestionsPresenter.loadRandomQuestion();
+        answerToQuestionsPresenter.setInputAnswerLayoutVisibility(true);
+        answerToQuestionsPresenter.setLoadAnswersLayoutVisibility(false);
         answerToQuestionsPresenter.focus();
     }
 
