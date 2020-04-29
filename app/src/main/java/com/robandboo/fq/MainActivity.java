@@ -2,6 +2,7 @@ package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.chain.bridge.QuestionDataBridge;
 import com.robandboo.fq.chain.state.AnimationTransitionState;
@@ -54,7 +60,18 @@ public class MainActivity extends AppCompatActivity {
     public static void changeBackground() {
         Random random = new Random();
         int backgroundId = random.nextInt(9);
-        activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
+        Glide
+                .with(activityLayout.getContext())
+                .load(backgroundResourcesIds[backgroundId])
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(
+                            @NonNull Drawable resource,
+                            @Nullable Transition<? super Drawable> transition) {
+                        activityLayout.setBackground(resource);
+                    }
+                });
+        //activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
