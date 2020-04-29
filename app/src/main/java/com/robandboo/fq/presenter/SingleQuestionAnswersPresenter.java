@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
@@ -74,14 +75,13 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
                 questionTextView.setText(question.getText());
                 answersLayout.removeAllViews();
                 if (response.body().isEmpty()) {
-                    TextView answerTextView = new TextView(answersLayout.getContext());
-                    answerTextView.setText(emptyAnswersDataMessage);
-                    answerTextView.setTextSize(24);
-                    answerTextView.setTextColor(Color.parseColor("grey"));
-                    answerTextView.setShadowLayer(
-                            1.6f, 1.5f, 1.3f, 0
+                    View answer = MainActivity.MAIN_INFLATER.inflate(
+                            R.layout.answer_on_single_question_layout,
+                            null, false
                     );
-                    answersLayout.addView(answerTextView);
+                    TextView answerTextView = answer.findViewById(R.id.singleAnswerText);
+                    answerTextView.setText(emptyAnswersDataMessage);
+                    answersLayout.addView(answer);
                     currentQuestion = question;
                 } else {
                     for (Answer answer : response.body()) {
