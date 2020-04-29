@@ -168,6 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="vertical"
+            android:scrollbars="vertical"
             android:visibility="gone">
 
             <LinearLayout
@@ -191,11 +192,23 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/allAnswersLayout"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/allAnswersLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"></LinearLayout>
+                </LinearLayout>
+            </ScrollView>
 
         </LinearLayout>
 
