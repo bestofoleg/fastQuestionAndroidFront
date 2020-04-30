@@ -5,6 +5,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;

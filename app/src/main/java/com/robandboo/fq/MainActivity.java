@@ -1,16 +1,16 @@
 package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.nguyenhoanglam.imagepicker.model.Config;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.chain.bridge.QuestionDataBridge;
 import com.robandboo.fq.chain.state.AnimationTransitionState;
@@ -28,10 +30,12 @@ import com.robandboo.fq.chain.state.AskQuestionPageState;
 import com.robandboo.fq.chain.state.IState;
 import com.robandboo.fq.chain.state.SingleQuestionPageState;
 import com.robandboo.fq.listener.NextStateSwipeListener;
+import com.robandboo.fq.presenter.AddImagePresenter;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.presenter.AskQuestionPresenter;
 import com.robandboo.fq.presenter.SingleQuestionAnswersPresenter;
-import com.robandboo.fq.util.ActivityManager;
+import com.robandboo.fq.util.activity.ActivityManager;
+import com.robandboo.fq.util.activity.OnFileManagerReturnResultListener;
 import com.robandboo.fq.util.swipe.SwipeHandler;
 import com.robandboo.fq.util.swipe.SwipeSettings;
 import com.robandboo.fq.util.swipe.SwipeVector;
@@ -71,8 +75,11 @@ public class MainActivity extends AppCompatActivity {
                         activityLayout.setBackground(resource);
                     }
                 });
-        //activityLayout.setBackgroundResource(backgroundResourcesIds[backgroundId]);
     }
+
+    public static final int GALLERY_REQUEST_CODE = 10;
+
+    public static OnFileManagerReturnResultListener fileManagerReturnResultListener;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -178,5 +185,25 @@ public class MainActivity extends AppCompatActivity {
                         .changeActivityTo(MyQuestionsActivity.class);
             }
         });
+        ImageView addImageImageView1 = findViewById(R.id.addImageButton1);
+        ImageView addImageImageView2 = findViewById(R.id.addImageButton2);
+        AddImagePresenter addImagePresenter =
+                new AddImagePresenter(
+                        addImageImageView1,
+                        addImageImageView2,
+                        this
+                );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
+            List<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            if (!images.isEmpty()) {
+                data.putExtra("imagePath", images.get(0).getPath());
+                fileManagerReturnResultListener.onReturnResult(data);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

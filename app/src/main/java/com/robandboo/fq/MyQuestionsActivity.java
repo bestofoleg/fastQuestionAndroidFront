@@ -3,17 +3,19 @@ package com.robandboo.fq;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.robandboo.fq.listener.LoadTopicsPageClickListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.presenter.MyQuestionsListPresenter;
+import com.robandboo.fq.util.activity.ActivityManager;
 
 import java.util.Random;
 
