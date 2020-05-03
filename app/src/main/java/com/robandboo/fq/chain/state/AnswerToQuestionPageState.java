@@ -31,7 +31,6 @@ public class AnswerToQuestionPageState implements IState {
 
     @Override
     public void start() {
-        answerToQuestionsPresenter.clearAnswerTextEdit();
         answerToQuestionsPresenter.setQuestionNumber(questionsQuantity - questionNumber + 1);
         answerToQuestionsPresenter.loadRandomQuestion();
         answerToQuestionsPresenter.setInputAnswerLayoutVisibility(true);
@@ -47,6 +46,7 @@ public class AnswerToQuestionPageState implements IState {
 
     @Override
     public void finish() {
+        answerToQuestionsPresenter.clearAnswerTextEdit();
         MainActivity.changeBackground();
     }
 

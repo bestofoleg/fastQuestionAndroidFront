@@ -34,7 +34,6 @@ public class AskQuestionPageState implements IState {
 
     @Override
     public void start() {
-        askQuestionPresenter.clearQuestionEditText();
         askQuestionPresenter.focus();
     }
 
@@ -46,6 +45,7 @@ public class AskQuestionPageState implements IState {
 
     @Override
     public void finish() {
+        askQuestionPresenter.clearQuestionEditText();
     }
 
     @Override
