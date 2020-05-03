@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.robandboo.fq.util.activity.OnFileManagerReturnResultListener;
 import com.robandboo.fq.util.swipe.SwipeHandler;
 import com.robandboo.fq.util.swipe.SwipeSettings;
 import com.robandboo.fq.util.swipe.SwipeVector;
+import com.robandboo.fq.watcher.QuestionTextEnterWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
                         addImageImageView2,
                         this
                 );
+        EditText askQuestionEditText = findViewById(R.id.questionTextEdit);
+        askQuestionEditText.addTextChangedListener(new QuestionTextEnterWatcher(
+                askQuestionEditText, chainManager
+        ));
     }
 
     @Override
