@@ -50,6 +50,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     private LinearLayout loadAnswersModeLayout;
 
+    private String questionIsLoadingMessage;
+
     public AnswerToQuestionsPresenter(LinearLayout answerToQuestionLayout, AppCompatActivity appCompatActivity) {
         this.answerToQuestionLayout = answerToQuestionLayout;
         questionService = NetworkSingleton.getInstance().getRetrofit()
@@ -74,6 +76,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
         sendAnswerModeLayout = answerToQuestionLayout.findViewById(R.id.answerInputLayout);
         loadAnswersModeLayout = answerToQuestionLayout.findViewById(R.id.usersAnswersLayout);
         answerTextEnterWatcher.setAppCompatActivity(appCompatActivity);
+        questionIsLoadingMessage = answerToQuestionLayout.getContext().getResources()
+                .getString(R.string.questionLoading);
     }
 
     @Override
@@ -154,6 +158,10 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     public void clearAnswerTextEdit() {
         answerEditText.getText().clear();
+    }
+
+    public void transferQuestionTextViewInLoadState() {
+        questionTextView.setText(questionIsLoadingMessage);
     }
 
     public void setQuestionNumber(int number) {

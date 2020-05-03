@@ -282,7 +282,7 @@ public class MyQuestionsLocalRepository {
                 pageNumber
         ));
         if (!file.exists()) {
-            if (pageNumber == 0) {
+            if (pageNumber == 1) {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {

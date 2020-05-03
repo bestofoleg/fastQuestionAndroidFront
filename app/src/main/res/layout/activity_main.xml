@@ -142,7 +142,7 @@
                 android:textColorHighlight="@android:color/darker_gray"
                 android:textColorHint="?attr/colorButtonNormal"
                 android:textColorLink="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/counterTextView"
@@ -284,7 +284,7 @@
             android:textColorHighlight="@android:color/darker_gray"
             android:textColorHint="@android:color/darker_gray"
             android:textColorLink="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 

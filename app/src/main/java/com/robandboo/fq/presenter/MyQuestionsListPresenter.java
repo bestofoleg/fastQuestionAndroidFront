@@ -36,7 +36,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                 new ExpandableListView(myQuestionsListRootLayout.getContext());
         myQuestionsListRootLayout.addView(topicsExpandableListView);
         topicExpandableListAdapter =
-                new TopicExpandableListAdapter(new ArrayList<Topic>());
+                new TopicExpandableListAdapter(new ArrayList<>());
         topicsExpandableListView.setAdapter(topicExpandableListAdapter);
         topicsExpandableListView
                 .setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {

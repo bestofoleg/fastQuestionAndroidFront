@@ -31,6 +31,7 @@ public class AnswerToQuestionPageState implements IState {
 
     @Override
     public void start() {
+        answerToQuestionsPresenter.transferQuestionTextViewInLoadState();
         answerToQuestionsPresenter.setQuestionNumber(questionsQuantity - questionNumber + 1);
         answerToQuestionsPresenter.loadRandomQuestion();
         answerToQuestionsPresenter.setInputAnswerLayoutVisibility(true);

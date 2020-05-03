@@ -6,7 +6,7 @@ public class MyQuestionsConfig {
     private int questionNumberInPage;
 
     public MyQuestionsConfig() {
-        pageNumber = 0;
+        pageNumber = 1;
         questionNumberInPage = 0;
     }
 

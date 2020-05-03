@@ -62,7 +62,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
                 myQuestionsLocalRepository.readMyQuestionsConfig();
         loadLastPage();
         LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
-        for (int i = myQuestionsConfig.getPageNumber(); i >= 0;i --) {
+        for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i --) {
             //TODO:transfer to fragment file
             TextView href = new TextView(pagesView.getContext());
             href.setText(String.valueOf(i));
