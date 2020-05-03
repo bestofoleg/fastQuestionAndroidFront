@@ -3,19 +3,8 @@ package com.robandboo.fq.watcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.robandboo.fq.R;
 import com.robandboo.fq.chain.ChainManager;
-import com.robandboo.fq.chain.bridge.IDataBridgeStart;
-import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
-import com.robandboo.fq.service.NetworkSingleton;
-import com.robandboo.fq.service.QuestionService;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class QuestionTextEnterWatcher implements TextWatcher {
     private EditText editText;
@@ -41,7 +30,7 @@ public class QuestionTextEnterWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable text) {
         if (text.toString().contains("\n")) {
-            text.toString().replaceAll("\n", "");
+            editText.setText(text.toString().replaceAll("\n", ""));
             chainManager.next();
         }
     }
