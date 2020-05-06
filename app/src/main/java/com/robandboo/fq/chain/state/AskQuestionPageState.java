@@ -1,11 +1,7 @@
 package com.robandboo.fq.chain.state;
 
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.robandboo.fq.R;
 import com.robandboo.fq.chain.bridge.IDataBridgeStart;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;

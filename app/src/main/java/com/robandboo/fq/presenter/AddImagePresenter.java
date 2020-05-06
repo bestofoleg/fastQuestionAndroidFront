@@ -13,7 +13,11 @@ import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.robandboo.fq.MainActivity;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class AddImagePresenter {
     private ImageView imageToSend1;
@@ -22,6 +26,8 @@ public class AddImagePresenter {
 
     private Activity activity;
 
+    private File [] files;
+
     public AddImagePresenter(
             final ImageView imageToSend1,
             final ImageView imageToSend2,
@@ -29,13 +35,17 @@ public class AddImagePresenter {
         this.imageToSend1 = imageToSend1;
         this.imageToSend2 = imageToSend2;
         this.activity = activity;
+        files = new File[2];
         this.imageToSend1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent fileManagerIntent = new Intent();
                 fileManagerIntent.setType("image/*");
                 MainActivity.fileManagerReturnResultListener = (intent) -> {
-                    loadImage(imageToSend1, intent.getStringExtra("imagePath"));
+                    String path = intent.getStringExtra("imagePath");
+                    loadImage(imageToSend1, path);
+                    File file = new File(path);
+                    files[0] = file;
                 };
                 ImagePicker.with(activity)
                         .setMultipleMode(false)
@@ -51,7 +61,10 @@ public class AddImagePresenter {
                 Intent fileManagerIntent = new Intent();
                 fileManagerIntent.setType("image/*");
                 MainActivity.fileManagerReturnResultListener = (intent) -> {
-                    loadImage(imageToSend2, intent.getStringExtra("imagePath"));
+                    String path = intent.getStringExtra("imagePath");
+                    loadImage(imageToSend2, path);
+                    File file = new File(path);
+                    files[1] = file;
                 };
                 ImagePicker.with(activity)
                         .setMultipleMode(false)
@@ -75,5 +88,9 @@ public class AddImagePresenter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<File> getImageFiles() {
+        return Arrays.asList(files);
     }
 }

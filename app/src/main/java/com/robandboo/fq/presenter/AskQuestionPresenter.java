@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,6 +15,12 @@ import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.validation.QuestionValidation;
 
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,8 +38,11 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
 
     private String errorSendAskMessage;
 
-    public AskQuestionPresenter(LinearLayout askLayout) {
+    private AddImagePresenter addImagePresenter;
+
+    public AskQuestionPresenter(LinearLayout askLayout, AddImagePresenter addImagePresenter) {
         this.askLayout = askLayout;
+        this.addImagePresenter = addImagePresenter;
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
@@ -48,6 +58,11 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
             questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
                 @Override
                 public void onResponse(Call<Question> call, Response<Question> response) {
+                    for (File imageFile : addImagePresenter.getImageFiles()) {
+                        if (imageFile.exists()) {
+                            saveFile(response.body().getId(), imageFile);
+                        }
+                    }
                     questionsLocalRepository.writeQuestion(response.body());
                     askedQuestion.setId(response.body().getId());
                 }
@@ -64,6 +79,26 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
             });
         }
         return askedQuestion;
+    }
+
+    private void saveFile(int questionId, File file) {
+        RequestBody imageBody =
+                RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData(
+                "file",
+                file.getName(),
+                imageBody
+        );
+        questionService.saveFile(questionId, imagePart).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
     public void clearQuestionEditText() {

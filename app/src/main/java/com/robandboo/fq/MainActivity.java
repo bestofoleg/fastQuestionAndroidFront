@@ -96,8 +96,16 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout askLayout = findViewById(R.id.questionLayout);
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
                 new AnswerToQuestionsPresenter(answerLayout, this);
+        ImageView addImageImageView1 = findViewById(R.id.addImageButton1);
+        ImageView addImageImageView2 = findViewById(R.id.addImageButton2);
+        AddImagePresenter addImagePresenter =
+                new AddImagePresenter(
+                        addImageImageView1,
+                        addImageImageView2,
+                        this
+                );
         AskQuestionPresenter askQuestionPresenter =
-                new AskQuestionPresenter(askLayout);
+                new AskQuestionPresenter(askLayout, addImagePresenter);
         List<IState> states = new ArrayList<>();
         int userAnswersQuantity =
                 getResources().getInteger(R.integer.defaultAnswersQuantity);
@@ -187,14 +195,6 @@ public class MainActivity extends AppCompatActivity {
                         .changeActivityTo(MyQuestionsActivity.class);
             }
         });
-        ImageView addImageImageView1 = findViewById(R.id.addImageButton1);
-        ImageView addImageImageView2 = findViewById(R.id.addImageButton2);
-        AddImagePresenter addImagePresenter =
-                new AddImagePresenter(
-                        addImageImageView1,
-                        addImageImageView2,
-                        this
-                );
         EditText askQuestionEditText = findViewById(R.id.questionTextEdit);
         askQuestionEditText.addTextChangedListener(new QuestionTextEnterWatcher(
                 askQuestionEditText, chainManager
