@@ -59,7 +59,7 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
                 @Override
                 public void onResponse(Call<Question> call, Response<Question> response) {
                     for (File imageFile : addImagePresenter.getImageFiles()) {
-                        if (imageFile.exists()) {
+                        if (imageFile != null && imageFile.exists()) {
                             saveFile(response.body().getId(), imageFile);
                         }
                     }

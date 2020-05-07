@@ -1,13 +1,19 @@
 package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,8 +47,10 @@ import com.robandboo.fq.util.swipe.SwipeHandler;
 import com.robandboo.fq.util.swipe.SwipeSettings;
 import com.robandboo.fq.util.swipe.SwipeVector;
 import com.robandboo.fq.watcher.QuestionTextEnterWatcher;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -83,10 +91,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static OnFileManagerReturnResultListener fileManagerReturnResultListener;
 
+    private Point screenSize;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Display display = getWindowManager().getDefaultDisplay();
+        screenSize = new Point();
+        display.getSize(screenSize);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         MAIN_INFLATER = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         setContentView(R.layout.activity_main);
@@ -199,6 +212,41 @@ public class MainActivity extends AppCompatActivity {
         askQuestionEditText.addTextChangedListener(new QuestionTextEnterWatcher(
                 askQuestionEditText, chainManager
         ));
+        ImageView answerImageView1 = findViewById(R.id.answerImage1);
+        ImageView answerImageView2 = findViewById(R.id.answerImage2);
+        answerImageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1();
+                if (bitmap != null) {
+                    fullScreenImage(bitmap);
+                }
+            }
+        });
+        answerImageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2();
+                if (bitmap != null) {
+                    fullScreenImage(bitmap);
+                }
+            }
+        });
+    }
+
+    private void fullScreenImage(Bitmap bitmap) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.image_full_screen_view);
+        ImageView popupImageView = dialog
+                .findViewById(R.id.fullScreenImageView);
+        popupImageView.setLayoutParams(
+                new LinearLayout.LayoutParams(
+                        screenSize.x, screenSize.y
+                )
+        );
+        popupImageView.setImageBitmap(bitmap);
+        dialog.show();
     }
 
     @Override

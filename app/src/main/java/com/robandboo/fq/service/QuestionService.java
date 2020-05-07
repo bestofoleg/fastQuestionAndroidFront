@@ -1,6 +1,9 @@
 package com.robandboo.fq.service;
 
 import com.robandboo.fq.dto.Question;
+import com.robandboo.fq.dto.QuestionFile;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -26,4 +29,7 @@ public interface QuestionService {
             @Path("id") int id,
             @Part MultipartBody.Part file
     );
+
+    @GET("/api/v1/question/get/file/{id}")
+    Call<List<QuestionFile>> loadFile(@Path("id") int id);
 }
