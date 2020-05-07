@@ -16,6 +16,7 @@ import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.validation.QuestionValidation;
 
 import java.io.File;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -58,9 +59,10 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
             questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {
                 @Override
                 public void onResponse(Call<Question> call, Response<Question> response) {
-                    for (File imageFile : addImagePresenter.getImageFiles()) {
-                        if (imageFile != null && imageFile.exists()) {
-                            saveFile(response.body().getId(), imageFile);
+                    List <File> imageFiles = addImagePresenter.getImageFiles();
+                    for (int i = 0;i < imageFiles.size(); i ++) {
+                        if (imageFiles.get(i) != null && imageFiles.get(i).exists()) {
+                            saveFile(response.body().getId(), imageFiles.get(i), i);
                         }
                     }
                     questionsLocalRepository.writeQuestion(response.body());
@@ -81,7 +83,7 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
         return askedQuestion;
     }
 
-    private void saveFile(int questionId, File file) {
+    private void saveFile(int questionId, File file, int fileIndex) {
         RequestBody imageBody =
                 RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData(
@@ -92,10 +94,12 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
         questionService.saveFile(questionId, imagePart).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                addImagePresenter.clearImage(fileIndex);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                addImagePresenter.clearImage(fileIndex);
                 throwable.printStackTrace();
             }
         });

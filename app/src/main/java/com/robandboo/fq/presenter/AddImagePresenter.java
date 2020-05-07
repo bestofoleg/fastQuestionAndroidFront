@@ -3,6 +3,7 @@ package com.robandboo.fq.presenter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.robandboo.fq.MainActivity;
+import com.robandboo.fq.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class AddImagePresenter {
 
     private ImageView imageToSend2;
 
+    private Drawable startImage;
+
     private Activity activity;
 
     private File [] files;
@@ -34,6 +38,7 @@ public class AddImagePresenter {
             final Activity activity) {
         this.imageToSend1 = imageToSend1;
         this.imageToSend2 = imageToSend2;
+        startImage = imageToSend1.getDrawable();
         this.activity = activity;
         files = new File[2];
         this.imageToSend1.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +93,15 @@ public class AddImagePresenter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearImage(int imageIndex) {
+        ImageView currentImageView = (imageIndex == 0) ? imageToSend1 : imageToSend2;
+        Glide
+                .with(currentImageView)
+                .load(startImage)
+                .into(currentImageView);
+        files[imageIndex] = null;
     }
 
     public List<File> getImageFiles() {

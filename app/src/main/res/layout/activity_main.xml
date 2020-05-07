@@ -91,7 +91,7 @@
         android:orientation="vertical"
         android:padding="25dp"
         android:scrollbars="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 
@@ -259,7 +259,7 @@
         android:orientation="vertical"
         android:padding="40dp"
         android:scrollbars="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 
@@ -279,10 +279,10 @@
             android:textSize="14sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="25dp">
+            android:paddingLeft="0dp">
 
             <ImageView
                 android:id="@+id/addImageButton1"
