@@ -13,11 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +28,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.robandboo.fq.chain.ChainManager;
+import com.robandboo.fq.chain.bridge.ImageFilesDataBridge;
 import com.robandboo.fq.chain.bridge.QuestionDataBridge;
 import com.robandboo.fq.chain.state.AnimationTransitionState;
 import com.robandboo.fq.chain.state.AnswerToQuestionPageState;
@@ -47,10 +46,8 @@ import com.robandboo.fq.util.swipe.SwipeHandler;
 import com.robandboo.fq.util.swipe.SwipeSettings;
 import com.robandboo.fq.util.swipe.SwipeVector;
 import com.robandboo.fq.watcher.QuestionTextEnterWatcher;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -157,9 +154,10 @@ public class MainActivity extends AppCompatActivity {
         }
         states.add(answerToQuestionTransitionState);
         QuestionDataBridge questionDataBridge = new QuestionDataBridge();
+        ImageFilesDataBridge imageFilesDataBridge = new ImageFilesDataBridge();
         states.add(new AskQuestionPageState(
                 askQuestionPresenter, answerToQuestionsPresenter,
-                this, questionDataBridge
+                this, questionDataBridge, imageFilesDataBridge
         ));
         LinearLayout singleQuestionLayout =
                 findViewById(R.id.singleQuestionAnswersPopup);
@@ -177,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         states.add(new SingleQuestionPageState(
                 singleQuestionAnswersPresenter,
                 this,
-                questionDataBridge
+                questionDataBridge, imageFilesDataBridge
         ));
         AnimationTransitionState singleToAnswerTransitionState =
                 new AnimationTransitionState(
@@ -212,6 +210,16 @@ public class MainActivity extends AppCompatActivity {
         askQuestionEditText.addTextChangedListener(new QuestionTextEnterWatcher(
                 askQuestionEditText, chainManager
         ));
+        initClickableFullScreenImages(
+                answerToQuestionsPresenter,
+                singleQuestionAnswersPresenter
+        );
+    }
+
+    private void initClickableFullScreenImages(
+            AnswerToQuestionsPresenter answerToQuestionsPresenter,
+            SingleQuestionAnswersPresenter singleQuestionAnswersPresenter
+    ) {
         ImageView answerImageView1 = findViewById(R.id.answerImage1);
         ImageView answerImageView2 = findViewById(R.id.answerImage2);
         answerImageView1.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +238,20 @@ public class MainActivity extends AppCompatActivity {
                 if (bitmap != null) {
                     fullScreenImage(bitmap);
                 }
+            }
+        });
+        ImageView singleQuestionView1 = findViewById(R.id.questionImage1);
+        ImageView singleQuestionView2 = findViewById(R.id.questionImage2);
+        singleQuestionView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(0));
+            }
+        });
+        singleQuestionView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(1));
             }
         });
     }

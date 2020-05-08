@@ -20,6 +20,8 @@
     <string name="questionNumberInPageParamName">questionNumberInPage</string>
     <string name="idParamName">id</string>
     <string name="textParamName">text</string>
+    <string name="filePath1ParamName">filePath1</string>
+    <string name="filePath2ParamName">filePath2</string>
     <string name="emptyJsonObject">{}</string>
     <string name="emptyJsonArray">[]</string>
     <string name="pageIsNotExistsErrorMessage">
@@ -47,4 +49,5 @@
     <string name="emptyAnswersDataMessage">Ответов пока что нет... Жди...</string>
     <string name="failureToLoadAnswers">Произошла ошибка загрузки ответов на этот вопрос</string>
     <string name="hiddenMulidot">...</string>
+    <string name="pages">Страницы: </string>
 </resources>

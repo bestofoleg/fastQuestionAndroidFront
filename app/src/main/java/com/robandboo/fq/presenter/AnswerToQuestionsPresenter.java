@@ -131,7 +131,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
     }
 
     private void loadImages(int questionId) {
-        questionService.loadFile(147/*questionId*/).enqueue(new Callback<List<QuestionFile>>() {
+        questionService.loadFile(questionId).enqueue(new Callback<List<QuestionFile>>() {
             @Override
             public void onResponse(Call<List<QuestionFile>> call,
                                    Response<List<QuestionFile>> response) {

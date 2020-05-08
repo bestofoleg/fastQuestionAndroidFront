@@ -51,6 +51,10 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
         errorSendAskMessage = askLayout.getResources().getString(R.string.errorSendAskMessage);
     }
 
+    public List<File> getImageFilesFromAddImagePresenter() {
+        return addImagePresenter.getImageFiles();
+    }
+
     public Question sendQuestion(QuestionValidation questionValidation) {
         final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());
@@ -60,12 +64,22 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
                 @Override
                 public void onResponse(Call<Question> call, Response<Question> response) {
                     List <File> imageFiles = addImagePresenter.getImageFiles();
+                    Question question = response.body();
+
                     for (int i = 0;i < imageFiles.size(); i ++) {
                         if (imageFiles.get(i) != null && imageFiles.get(i).exists()) {
                             saveFile(response.body().getId(), imageFiles.get(i), i);
                         }
                     }
-                    questionsLocalRepository.writeQuestion(response.body());
+
+                    if (!imageFiles.isEmpty()) {
+                        question.setFilePath1(imageFiles.get(0).getAbsolutePath());
+                        if (imageFiles.size() > 1) {
+                            question.setFilePath2(imageFiles.get(1).getAbsolutePath());
+                        }
+                    }
+
+                    questionsLocalRepository.writeQuestion(question);
                     askedQuestion.setId(response.body().getId());
                 }
 

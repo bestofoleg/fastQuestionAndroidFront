@@ -3,8 +3,10 @@ package com.robandboo.fq.ui.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.dto.Answer;
@@ -12,6 +14,7 @@ import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.ui.entity.Topic;
 
+import java.io.File;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,7 +32,7 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
                 .getRetrofit().create(AnswerService.class);
     }
 
-    public void setNewItems(List <Topic> topics) {
+    public void setNewItems(List<Topic> topics) {
         this.topics = topics;
         notifyDataSetChanged();
     }
@@ -38,20 +41,20 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
         int questionServerId = topics.get(id).getQuestion().getId();
         answerService.getAnswerByQuestionId(questionServerId)
                 .enqueue(new Callback<List<Answer>>() {
-            @Override
-            public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
-                if (response.body() != null) {
-                    topics.get(id).setAnswers(response.body());
-                }
-                notifyDataSetChanged();
-            }
+                    @Override
+                    public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
+                        if (response.body() != null) {
+                            topics.get(id).setAnswers(response.body());
+                        }
+                        notifyDataSetChanged();
+                    }
 
-            @Override
-            public void onFailure(Call<List<Answer>> call, Throwable t) {
-                //TODO: implement it!
-                notifyDataSetChanged();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<List<Answer>> call, Throwable t) {
+                        //TODO: implement it!
+                        notifyDataSetChanged();
+                    }
+                });
     }
 
     @Override
@@ -94,6 +97,28 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
         View root = MainActivity.MAIN_INFLATER.inflate(
                 R.layout.topic_question_layout, null, false
         ).getRootView();
+        ImageView image1 = root.findViewById(R.id.topicImage1);
+        ImageView image2 = root.findViewById(R.id.topicImage2);
+        File file1 = new File(topics.get(groupPosition).getQuestion().getFilePath1());
+        File file2 = new File(topics.get(groupPosition).getQuestion().getFilePath2());
+        if (file1.exists()) {
+            Glide
+                    .with(image1)
+                    .load(file1)
+                    .into(image1);
+            image1.setVisibility(View.VISIBLE);
+        } else {
+            image1.setVisibility(View.GONE);
+        }
+        if (file2.exists()) {
+            Glide
+                    .with(image2)
+                    .load(file2)
+                    .into(image2);
+            image1.setVisibility(View.VISIBLE);
+        } else {
+            image1.setVisibility(View.GONE);
+        }
         String hiddenMulidot = root.getContext().getResources().getString(R.string.hiddenMulidot);
         TextView questionText = root.findViewById(R.id.topicQuestion);
         String questionString = topics.get(groupPosition).getQuestion().getText();

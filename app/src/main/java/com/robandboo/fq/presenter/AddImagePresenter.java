@@ -13,12 +13,10 @@ import com.bumptech.glide.Glide;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.robandboo.fq.MainActivity;
-import com.robandboo.fq.R;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class AddImagePresenter {

@@ -52,7 +52,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                 myQuestionsLocalRepository.readAllQuestionsFromPage(page);
         List<Topic> topics = new ArrayList<>();
         for (Question question : questions) {
-            topics.add(new Topic(question, new ArrayList<Answer>()));
+            topics.add(new Topic(question, new ArrayList<>()));
         }
         topicExpandableListAdapter.setNewItems(topics);
     }
