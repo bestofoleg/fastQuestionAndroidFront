@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 .findViewById(R.id.fullScreenImageView);
         popupImageView.setLayoutParams(
                 new LinearLayout.LayoutParams(
-                        screenSize.x, screenSize.y
+                        bitmap.getWidth(), bitmap.getHeight()
                 )
         );
         popupImageView.setImageBitmap(bitmap);
