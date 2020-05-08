@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.MainActivity;
@@ -51,8 +52,7 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
 
                     @Override
                     public void onFailure(Call<List<Answer>> call, Throwable t) {
-                        //TODO: implement it!
-                        notifyDataSetChanged();
+                        //notifyDataSetChanged();
                     }
                 });
     }

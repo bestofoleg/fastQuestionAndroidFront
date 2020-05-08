@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 
-import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.AnswerService;
