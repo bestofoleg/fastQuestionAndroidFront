@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:background="@drawable/rounded"
             android:orientation="vertical"
             android:scrollbars="vertical"
             android:visibility="gone">
@@ -44,7 +45,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded"
                     android:orientation="horizontal"
                     android:padding="10dp">
 

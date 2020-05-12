@@ -93,14 +93,14 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
                         .into(imageView1);
                 bitmap1 = BitmapFactory.decodeFile(imageFiles.get(0).getAbsolutePath());
                 imageView1.setVisibility(View.VISIBLE);
-                if (imageFiles.size() > 1 && imageFiles.get(1) != null) {
-                    Glide
-                            .with(imageView2)
-                            .load(imageFiles.get(1))
-                            .into(imageView2);
-                    bitmap2 = BitmapFactory.decodeFile(imageFiles.get(1).getAbsolutePath());
-                    imageView2.setVisibility(View.VISIBLE);
-                }
+            }
+            if (imageFiles.size() > 1 && imageFiles.get(1) != null) {
+                Glide
+                        .with(imageView2)
+                        .load(imageFiles.get(1))
+                        .into(imageView2);
+                bitmap2 = BitmapFactory.decodeFile(imageFiles.get(1).getAbsolutePath());
+                imageView2.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -73,8 +73,10 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
                     }
 
                     if (!imageFiles.isEmpty()) {
-                        question.setFilePath1(imageFiles.get(0).getAbsolutePath());
-                        if (imageFiles.size() > 1) {
+                        if (imageFiles.get(0) != null) {
+                            question.setFilePath1(imageFiles.get(0).getAbsolutePath());
+                        }
+                        if (imageFiles.size() > 1 && imageFiles.get(1) != null) {
                             question.setFilePath2(imageFiles.get(1).getAbsolutePath());
                         }
                     }
