@@ -33,8 +33,9 @@ public class AnswerValidation implements IValidation <String> {
 
     @Override
     public boolean validate() {
-        boolean isValid = (answerText != null) && (answerText.length() >= minAnswerSize) &&
-                (answerText.length() < maxAnswerSize);
+        String trimedAnswerText = answerText.trim();
+        boolean isValid = (trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
+                (trimedAnswerText.length() < maxAnswerSize);
         if (!isValid) {
             Toast.makeText(appCompatActivity, answerValidationMessage, Toast.LENGTH_SHORT)
                     .show();
@@ -49,7 +50,8 @@ public class AnswerValidation implements IValidation <String> {
 
     @Override
     public boolean validateWithoutToast() {
-        return (answerText != null) && (answerText.length() >= minAnswerSize) &&
-                (answerText.length() < maxAnswerSize);
+        String trimedAnswerText = answerText.trim();
+        return (trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
+                (trimedAnswerText.length() < maxAnswerSize);
     }
 }
