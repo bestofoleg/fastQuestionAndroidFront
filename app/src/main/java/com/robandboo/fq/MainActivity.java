@@ -10,13 +10,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toolbar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -261,14 +263,9 @@ public class MainActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.image_full_screen_view);
-        ImageView popupImageView = dialog
-                .findViewById(R.id.fullScreenImageView);
-        popupImageView.setLayoutParams(
-                new LinearLayout.LayoutParams(
-                        bitmap.getWidth(), bitmap.getHeight()
-                )
-        );
+        ImageView popupImageView = dialog.findViewById(R.id.fullScreenImageView);
         popupImageView.setImageBitmap(bitmap);
+        dialog.getWindow().setBackgroundDrawable(null);
         dialog.show();
     }
 
