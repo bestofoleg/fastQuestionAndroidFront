@@ -167,6 +167,9 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
                                 .with(imageView2)
                                 .load(bitmap2)
                                 .into(imageView2);
+                    } else {
+                        imageView2.setVisibility(View.GONE);
+                        currentBitmap2 = null;
                     }
                 } else {
                     imageView1.setVisibility(View.GONE);
