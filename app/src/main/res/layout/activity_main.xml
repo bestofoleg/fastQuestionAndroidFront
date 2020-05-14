@@ -328,6 +328,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/addImageButton1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    app:srcCompat="@android:drawable/ic_menu_add" />
+
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -340,8 +351,15 @@
                         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
                 </FrameLayout>
 
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/addImageButtonPlace2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
                 <ImageView
-                    android:id="@+id/addImageButton1"
+                    android:id="@+id/addImageButton2"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_margin="10dp"
@@ -350,13 +368,6 @@
                     android:minWidth="100dp"
                     android:minHeight="100dp"
                     app:srcCompat="@android:drawable/ic_menu_add" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/addImageButtonPlace2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -369,17 +380,6 @@
                         android:visibility="gone"
                         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
                 </FrameLayout>
-
-                <ImageView
-                    android:id="@+id/addImageButton2"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="10dp"
-                    android:maxWidth="100dp"
-                    android:maxHeight="100dp"
-                    android:minWidth="100dp"
-                    android:minHeight="100dp"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
 
             </RelativeLayout>
         </LinearLayout>

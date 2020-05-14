@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ import com.robandboo.fq.chain.state.AskQuestionPageState;
 import com.robandboo.fq.chain.state.IState;
 import com.robandboo.fq.chain.state.SingleQuestionPageState;
 import com.robandboo.fq.listener.NextStateSwipeListener;
+import com.robandboo.fq.listener.TouchFullScreenImageControlListener;
 import com.robandboo.fq.presenter.AddImagePresenter;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.presenter.AskQuestionPresenter;
@@ -259,10 +261,16 @@ public class MainActivity extends AppCompatActivity {
     private void fullScreenImage(Bitmap bitmap) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.image_full_screen_view);
+        View content = getLayoutInflater().inflate(R.layout.image_full_screen_view, null);
+        dialog.setContentView(content);
         ImageView popupImageView = dialog.findViewById(R.id.fullScreenImageView);
+        content.setOnTouchListener(
+                new TouchFullScreenImageControlListener(dialog, popupImageView, screenSize)
+        );
         popupImageView.setImageBitmap(bitmap);
         dialog.getWindow().setBackgroundDrawable(null);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
         dialog.show();
     }
 

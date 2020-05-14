@@ -74,7 +74,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend2, path);
                     File file = new File(path);
                     files[1] = file;
-                    removeImage1.setVisibility(View.VISIBLE);
+                    removeImage2.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
                         .setMultipleMode(false)
