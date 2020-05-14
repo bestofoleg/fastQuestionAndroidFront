@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.robandboo.fq.MainActivity;
+import com.robandboo.fq.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,10 @@ public class AddImagePresenter {
     private ImageView imageToSend2;
 
     private Drawable startImage;
+
+    private ImageView removeImage1;
+
+    private ImageView removeImage2;
 
     private Activity activity;
 
@@ -49,6 +54,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend1, path);
                     File file = new File(path);
                     files[0] = file;
+                    removeImage1.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
                         .setMultipleMode(false)
@@ -68,6 +74,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend2, path);
                     File file = new File(path);
                     files[1] = file;
+                    removeImage1.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
                         .setMultipleMode(false)
@@ -75,6 +82,24 @@ public class AddImagePresenter {
                         .setCameraOnly(false)
                         .setRequestCode(Config.RC_PICK_IMAGES)
                         .start();
+            }
+        });
+        this.removeImage1 = activity.findViewById(R.id.removeImageFromQuestionButton1);
+        this.removeImage2 = activity.findViewById(R.id.removeImageFromQuestionButton2);
+
+        removeImage1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearImage(0);
+                removeImage1.setVisibility(View.GONE);
+            }
+        });
+
+        removeImage2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearImage(1);
+                removeImage2.setVisibility(View.GONE);
             }
         });
     }
