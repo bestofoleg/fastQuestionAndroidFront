@@ -26,6 +26,10 @@ public class Question {
     @Expose
     private String filePath2;
 
+    @SerializedName("questionType")
+    @Expose
+    private String questionType;
+
     public Question() {
     }
 
@@ -79,6 +83,14 @@ public class Question {
 
     public void setFilePath2(String filePath2) {
         this.filePath2 = filePath2;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
     }
 
     @Override

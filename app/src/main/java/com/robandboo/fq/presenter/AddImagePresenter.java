@@ -57,7 +57,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend1, path);
                     File file = new File(path);
                     files[0] = file;
-                    dispatchVoiterVisibility(isVoiterCheckBox);
+                    dispatchVoiterState(isVoiterCheckBox);
                     removeImage1.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
@@ -78,7 +78,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend2, path);
                     File file = new File(path);
                     files[1] = file;
-                    dispatchVoiterVisibility(isVoiterCheckBox);
+                    dispatchVoiterState(isVoiterCheckBox);
                     removeImage2.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
@@ -97,7 +97,7 @@ public class AddImagePresenter {
             public void onClick(View view) {
                 clearImage(0);
                 removeImage1.setVisibility(View.GONE);
-                dispatchVoiterVisibility(isVoiterCheckBox);
+                dispatchVoiterState(isVoiterCheckBox);
             }
         });
 
@@ -106,16 +106,17 @@ public class AddImagePresenter {
             public void onClick(View view) {
                 clearImage(1);
                 removeImage2.setVisibility(View.GONE);
-                dispatchVoiterVisibility(isVoiterCheckBox);
+                dispatchVoiterState(isVoiterCheckBox);
             }
         });
     }
 
-    private void dispatchVoiterVisibility(CheckBox isVoiterCheckBox) {
+    private void dispatchVoiterState(CheckBox isVoiterCheckBox) {
         if (files[0] != null && files[1] != null) {
             isVoiterCheckBox.setVisibility(View.VISIBLE);
         } else {
             isVoiterCheckBox.setVisibility(View.GONE);
+            isVoiterCheckBox.setChecked(false);
         }
     }
 

@@ -2,6 +2,7 @@ package com.robandboo.fq.presenter;
 
 import android.net.Uri;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -41,9 +42,12 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
 
     private AddImagePresenter addImagePresenter;
 
+    private CheckBox isVoteCheckBox;
+
     public AskQuestionPresenter(LinearLayout askLayout, AddImagePresenter addImagePresenter) {
         this.askLayout = askLayout;
         this.addImagePresenter = addImagePresenter;
+        isVoteCheckBox = askLayout.findViewById(R.id.isVoiter);
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
@@ -58,6 +62,7 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
     public Question sendQuestion(QuestionValidation questionValidation) {
         final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());
+        askedQuestion.setQuestionType((isVoteCheckBox.isChecked())?"VOTE":"TEXT");
         questionValidation.setDataForValidation(askQuestionEditText.getText().toString());
         if (questionValidation.validateWithoutToast()) {
             questionService.saveQuestion(askedQuestion).enqueue(new Callback<Question>() {

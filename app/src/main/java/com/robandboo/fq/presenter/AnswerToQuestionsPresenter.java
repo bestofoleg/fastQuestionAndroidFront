@@ -113,7 +113,14 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
                 resultQuestion.setId(response.body().getId());
                 resultQuestion.setText(response.body().getText());
                 resultQuestion.setAnswers(response.body().getAnswers());
+                resultQuestion.setQuestionType(response.body().getQuestionType());
                 questionTextView.setText(resultQuestion.getText());
+                if(resultQuestion.getQuestionType() != null &&
+                        resultQuestion.getQuestionType().equals("VOTE")) {
+                    answerEditText.setVisibility(View.GONE);
+                } else {
+                    answerEditText.setVisibility(View.VISIBLE);
+                }
                 currentQuestion = resultQuestion;
                 answerTextEnterWatcher.setQuestion(resultQuestion);
                 loadImages(resultQuestion.getId());
