@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +42,8 @@ public class AddImagePresenter {
             final Activity activity) {
         this.imageToSend1 = imageToSend1;
         this.imageToSend2 = imageToSend2;
+        CheckBox isVoiterCheckBox = activity.findViewById(R.id.isVoiter);
+        isVoiterCheckBox.setVisibility(View.GONE);
         startImage = imageToSend1.getDrawable();
         this.activity = activity;
         files = new File[2];
@@ -54,6 +57,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend1, path);
                     File file = new File(path);
                     files[0] = file;
+                    dispatchVoiterVisibility(isVoiterCheckBox);
                     removeImage1.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
@@ -74,6 +78,7 @@ public class AddImagePresenter {
                     loadImage(imageToSend2, path);
                     File file = new File(path);
                     files[1] = file;
+                    dispatchVoiterVisibility(isVoiterCheckBox);
                     removeImage2.setVisibility(View.VISIBLE);
                 };
                 ImagePicker.with(activity)
@@ -92,6 +97,7 @@ public class AddImagePresenter {
             public void onClick(View view) {
                 clearImage(0);
                 removeImage1.setVisibility(View.GONE);
+                dispatchVoiterVisibility(isVoiterCheckBox);
             }
         });
 
@@ -100,8 +106,17 @@ public class AddImagePresenter {
             public void onClick(View view) {
                 clearImage(1);
                 removeImage2.setVisibility(View.GONE);
+                dispatchVoiterVisibility(isVoiterCheckBox);
             }
         });
+    }
+
+    private void dispatchVoiterVisibility(CheckBox isVoiterCheckBox) {
+        if (files[0] != null && files[1] != null) {
+            isVoiterCheckBox.setVisibility(View.VISIBLE);
+        } else {
+            isVoiterCheckBox.setVisibility(View.GONE);
+        }
     }
 
     private void loadImage(ImageView image, String path) {

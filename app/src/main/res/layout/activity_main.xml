@@ -130,7 +130,7 @@
         android:orientation="vertical"
         android:padding="25dp"
         android:scrollbars="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 
@@ -298,7 +298,7 @@
         android:orientation="vertical"
         android:padding="40dp"
         android:scrollbars="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 
@@ -383,6 +383,14 @@
 
             </RelativeLayout>
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/isVoiter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Создать опрос?"
+            android:textAlignment="viewStart" />
 
         <EditText
             android:id="@+id/questionTextEdit"
