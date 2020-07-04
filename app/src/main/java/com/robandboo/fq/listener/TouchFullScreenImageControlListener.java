@@ -60,8 +60,10 @@ public class TouchFullScreenImageControlListener implements View.OnTouchListener
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (Math.abs(startTopViewValueY - view.getTop()) > (screenSize.y / 5)) {
+            if (Math.abs(startTopViewValueY - view.getTop()) > (screenSize.y / 7)) {
                 dialog.cancel();
+            } else {
+                view.setTop(startTopViewValueY);
             }
             imageView.setScaleX(1);
             imageView.setScaleY(1);
