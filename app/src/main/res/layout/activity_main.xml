@@ -130,7 +130,7 @@
         android:orientation="vertical"
         android:padding="25dp"
         android:scrollbars="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 
@@ -190,6 +190,7 @@
                     android:minWidth="100dp"
                     android:minHeight="50dp"
                     app:srcCompat="@drawable/loading" />
+
             </LinearLayout>
 
             <EditText
@@ -298,7 +299,7 @@
         android:orientation="vertical"
         android:padding="40dp"
         android:scrollbars="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_anchor="@+id/mainLayout"
         app:layout_anchorGravity="center">
 

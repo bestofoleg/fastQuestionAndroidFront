@@ -224,22 +224,25 @@ public class MainActivity extends AppCompatActivity {
     ) {
         ImageView answerImageView1 = findViewById(R.id.answerImage1);
         ImageView answerImageView2 = findViewById(R.id.answerImage2);
-        answerImageView1.setOnClickListener(new View.OnClickListener() {
+        answerImageView1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1();
                 if (bitmap != null) {
                     fullScreenImage(bitmap);
                 }
+                return true;
             }
         });
-        answerImageView2.setOnClickListener(new View.OnClickListener() {
+
+        answerImageView2.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2();
                 if (bitmap != null) {
                     fullScreenImage(bitmap);
                 }
+                return true;
             }
         });
         ImageView singleQuestionView1 = findViewById(R.id.questionImage1);
