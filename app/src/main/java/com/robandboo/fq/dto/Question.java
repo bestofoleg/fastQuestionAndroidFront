@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Map;
 
 public class Question {
     @SerializedName("id")
@@ -29,6 +30,10 @@ public class Question {
     @SerializedName("questionType")
     @Expose
     private String questionType;
+
+    @SerializedName("fileIds")
+    @Expose
+    private Map<Long, Long> fileIds;
 
     public Question() {
     }
@@ -91,6 +96,14 @@ public class Question {
 
     public void setQuestionType(String questionType) {
         this.questionType = questionType;
+    }
+
+    public Map<Long, Long> getFileIds() {
+        return fileIds;
+    }
+
+    public void setFileIds(Map<Long, Long> fileIds) {
+        this.fileIds = fileIds;
     }
 
     @Override

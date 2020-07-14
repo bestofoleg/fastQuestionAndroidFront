@@ -116,7 +116,7 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
             public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
                 questionTextView.setText(question.getText());
                 answersLayout.removeAllViews();
-                if (response.body().isEmpty()) {
+                if (response.body() == null || response.body().isEmpty()) {
                     View answer = MainActivity.MAIN_INFLATER.inflate(
                             R.layout.answer_on_single_question_layout,
                             null, false

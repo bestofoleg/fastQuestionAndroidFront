@@ -32,4 +32,7 @@ public interface QuestionService {
 
     @GET("/api/v1/question/get/file/{id}")
     Call<List<QuestionFile>> loadFile(@Path("id") int id);
+
+    @GET("/api/v1/question/get/file/{id}")
+    Call<List<QuestionFile>> getFileByQuestionId(@Path("id") int id);
 }

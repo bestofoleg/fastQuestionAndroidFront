@@ -16,4 +16,7 @@ public interface AnswerService {
 
     @GET("/api/v1/answer/getAnswerByQuestionId/{id}")
     Call<List<Answer>> getAnswerByQuestionId(@Path("id") int id);
+
+    @POST("/api/v1/answer/save/file/vote/{id}")
+    Call<Void> saveVote(@Path("id") int id);
 }

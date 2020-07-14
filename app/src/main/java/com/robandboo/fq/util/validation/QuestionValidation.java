@@ -17,6 +17,8 @@ public class QuestionValidation implements IValidation <String>{
 
     private String questionText;
 
+    private boolean isVote;
+
     public QuestionValidation(AppCompatActivity appCompatActivity) {
         this.appCompatActivity = appCompatActivity;
         minQuestionSize = appCompatActivity.getResources()
@@ -52,5 +54,11 @@ public class QuestionValidation implements IValidation <String>{
         String trimedQuestionText = questionText.trim();
         return (trimedQuestionText != null) && (trimedQuestionText.length() >= minQuestionSize) &&
                 (trimedQuestionText.length() < maxQuestionSize);
+    }
+
+    @Override
+    public void setDataForValidation(String data, boolean isVote) {
+        this.questionText = data;
+        this.isVote = isVote;
     }
 }

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.R;
 import com.robandboo.fq.chain.AnswerToQuestionChainManager;
+import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
@@ -25,6 +26,7 @@ import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.validation.AnswerValidation;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -70,8 +72,16 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     private Bitmap currentBitmap2;
 
-    public AnswerToQuestionsPresenter(LinearLayout answerToQuestionLayout, AppCompatActivity appCompatActivity) {
+    private ChainManager chainManager;
+
+    private String voteErrorMessage;
+
+    public AnswerToQuestionsPresenter(
+            LinearLayout answerToQuestionLayout,
+            AppCompatActivity appCompatActivity) {
         this.answerToQuestionLayout = answerToQuestionLayout;
+        voteErrorMessage = answerToQuestionLayout.getContext().getResources()
+                .getString(R.string.voteError);
         questionService = NetworkSingleton.getInstance().getRetrofit()
                 .create(QuestionService.class);
         answerService = NetworkSingleton.getInstance().getRetrofit()
@@ -98,6 +108,73 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
                 .getString(R.string.questionLoading);
         imageView1 = answerToQuestionLayout.findViewById(R.id.answerImage1);
         imageView2 = answerToQuestionLayout.findViewById(R.id.answerImage2);
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeVote(0);
+            }
+        });
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeVote(1);
+            }
+        });
+    }
+
+    private void makeVote(int position) {
+        if ("VOTE".equals(currentQuestion.getQuestionType())) {
+            this.questionService.getFileByQuestionId(currentQuestion.getId()).enqueue(new Callback<List<QuestionFile>>() {
+                @Override
+                public void onResponse(Call<List<QuestionFile>> call, Response<List<QuestionFile>> response) {
+                    List<QuestionFile> questionFiles = response.body();
+                    if (questionFiles != null && !questionFiles.isEmpty()) {
+                        switch (position) {
+                            case 0:
+                                answerService.saveVote(questionFiles.get(0).getId())
+                                        .enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                chainManager.next();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Toast.makeText(
+                                                        answerToQuestionLayout.getContext(),
+                                                        voteErrorMessage,
+                                                        Toast.LENGTH_SHORT
+                                                );
+                                            }
+                                        });
+                                break;
+                            case 1:
+                                answerService.saveVote(questionFiles.get(1).getId())
+                                        .enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                chainManager.next();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Toast.makeText(
+                                                        answerToQuestionLayout.getContext(),
+                                                        voteErrorMessage,
+                                                        Toast.LENGTH_SHORT
+                                                );
+                                            }
+                                        });
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<QuestionFile>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -224,7 +301,11 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
         Answer answer = new Answer();
         answer.setQuestion(currentQuestion);
         answer.setText(answerEditText.getText().toString());
-        answerValidation.setDataForValidation(answerEditText.getText().toString());
+        answerValidation.setDataForValidation(
+                answerEditText.getText().toString(),
+                currentQuestion.getQuestionType() != null &&
+                        currentQuestion.getQuestionType().equals("VOTE")
+        );
         answerService.saveAnswer(answer).enqueue(new Callback<Answer>() {
             @Override
             public void onResponse(Call<Answer> call, Response<Answer> response) {
@@ -288,5 +369,9 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
     @Override
     public LinearLayout getRootLayout() {
         return answerToQuestionLayout;
+    }
+
+    public void setChainManager(ChainManager chainManager) {
+        this.chainManager = chainManager;
     }
 }

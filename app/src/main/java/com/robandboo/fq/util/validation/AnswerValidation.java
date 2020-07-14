@@ -17,6 +17,8 @@ public class AnswerValidation implements IValidation <String> {
 
     private String answerText;
 
+    private boolean isVote;
+
     public AnswerValidation(AppCompatActivity appCompatActivity) {
         this.appCompatActivity = appCompatActivity;
         this.answerText = answerText;
@@ -34,8 +36,8 @@ public class AnswerValidation implements IValidation <String> {
     @Override
     public boolean validate() {
         String trimedAnswerText = answerText.trim();
-        boolean isValid = (trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
-                (trimedAnswerText.length() < maxAnswerSize);
+        boolean isValid = ((trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
+                (trimedAnswerText.length() < maxAnswerSize)) || isVote;
         if (!isValid) {
             Toast.makeText(appCompatActivity, answerValidationMessage, Toast.LENGTH_SHORT)
                     .show();
@@ -49,9 +51,15 @@ public class AnswerValidation implements IValidation <String> {
     }
 
     @Override
+    public void setDataForValidation(String data, boolean isVote) {
+        this.answerText = data;
+        this.isVote = isVote;
+    }
+
+    @Override
     public boolean validateWithoutToast() {
         String trimedAnswerText = answerText.trim();
-        return (trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
-                (trimedAnswerText.length() < maxAnswerSize);
+        return ((trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
+                (trimedAnswerText.length() < maxAnswerSize)) || isVote;
     }
 }

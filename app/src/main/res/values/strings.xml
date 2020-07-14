@@ -50,4 +50,5 @@
     <string name="failureToLoadAnswers">Произошла ошибка загрузки ответов на этот вопрос</string>
     <string name="hiddenMulidot">...</string>
     <string name="pages">Страницы: </string>
+    <string name="voteError">При голосовании произошла ошибка</string>
 </resources>

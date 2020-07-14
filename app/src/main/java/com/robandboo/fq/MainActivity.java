@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 new SwipeVector(-1, 0)
         );
         ChainManager chainManager = new ChainManager(states);
+        answerToQuestionsPresenter.setChainManager(chainManager);
         SwipeHandler swipeHandler = new SwipeHandler(swipeSettings);
         swipeHandler.setSwipeListener(
                 this,
@@ -224,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     ) {
         ImageView answerImageView1 = findViewById(R.id.answerImage1);
         ImageView answerImageView2 = findViewById(R.id.answerImage2);
+
         answerImageView1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
