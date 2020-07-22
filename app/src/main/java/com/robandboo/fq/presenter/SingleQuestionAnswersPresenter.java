@@ -16,6 +16,7 @@ import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
+import com.robandboo.fq.service.QuestionService;
 
 import java.io.File;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearLayout> {
+public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLayout> {
     private LinearLayout singleQuestionLayout;
 
     private AnswerService answerService;
@@ -52,10 +53,18 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
 
     private Bitmap bitmap2;
 
+    private TextView firstImageVotingCountTextView;
+
+    private TextView secondImageVotingCountTextView;
+
+    private QuestionService questionService;
+
     public SingleQuestionAnswersPresenter(LinearLayout singleQuestionLayout) {
         this.singleQuestionLayout = singleQuestionLayout;
         answerService = NetworkSingleton.getInstance().getRetrofit()
                 .create(AnswerService.class);
+        questionService = NetworkSingleton.getInstance().getRetrofit()
+                .create(QuestionService.class);
         questionTextView = singleQuestionLayout.findViewById(R.id.questionTitleSingle);
         answersLayout = singleQuestionLayout.findViewById(R.id.singleAnswersList);
         imageButton = singleQuestionLayout.findViewById(R.id.updateSinglePageButton);
@@ -73,6 +82,8 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
                 .getResources().getString(R.string.failureToLoadAnswers);
         imageView1 = singleQuestionLayout.findViewById(R.id.questionImage1);
         imageView2 = singleQuestionLayout.findViewById(R.id.questionImage2);
+        firstImageVotingCountTextView = singleQuestionLayout.findViewById(R.id.rate1);
+        secondImageVotingCountTextView = singleQuestionLayout.findViewById(R.id.rate2);
     }
 
     @Override
@@ -109,41 +120,70 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter <LinearL
         return Arrays.asList(bitmap1, bitmap2);
     }
 
+    private void setVisibilityForVotingRateTextViews(boolean isVisible) {
+        if (isVisible) {
+            firstImageVotingCountTextView.setVisibility(View.VISIBLE);
+            secondImageVotingCountTextView.setVisibility(View.VISIBLE);
+        } else {
+            firstImageVotingCountTextView.setVisibility(View.GONE);
+            secondImageVotingCountTextView.setVisibility(View.GONE);
+        }
+    }
+
     public void updateData(final Question question) {
+        setVisibilityForVotingRateTextViews(false);
         answerService.getAnswerByQuestionId(question.getId())
                 .enqueue(new Callback<List<Answer>>() {
-            @Override
-            public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
-                questionTextView.setText(question.getText());
-                answersLayout.removeAllViews();
-                if (response.body() == null || response.body().isEmpty()) {
-                    View answer = MainActivity.MAIN_INFLATER.inflate(
-                            R.layout.answer_on_single_question_layout,
-                            null, false
-                    );
-                    TextView answerTextView = answer.findViewById(R.id.singleAnswerText);
-                    answerTextView.setText(emptyAnswersDataMessage);
-                    answersLayout.addView(answer);
-                    currentQuestion = question;
-                } else {
-                    for (Answer answer : response.body()) {
-                        TextView answerTextView = new TextView(answersLayout.getContext());
-                        answerTextView.setText(answerPrefix + answer.getText());
-                        answerTextView.setTextSize(14);
-                        answersLayout.addView(answerTextView);
-                        currentQuestion = question;
-                    }
-                }
-            }
+                    @Override
+                    public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
+                        if (!"VOTE".equals(question.getQuestionType())) {
+                            questionTextView.setText(question.getText());
+                            answersLayout.removeAllViews();
+                            if (response.body() == null || response.body().isEmpty()) {
+                                View answer = MainActivity.MAIN_INFLATER.inflate(
+                                        R.layout.answer_on_single_question_layout,
+                                        null, false
+                                );
+                                TextView answerTextView = answer.findViewById(R.id.singleAnswerText);
+                                answerTextView.setText(emptyAnswersDataMessage);
+                                answersLayout.addView(answer);
+                                currentQuestion = question;
+                            } else {
+                                for (Answer answer : response.body()) {
+                                    TextView answerTextView = new TextView(answersLayout.getContext());
+                                    answerTextView.setText(answerPrefix + answer.getText());
+                                    answerTextView.setTextSize(14);
+                                    answersLayout.addView(answerTextView);
+                                    currentQuestion = question;
+                                }
+                            }
+                        } else {
+                            setVisibilityForVotingRateTextViews(true);
+                            questionService.getQuestionById(question.getId()).enqueue(new Callback<Question>() {
+                                @Override
+                                public void onResponse(Call<Question> call, Response<Question> response) {
+                                    Question updatedQuestion = response.body();
+                                    firstImageVotingCountTextView.setText("51%");
+                                    secondImageVotingCountTextView.setText("49%");
+                                }
 
-            @Override
-            public void onFailure(Call<List<Answer>> call, Throwable t) {
-                Toast.makeText(
-                        singleQuestionLayout.getContext(),
-                        failureToLoadAnswers,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+                                @Override
+                                public void onFailure(Call<Question> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Answer>> call, Throwable t) {
+                        Toast.makeText(
+                                singleQuestionLayout.getContext(),
+                                failureToLoadAnswers,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     @Override

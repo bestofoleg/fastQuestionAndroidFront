@@ -1,7 +1,7 @@
 package com.robandboo.fq.service;
 
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public final class NetworkSingleton {
     private volatile static NetworkSingleton instance;
@@ -11,7 +11,7 @@ public final class NetworkSingleton {
     private NetworkSingleton() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
 

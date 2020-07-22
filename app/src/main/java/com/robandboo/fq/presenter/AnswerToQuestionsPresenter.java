@@ -29,13 +29,11 @@ import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayout>{
+public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout> {
     private LinearLayout answerToQuestionLayout;
 
     private QuestionService questionService;
@@ -124,56 +122,45 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
 
     private void makeVote(int position) {
         if ("VOTE".equals(currentQuestion.getQuestionType())) {
-            this.questionService.getFileByQuestionId(currentQuestion.getId()).enqueue(new Callback<List<QuestionFile>>() {
-                @Override
-                public void onResponse(Call<List<QuestionFile>> call, Response<List<QuestionFile>> response) {
-                    List<QuestionFile> questionFiles = response.body();
-                    if (questionFiles != null && !questionFiles.isEmpty()) {
-                        switch (position) {
-                            case 0:
-                                answerService.saveVote(questionFiles.get(0).getId())
-                                        .enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                chainManager.next();
-                                            }
+            List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
+            switch (position) {
+                case 0:
+                    answerService.saveVote(fileIds.get(0))
+                            .enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    chainManager.next();
+                                }
 
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                                Toast.makeText(
-                                                        answerToQuestionLayout.getContext(),
-                                                        voteErrorMessage,
-                                                        Toast.LENGTH_SHORT
-                                                );
-                                            }
-                                        });
-                                break;
-                            case 1:
-                                answerService.saveVote(questionFiles.get(1).getId())
-                                        .enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                chainManager.next();
-                                            }
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Toast.makeText(
+                                            answerToQuestionLayout.getContext(),
+                                            voteErrorMessage,
+                                            Toast.LENGTH_SHORT
+                                    );
+                                }
+                            });
+                    break;
+                case 1:
+                    answerService.saveVote(fileIds.get(1))
+                            .enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    chainManager.next();
+                                }
 
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                                Toast.makeText(
-                                                        answerToQuestionLayout.getContext(),
-                                                        voteErrorMessage,
-                                                        Toast.LENGTH_SHORT
-                                                );
-                                            }
-                                        });
-                        }
-                    }
-                }
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Toast.makeText(
+                                            answerToQuestionLayout.getContext(),
+                                            voteErrorMessage,
+                                            Toast.LENGTH_SHORT
+                                    );
+                                }
+                            });
+            }
 
-                @Override
-                public void onFailure(Call<List<QuestionFile>> call, Throwable t) {
-
-                }
-            });
         }
     }
 
@@ -191,8 +178,9 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
                 resultQuestion.setText(response.body().getText());
                 resultQuestion.setAnswers(response.body().getAnswers());
                 resultQuestion.setQuestionType(response.body().getQuestionType());
+                resultQuestion.setFileIds(response.body().getFileIds());
                 questionTextView.setText(resultQuestion.getText());
-                if(resultQuestion.getQuestionType() != null &&
+                if (resultQuestion.getQuestionType() != null &&
                         resultQuestion.getQuestionType().equals("VOTE")) {
                     answerEditText.setVisibility(View.GONE);
                 } else {
@@ -219,14 +207,14 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter <LinearLayou
             @Override
             public void onResponse(Call<List<QuestionFile>> call,
                                    Response<List<QuestionFile>> response) {
-                List <QuestionFile> questionFiles = response.body();
+                List<QuestionFile> questionFiles = response.body();
                 if (questionFiles != null && !questionFiles.isEmpty()) {
                     imageView1.setVisibility(View.VISIBLE);
 
                     byte[] bytes1 = Base64.decode(
-                                    questionFiles.get(0).getData().getBytes(),
-                                    Base64.DEFAULT
-                            );
+                            questionFiles.get(0).getData().getBytes(),
+                            Base64.DEFAULT
+                    );
 
                     Bitmap bitmap1 = BitmapFactory.decodeByteArray(
                             bytes1, 0, bytes1.length

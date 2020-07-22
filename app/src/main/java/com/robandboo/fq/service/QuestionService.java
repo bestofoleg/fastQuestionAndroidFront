@@ -20,6 +20,9 @@ public interface QuestionService {
     @GET("/api/v1/question/getRandomQuestion")
     Call<Question> getRandomQuestion();
 
+    @GET("/api/v1/question/get/question/{id}")
+    Call<Question> getQuestionById(@Path("id") int id);
+
     @POST("/api/v1/question/saveQuestion")
     Call<Question> saveQuestion(@Body Question question);
 

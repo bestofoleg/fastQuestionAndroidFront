@@ -1,42 +1,33 @@
 package com.robandboo.fq.dto;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Map;
 
-public class Question {
-    @SerializedName("id")
-    @Expose
-    private int id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    @SerializedName("text")
-    @Expose
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Question {
+    private Integer id;
+
     private String text;
 
-    @SerializedName("answers")
-    @Expose
     private List<Answer> answers;
 
-    @SerializedName("filePath1")
-    @Expose
     private String filePath1;
 
-    @SerializedName("filePath2")
-    @Expose
     private String filePath2;
 
-    @SerializedName("questionType")
-    @Expose
     private String questionType;
 
-    @SerializedName("fileIds")
-    @Expose
     private Map<Long, Long> fileIds;
-
-    public Question() {
-    }
 
     public Question(int id, String text) {
         this.id = id;
@@ -48,72 +39,5 @@ public class Question {
         this.text = text;
         this.filePath1 = filePath1;
         this.filePath2 = filePath2;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
-    }
-
-    public String getFilePath1() {
-        return filePath1;
-    }
-
-    public void setFilePath1(String filePath1) {
-        this.filePath1 = filePath1;
-    }
-
-    public String getFilePath2() {
-        return filePath2;
-    }
-
-    public void setFilePath2(String filePath2) {
-        this.filePath2 = filePath2;
-    }
-
-    public String getQuestionType() {
-        return questionType;
-    }
-
-    public void setQuestionType(String questionType) {
-        this.questionType = questionType;
-    }
-
-    public Map<Long, Long> getFileIds() {
-        return fileIds;
-    }
-
-    public void setFileIds(Map<Long, Long> fileIds) {
-        this.fileIds = fileIds;
-    }
-
-    @Override
-    public String toString() {
-        return "Question{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", answers=" + answers +
-                ", filePath1='" + filePath1 + '\'' +
-                ", filePath2='" + filePath2 + '\'' +
-                '}';
     }
 }
