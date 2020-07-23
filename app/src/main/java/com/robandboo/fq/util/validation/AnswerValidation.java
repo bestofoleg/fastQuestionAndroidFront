@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.R;
 
-public class AnswerValidation implements IValidation <String> {
+public class AnswerValidation implements IValidation<String> {
     private AppCompatActivity appCompatActivity;
 
     private int minAnswerSize;
@@ -37,10 +37,12 @@ public class AnswerValidation implements IValidation <String> {
     public boolean validate() {
         String trimedAnswerText = answerText.trim();
         boolean isValid = ((trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
-                (trimedAnswerText.length() < maxAnswerSize)) || isVote;
+                (trimedAnswerText.length() < maxAnswerSize));
         if (!isValid) {
-            Toast.makeText(appCompatActivity, answerValidationMessage, Toast.LENGTH_SHORT)
-                    .show();
+            if (!isVote) {
+                Toast.makeText(appCompatActivity, answerValidationMessage, Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
         return isValid;
     }
@@ -60,6 +62,6 @@ public class AnswerValidation implements IValidation <String> {
     public boolean validateWithoutToast() {
         String trimedAnswerText = answerText.trim();
         return ((trimedAnswerText != null) && (trimedAnswerText.length() >= minAnswerSize) &&
-                (trimedAnswerText.length() < maxAnswerSize)) || isVote;
+                (trimedAnswerText.length() < maxAnswerSize));
     }
 }

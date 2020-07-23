@@ -34,10 +34,11 @@ public class Question {
         this.text = text;
     }
 
-    public Question(int id, String text, String filePath1, String filePath2) {
+    public Question(int id, String text, String filePath1, String filePath2, String questionType) {
         this.id = id;
         this.text = text;
         this.filePath1 = filePath1;
         this.filePath2 = filePath2;
+        this.questionType = questionType;
     }
 }

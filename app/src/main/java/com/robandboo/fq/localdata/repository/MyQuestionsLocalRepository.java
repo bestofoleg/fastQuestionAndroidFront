@@ -53,10 +53,14 @@ public class MyQuestionsLocalRepository {
 
     private String filePath2ParamName;
 
+    private String questionTypeParamName;
+
     public MyQuestionsLocalRepository(Context context) {
         this.context = context;
         pageNumberParamName =
                 context.getResources().getString(R.string.pageNumberParamName);
+        questionTypeParamName =
+                context.getString(R.string.questionTypeParam);
         questionNumberInPageParamName =
                 context.getResources().getString(R.string.questionNumberInPageParamName);
         idParamName =
@@ -209,6 +213,7 @@ public class MyQuestionsLocalRepository {
                 jsonObject.put(textParamName, question.getText());
                 jsonObject.put(filePath1ParamName, question.getFilePath1());
                 jsonObject.put(filePath2ParamName, question.getFilePath2());
+                jsonObject.put(questionTypeParamName, question.getQuestionType());
                 objects.add(jsonObject);
             }
         } catch (JSONException e) {
@@ -254,7 +259,8 @@ public class MyQuestionsLocalRepository {
                                 object.getInt(idParamName),
                                 object.getString(textParamName),
                                 object.getString(filePath1ParamName),
-                                object.getString(filePath2ParamName)
+                                object.getString(filePath2ParamName),
+                                object.getString(questionTypeParamName)
                         ));
                     }
                 }

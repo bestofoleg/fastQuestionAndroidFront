@@ -62,10 +62,13 @@ public class MyQuestionsActivity extends AppCompatActivity {
         for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i --) {
             //TODO:transfer to fragment file
             TextView href = new TextView(pagesView.getContext());
-            href.setText(String.valueOf(i));
+            href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
             href.setTextSize(24f);
             href.setPadding(50, 0, 0, 0);
-            href.setOnClickListener(new LoadTopicsPageClickListener(i, myQuestionsListPresenter));
+            href.setOnClickListener(new LoadTopicsPageClickListener(
+                    i,
+                    myQuestionsListPresenter
+            ));
             pagesView.addView(href);
         }
     }

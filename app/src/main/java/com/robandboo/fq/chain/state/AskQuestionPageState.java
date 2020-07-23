@@ -52,6 +52,8 @@ public class AskQuestionPageState implements IState {
     @Override
     public void finish() {
         askQuestionPresenter.clearQuestionEditText();
+        askQuestionPresenter.clearCheckBox();
+        askQuestionPresenter.clearRemoveImageButtons();
     }
 
     @Override

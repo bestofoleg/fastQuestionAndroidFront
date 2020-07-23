@@ -1,12 +1,8 @@
 package com.robandboo.fq.chain.state;
 
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.MainActivity;
-import com.robandboo.fq.R;
 import com.robandboo.fq.presenter.AnswerToQuestionsPresenter;
 import com.robandboo.fq.util.validation.AnswerValidation;
 
@@ -43,7 +39,7 @@ public class AnswerToQuestionPageState implements IState {
     @Override
     public boolean work() {
         answerToQuestionsPresenter.sendAnswer(answerValidation);
-        return answerValidation.validate();
+        return this.answerValidation.validate() || answerToQuestionsPresenter.isSkipValidation();
     }
 
     @Override

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuestionFile {
-    private Integer id;
+    private Long id;
 
     private String fileName;
 

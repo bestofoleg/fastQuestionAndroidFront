@@ -120,6 +120,16 @@ public class AddImagePresenter {
         }
     }
 
+    public void setRemoveImageButtonActive(boolean isActive) {
+        if (isActive) {
+            removeImage1.setVisibility(View.VISIBLE);
+            removeImage2.setVisibility(View.VISIBLE);
+        } else {
+            removeImage1.setVisibility(View.GONE);
+            removeImage2.setVisibility(View.GONE);
+        }
+    }
+
     private void loadImage(ImageView image, String path) {
         Uri uri = Uri.parse("file:///" + path);
         try {

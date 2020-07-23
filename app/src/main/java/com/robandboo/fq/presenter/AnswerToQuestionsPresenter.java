@@ -27,8 +27,11 @@ import com.robandboo.fq.util.validation.AnswerValidation;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,9 +77,15 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private String voteErrorMessage;
 
+    private Map<String, Long> imageCodeToFileId;
+
+    @Getter
+    private boolean skipValidation;
+
     public AnswerToQuestionsPresenter(
             LinearLayout answerToQuestionLayout,
             AppCompatActivity appCompatActivity) {
+        skipValidation = false;
         this.answerToQuestionLayout = answerToQuestionLayout;
         voteErrorMessage = answerToQuestionLayout.getContext().getResources()
                 .getString(R.string.voteError);
@@ -109,58 +118,40 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeVote(0);
+                makeVote(imageCodeToFileId.get("image1"));
             }
         });
         imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeVote(1);
+                makeVote(imageCodeToFileId.get("image2"));
             }
         });
     }
 
-    private void makeVote(int position) {
+    private void makeVote(Long fileId) {
         if ("VOTE".equals(currentQuestion.getQuestionType())) {
+            skipValidation = true;
             List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
-            switch (position) {
-                case 0:
-                    answerService.saveVote(fileIds.get(0))
-                            .enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    chainManager.next();
-                                }
+            answerService.saveVote(fileId)
+                    .enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            chainManager.next();
+                        }
 
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Toast.makeText(
-                                            answerToQuestionLayout.getContext(),
-                                            voteErrorMessage,
-                                            Toast.LENGTH_SHORT
-                                    );
-                                }
-                            });
-                    break;
-                case 1:
-                    answerService.saveVote(fileIds.get(1))
-                            .enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    chainManager.next();
-                                }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(
+                                    answerToQuestionLayout.getContext(),
+                                    voteErrorMessage,
+                                    Toast.LENGTH_SHORT
+                            );
+                        }
+                    });
 
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Toast.makeText(
-                                            answerToQuestionLayout.getContext(),
-                                            voteErrorMessage,
-                                            Toast.LENGTH_SHORT
-                                    );
-                                }
-                            });
-            }
-
+        } else {
+            skipValidation = false;
         }
     }
 
@@ -207,6 +198,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
             @Override
             public void onResponse(Call<List<QuestionFile>> call,
                                    Response<List<QuestionFile>> response) {
+                imageCodeToFileId = new HashMap<>();
                 List<QuestionFile> questionFiles = response.body();
                 if (questionFiles != null && !questionFiles.isEmpty()) {
                     imageView1.setVisibility(View.VISIBLE);
@@ -224,6 +216,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
                             .with(imageView1)
                             .load(bitmap1)
                             .into(imageView1);
+                    imageCodeToFileId.put("image1", questionFiles.get(0).getId());
                     if (questionFiles.size() > 1) {
                         imageView2.setVisibility(View.VISIBLE);
                         byte[] bytes2 = Base64.decode(
@@ -239,6 +232,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
                                 .with(imageView2)
                                 .load(bitmap2)
                                 .into(imageView2);
+                        imageCodeToFileId.put("image2", questionFiles.get(1).getId());
                     } else {
                         imageView2.setVisibility(View.GONE);
                         currentBitmap2 = null;
@@ -294,21 +288,23 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
                 currentQuestion.getQuestionType() != null &&
                         currentQuestion.getQuestionType().equals("VOTE")
         );
-        answerService.saveAnswer(answer).enqueue(new Callback<Answer>() {
-            @Override
-            public void onResponse(Call<Answer> call, Response<Answer> response) {
-            }
+        if (!currentQuestion.getQuestionType().equals("VOTE")) {
+            answerService.saveAnswer(answer).enqueue(new Callback<Answer>() {
+                @Override
+                public void onResponse(Call<Answer> call, Response<Answer> response) {
+                }
 
-            @Override
-            public void onFailure(Call<Answer> call, Throwable t) {
-                Toast.makeText(
-                        answerToQuestionLayout.getContext(),
-                        failureToSendAnswerErrorMessage,
-                        Toast.LENGTH_SHORT
-                ).show();
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<Answer> call, Throwable t) {
+                    Toast.makeText(
+                            answerToQuestionLayout.getContext(),
+                            failureToSendAnswerErrorMessage,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     @Override

@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.singleQuestionAnswersPopup);
         SingleQuestionAnswersPresenter singleQuestionAnswersPresenter =
                 new SingleQuestionAnswersPresenter(singleQuestionLayout);
+        askQuestionPresenter.setSingleQuestionAnswersPresenter(singleQuestionAnswersPresenter);
         AnimationTransitionState questionToSingleTransitionState =
                 new AnimationTransitionState(
                         R.anim.swipe_to_left_anim,
