@@ -1,4 +1,4 @@
-package com.robandboo.fq.listener;
+package com.robandboo.fq.callback;
 
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Builder
-public class SaveQuestionCallbackListener implements Callback<Question> {
+public class SaveQuestionCallback implements Callback<Question> {
     private AddImagePresenter addImagePresenter;
     private MyQuestionsLocalRepository questionsLocalRepository;
     private String errorSendAskMessage;

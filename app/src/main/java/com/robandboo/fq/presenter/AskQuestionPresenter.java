@@ -6,11 +6,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.robandboo.fq.R;
+import com.robandboo.fq.callback.SaveQuestionCallback;
 import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.listener.SaveQuestionCallbackListener;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
+import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.validation.QuestionValidation;
 
 import java.io.File;
@@ -56,10 +57,11 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
     public Question sendQuestion(QuestionValidation questionValidation) {
         final Question askedQuestion = new Question();
         askedQuestion.setText(askQuestionEditText.getText().toString());
-        askedQuestion.setQuestionType((isVoteCheckBox.isChecked())?"VOTE":"TEXT");
+        askedQuestion.setQuestionType((isVoteCheckBox.isChecked())?
+                                QuestionType.VOTE.toString() : QuestionType.TEXT.toString());
         questionValidation.setDataForValidation(askQuestionEditText.getText().toString());
         if (questionValidation.validateWithoutToast()) {
-            SaveQuestionCallbackListener callback = SaveQuestionCallbackListener.builder()
+            SaveQuestionCallback callback = SaveQuestionCallback.builder()
                     .addImagePresenter(addImagePresenter)
                     .askedQuestion(askedQuestion)
                     .askLayout(askLayout)

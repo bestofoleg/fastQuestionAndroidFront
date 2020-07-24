@@ -1,40 +1,35 @@
 package com.robandboo.fq.presenter;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.R;
+import com.robandboo.fq.callback.GetRandomQuestionCallback;
+import com.robandboo.fq.callback.SendAnswerCallback;
+import com.robandboo.fq.callback.SendVoteCallback;
 import com.robandboo.fq.chain.AnswerToQuestionChainManager;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.dto.QuestionFile;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
+import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.validation.AnswerValidation;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout> {
     private LinearLayout answerToQuestionLayout;
@@ -130,26 +125,14 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
     }
 
     private void makeVote(Long fileId) {
-        if ("VOTE".equals(currentQuestion.getQuestionType())) {
+        if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
             skipValidation = true;
             List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
-            answerService.saveVote(fileId)
-                    .enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            chainManager.next();
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(
-                                    answerToQuestionLayout.getContext(),
-                                    voteErrorMessage,
-                                    Toast.LENGTH_SHORT
-                            );
-                        }
-                    });
-
+            SendVoteCallback sendVoteCallback = SendVoteCallback.builder()
+                    .voteErrorMessage(voteErrorMessage)
+                    .answerToQuestionLayout(answerToQuestionLayout)
+                    .chainManager(chainManager).build();
+            answerService.saveVote(fileId).enqueue(sendVoteCallback);
         } else {
             skipValidation = false;
         }
@@ -162,94 +145,21 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     public Question loadRandomQuestion() {
         final Question resultQuestion = new Question();
-        questionService.getRandomQuestion().enqueue(new Callback<Question>() {
-            @Override
-            public void onResponse(Call<Question> call, Response<Question> response) {
-                resultQuestion.setId(response.body().getId());
-                resultQuestion.setText(response.body().getText());
-                resultQuestion.setAnswers(response.body().getAnswers());
-                resultQuestion.setQuestionType(response.body().getQuestionType());
-                resultQuestion.setFileIds(response.body().getFileIds());
-                questionTextView.setText(resultQuestion.getText());
-                if (resultQuestion.getQuestionType() != null &&
-                        resultQuestion.getQuestionType().equals("VOTE")) {
-                    answerEditText.setVisibility(View.GONE);
-                } else {
-                    answerEditText.setVisibility(View.VISIBLE);
-                }
-                currentQuestion = resultQuestion;
-                answerTextEnterWatcher.setQuestion(resultQuestion);
-                loadImages(resultQuestion.getId());
-            }
-
-            @Override
-            public void onFailure(Call<Question> call, Throwable t) {
-                resultQuestion.setText(failureToLoadQuestionErrorMessage);
-                questionTextView.setText(failureToLoadQuestionErrorMessage);
-                questionTextView.setTextColor(Color.RED);
-                t.printStackTrace();
-            }
-        });
+        GetRandomQuestionCallback getRandomQuestionCallback = GetRandomQuestionCallback.builder()
+                .currentQuestion(currentQuestion)
+                .failureToLoadQuestionErrorMessage(failureToLoadQuestionErrorMessage)
+                .questionService(questionService)
+                .questionTextView(questionTextView)
+                .resultQuestion(resultQuestion)
+                .answerEditText(answerEditText)
+                .answerTextEnterWatcher(answerTextEnterWatcher)
+                .currentBitmap1(currentBitmap1)
+                .currentBitmap2(currentBitmap2)
+                .imageCodeToFileId(imageCodeToFileId)
+                .imageView1(imageView1)
+                .imageView2(imageView2).build();
+        questionService.getRandomQuestion().enqueue(getRandomQuestionCallback);
         return resultQuestion;
-    }
-
-    private void loadImages(int questionId) {
-        questionService.loadFile(questionId).enqueue(new Callback<List<QuestionFile>>() {
-            @Override
-            public void onResponse(Call<List<QuestionFile>> call,
-                                   Response<List<QuestionFile>> response) {
-                imageCodeToFileId = new HashMap<>();
-                List<QuestionFile> questionFiles = response.body();
-                if (questionFiles != null && !questionFiles.isEmpty()) {
-                    imageView1.setVisibility(View.VISIBLE);
-
-                    byte[] bytes1 = Base64.decode(
-                            questionFiles.get(0).getData().getBytes(),
-                            Base64.DEFAULT
-                    );
-
-                    Bitmap bitmap1 = BitmapFactory.decodeByteArray(
-                            bytes1, 0, bytes1.length
-                    );
-                    currentBitmap1 = bitmap1;
-                    Glide
-                            .with(imageView1)
-                            .load(bitmap1)
-                            .into(imageView1);
-                    imageCodeToFileId.put("image1", questionFiles.get(0).getId());
-                    if (questionFiles.size() > 1) {
-                        imageView2.setVisibility(View.VISIBLE);
-                        byte[] bytes2 = Base64.decode(
-                                questionFiles.get(1).getData().getBytes(),
-                                Base64.DEFAULT
-                        );
-
-                        Bitmap bitmap2 = BitmapFactory.decodeByteArray(
-                                bytes2, 0, bytes2.length
-                        );
-                        currentBitmap2 = bitmap2;
-                        Glide
-                                .with(imageView2)
-                                .load(bitmap2)
-                                .into(imageView2);
-                        imageCodeToFileId.put("image2", questionFiles.get(1).getId());
-                    } else {
-                        imageView2.setVisibility(View.GONE);
-                        currentBitmap2 = null;
-                    }
-                } else {
-                    imageView1.setVisibility(View.GONE);
-                    imageView2.setVisibility(View.GONE);
-                    currentBitmap1 = null;
-                    currentBitmap2 = null;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<QuestionFile>> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
     }
 
     public Bitmap getCurrentBitmap1() {
@@ -285,25 +195,13 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         answer.setText(answerEditText.getText().toString());
         answerValidation.setDataForValidation(
                 answerEditText.getText().toString(),
-                currentQuestion.getQuestionType() != null &&
-                        currentQuestion.getQuestionType().equals("VOTE")
+                QuestionType.VOTE.isA(currentQuestion.getQuestionType())
         );
-        if (!currentQuestion.getQuestionType().equals("VOTE")) {
-            answerService.saveAnswer(answer).enqueue(new Callback<Answer>() {
-                @Override
-                public void onResponse(Call<Answer> call, Response<Answer> response) {
-                }
-
-                @Override
-                public void onFailure(Call<Answer> call, Throwable t) {
-                    Toast.makeText(
-                            answerToQuestionLayout.getContext(),
-                            failureToSendAnswerErrorMessage,
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    t.printStackTrace();
-                }
-            });
+        if (!QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+            SendAnswerCallback sendAnswerCallback = SendAnswerCallback.builder()
+                    .answerToQuestionLayout(answerToQuestionLayout)
+                    .failureToSendAnswerErrorMessage(failureToSendAnswerErrorMessage).build();
+            answerService.saveAnswer(answer).enqueue(sendAnswerCallback);
         }
     }
 
