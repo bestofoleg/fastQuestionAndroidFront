@@ -16,7 +16,6 @@ import lombok.Builder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,9 +75,9 @@ public class SaveQuestionCallback implements Callback<Question> {
                 file.getName(),
                 imageBody
         );
-        SaveFileCallback saveFileCallback = SaveFileCallback.builder()
+        SaveFileAndClearViewsCallback saveFileAndClearViewsCallback = SaveFileAndClearViewsCallback.builder()
                 .fileIndex(fileIndex)
                 .addImagePresenter(addImagePresenter).build();
-        questionService.saveFile(questionId, imagePart).enqueue(saveFileCallback);
+        questionService.saveFile(questionId, imagePart).enqueue(saveFileAndClearViewsCallback);
     }
 }

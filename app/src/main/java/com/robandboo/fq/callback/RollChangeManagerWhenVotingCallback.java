@@ -11,7 +11,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Builder
-public class SendVoteCallback implements Callback<Void> {
+public class RollChangeManagerWhenVotingCallback implements Callback<Void> {
     private LinearLayout answerToQuestionLayout;
     private ChainManager chainManager;
     private String voteErrorMessage;

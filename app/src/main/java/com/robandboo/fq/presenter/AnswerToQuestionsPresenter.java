@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.robandboo.fq.R;
 import com.robandboo.fq.callback.GetRandomQuestionCallback;
 import com.robandboo.fq.callback.SendAnswerCallback;
-import com.robandboo.fq.callback.SendVoteCallback;
+import com.robandboo.fq.callback.RollChangeManagerWhenVotingCallback;
 import com.robandboo.fq.chain.AnswerToQuestionChainManager;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Answer;
@@ -128,11 +128,11 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
             skipValidation = true;
             List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
-            SendVoteCallback sendVoteCallback = SendVoteCallback.builder()
+            RollChangeManagerWhenVotingCallback rollChangeManagerWhenVotingCallback = RollChangeManagerWhenVotingCallback.builder()
                     .voteErrorMessage(voteErrorMessage)
                     .answerToQuestionLayout(answerToQuestionLayout)
                     .chainManager(chainManager).build();
-            answerService.saveVote(fileId).enqueue(sendVoteCallback);
+            answerService.saveVote(fileId).enqueue(rollChangeManagerWhenVotingCallback);
         } else {
             skipValidation = false;
         }

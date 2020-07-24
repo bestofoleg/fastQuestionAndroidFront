@@ -9,7 +9,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Builder
-public class SaveFileCallback implements Callback<ResponseBody> {
+public class SaveFileAndClearViewsCallback implements Callback<ResponseBody> {
     private AddImagePresenter addImagePresenter;
     private int fileIndex;
 

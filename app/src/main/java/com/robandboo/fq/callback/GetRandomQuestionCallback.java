@@ -62,13 +62,13 @@ public class GetRandomQuestionCallback implements Callback<Question> {
     }
 
     private void loadImages(int questionId) {
-        LoadFileCallback loadFileCallback = LoadFileCallback.builder()
+        LoadFileInAnswerToQuestionImageViewsCallback loadFileInAnswerToQuestionImageViewsCallback = LoadFileInAnswerToQuestionImageViewsCallback.builder()
                 .imageCodeToFileId(imageCodeToFileId)
                 .currentBitmap1(currentBitmap1)
                 .currentBitmap2(currentBitmap2)
                 .imageView1(imageView1)
                 .imageView2(imageView2).build();
-        questionService.loadFile(questionId).enqueue(loadFileCallback);
+        questionService.loadFile(questionId).enqueue(loadFileInAnswerToQuestionImageViewsCallback);
     }
 }
 

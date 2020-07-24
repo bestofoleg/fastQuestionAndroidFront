@@ -19,7 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Builder
-public class LoadFileCallback implements Callback<List<QuestionFile>> {
+public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<List<QuestionFile>> {
     private Map<String, Long> imageCodeToFileId;
     private ImageView imageView1;
     private ImageView imageView2;
