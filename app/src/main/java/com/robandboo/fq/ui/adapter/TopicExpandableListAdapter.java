@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
+import com.robandboo.fq.callback.GetAnswerByQuestionIdForUpdateTopicCallback;
 import com.robandboo.fq.dto.Answer;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
@@ -40,21 +41,13 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void updateTopicFromServerByGroupId(final int id) {
         int questionServerId = topics.get(id).getQuestion().getId();
+        GetAnswerByQuestionIdForUpdateTopicCallback getAnswerByQuestionIdForUpdateTopicCallback =
+                GetAnswerByQuestionIdForUpdateTopicCallback.builder()
+                    .id(id)
+                    .topicExpandableListAdapter(this)
+                    .topics(topics).build();
         answerService.getAnswerByQuestionId(questionServerId)
-                .enqueue(new Callback<List<Answer>>() {
-                    @Override
-                    public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
-                        if (response.body() != null) {
-                            topics.get(id).setAnswers(response.body());
-                        }
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Answer>> call, Throwable t) {
-                        //notifyDataSetChanged();
-                    }
-                });
+                .enqueue(getAnswerByQuestionIdForUpdateTopicCallback);
     }
 
     @Override

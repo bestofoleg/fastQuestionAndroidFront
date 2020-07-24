@@ -76,17 +76,9 @@ public class SaveQuestionCallback implements Callback<Question> {
                 file.getName(),
                 imageBody
         );
-        questionService.saveFile(questionId, imagePart).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                addImagePresenter.clearImage(fileIndex);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                addImagePresenter.clearImage(fileIndex);
-                throwable.printStackTrace();
-            }
-        });
+        SaveFileCallback saveFileCallback = SaveFileCallback.builder()
+                .fileIndex(fileIndex)
+                .addImagePresenter(addImagePresenter).build();
+        questionService.saveFile(questionId, imagePart).enqueue(saveFileCallback);
     }
 }
