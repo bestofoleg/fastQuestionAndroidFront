@@ -15,8 +15,6 @@ import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
-import java.util.Map;
-
 import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -48,15 +48,9 @@
                     android:orientation="horizontal"
                     android:padding="10dp">
 
-                    <ImageButton
-                        android:id="@+id/updateSinglePageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@android:drawable/stat_notify_sync" />
-
                     <TextView
                         android:id="@+id/questionTitleSingle"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:shadowDx="0"
@@ -69,6 +63,12 @@
                         android:textColorLink="@android:color/black"
                         android:textSize="14sp"
                         android:visibility="visible" />
+
+                    <ImageButton
+                        android:id="@+id/updateSinglePageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@android:drawable/stat_notify_sync" />
 
                 </LinearLayout>
 

@@ -1,8 +1,10 @@
 package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +51,17 @@ public class MyQuestionsActivity extends AppCompatActivity {
             ));
             pagesView.addView(href);
         }
+        Button clearMyQuestionsCacheBtn = findViewById(R.id.clearMyQuestionsCacheBtn);
+        clearMyQuestionsCacheBtn.setOnClickListener(view -> {
+            myQuestionsLocalRepository.clearAllData();
+            restartActivity();
+        });
+    }
+
+    private void restartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     public void loadLastPage() {

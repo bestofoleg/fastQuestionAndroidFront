@@ -43,10 +43,13 @@ public class GetAnswerByQuestionIdCallback implements Callback<List<Answer>> {
             currentQuestion = question;
         } else {
             response.body().forEach(answer -> {
-                TextView answerTextView = new TextView(answersLayout.getContext());
-                answerTextView.setText(answerPrefix + answer.getText());
-                answerTextView.setTextSize(14);
-                answersLayout.addView(answerTextView);
+                View message = MainActivity.MAIN_INFLATER.inflate(
+                        R.layout.answer_on_single_question_layout,
+                        null, false
+                );
+                TextView messageTextView = message.findViewById(R.id.singleAnswerText);
+                messageTextView.setText(answer.getText());
+                answersLayout.addView(message);
                 currentQuestion = question;
             });
         }

@@ -87,6 +87,24 @@ public class MyQuestionsLocalRepository {
                 context.getResources().getString(R.string.filePath2ParamName);
     }
 
+    public void clearAllData() {
+        MyQuestionsConfig myQuestionsConfig = readMyQuestionsConfig();
+        int savedPagesQuantity = myQuestionsConfig.getPageNumber();
+        File dir = new File(context.getFilesDir(), myQuestionsPath);
+        File configFile = new File(dir, myQuestionsDataConfig);
+        configFile.delete();
+        for (int i = 0; i < savedPagesQuantity; i++) {
+            File questionPageFile = new File(
+                    dir,
+                    MessageFormat.format(
+                            myQuestionPageName,
+                            i+1
+                    )
+            );
+            questionPageFile.delete();
+        }
+    }
+
     public MyQuestionsConfig readMyQuestionsConfig() {
         MyQuestionsConfig myQuestionsConfig = null;
         StringBuffer configTextBuffer = new StringBuffer();
@@ -255,11 +273,13 @@ public class MyQuestionsLocalRepository {
                 if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = (JSONObject) jsonArray.get(i);
+                        /*object.put(filePath1ParamName, "");
+                        object.put(filePath2ParamName, "");*/
                         questions.add(new Question(
                                 object.getInt(idParamName),
                                 object.getString(textParamName),
-                                object.getString(filePath1ParamName),
-                                object.getString(filePath2ParamName),
+                                (String) checkParameterAndGetByName(object, filePath1ParamName),
+                                (String) checkParameterAndGetByName(object, filePath2ParamName),
                                 object.getString(questionTypeParamName)
                         ));
                     }
@@ -269,6 +289,17 @@ public class MyQuestionsLocalRepository {
             }
         }
         return questions;
+    }
+
+    private Object checkParameterAndGetByName(JSONObject object, String name) {
+        if (object.has(name)) {
+            try {
+                return object.get(name);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     private File createNewQuestionsPageFile(int newPageNumber) {

@@ -92,8 +92,10 @@ public class TopicExpandableListAdapter extends BaseExpandableListAdapter {
         ).getRootView();
         ImageView image1 = root.findViewById(R.id.topicImage1);
         ImageView image2 = root.findViewById(R.id.topicImage2);
-        File file1 = new File(topics.get(groupPosition).getQuestion().getFilePath1());
-        File file2 = new File(topics.get(groupPosition).getQuestion().getFilePath2());
+        String filePath1 = topics.get(groupPosition).getQuestion().getFilePath1();
+        String filePath2 = topics.get(groupPosition).getQuestion().getFilePath2();
+        File file1 = new File(filePath1 != null? filePath1: "");
+        File file2 = new File(filePath2 != null? filePath2: "");
         if (file1.exists()) {
             Glide
                     .with(image1)
