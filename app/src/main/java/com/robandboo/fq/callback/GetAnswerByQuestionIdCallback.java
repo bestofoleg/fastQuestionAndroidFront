@@ -42,13 +42,13 @@ public class GetAnswerByQuestionIdCallback implements Callback<List<Answer>> {
             answersLayout.addView(answer);
             currentQuestion = question;
         } else {
-            for (Answer answer : response.body()) {
+            response.body().forEach(answer -> {
                 TextView answerTextView = new TextView(answersLayout.getContext());
                 answerTextView.setText(answerPrefix + answer.getText());
                 answerTextView.setTextSize(14);
                 answersLayout.addView(answerTextView);
                 currentQuestion = question;
-            }
+            });
         }
     }
 

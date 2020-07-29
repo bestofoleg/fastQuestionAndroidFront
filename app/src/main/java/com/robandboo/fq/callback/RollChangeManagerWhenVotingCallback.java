@@ -3,6 +3,7 @@ package com.robandboo.fq.callback;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.chain.ChainManager;
 
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class RollChangeManagerWhenVotingCallback implements Callback<Void> {
 
     @Override
     public void onResponse(Call<Void> call, Response<Void> response) {
-        chainManager.next();
+        MainActivity.chainManager.next();
     }
 
     @Override

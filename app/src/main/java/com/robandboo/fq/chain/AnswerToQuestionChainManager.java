@@ -81,7 +81,7 @@ public class AnswerToQuestionChainManager {
             answerTextView.setText(R.string.emptyAnswersDataMessage);
             loadAnswersModeLayout.addView(root);
         } else {
-            for (Answer answer : answers) {
+            answers.forEach(answer -> {
                 View root = MainActivity.MAIN_INFLATER.inflate(
                         R.layout.answer_on_single_question_layout,
                         null, false
@@ -89,7 +89,7 @@ public class AnswerToQuestionChainManager {
                 TextView answerTextView = root.findViewById(R.id.singleAnswerText);
                 answerTextView.setText(answer.getText());
                 loadAnswersModeLayout.addView(root);
-            }
+            });
         }
     }
 }

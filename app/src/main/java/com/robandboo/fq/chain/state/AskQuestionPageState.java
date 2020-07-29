@@ -1,7 +1,5 @@
 package com.robandboo.fq.chain.state;
 
-import android.graphics.Bitmap;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.chain.bridge.IDataBridgeStart;

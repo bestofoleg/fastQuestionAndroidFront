@@ -67,12 +67,8 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLa
         questionTextView = singleQuestionLayout.findViewById(R.id.questionTitleSingle);
         answersLayout = singleQuestionLayout.findViewById(R.id.singleAnswersList);
         imageButton = singleQuestionLayout.findViewById(R.id.updateSinglePageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SingleQuestionAnswersPresenter.this.updateData(currentQuestion);
-            }
-        });
+        imageButton.setOnClickListener((view)->
+                SingleQuestionAnswersPresenter.this.updateData(currentQuestion));
         answerPrefix = singleQuestionLayout.getContext()
                 .getResources().getString(R.string.answerPrefix);
         emptyAnswersDataMessage = singleQuestionLayout.getContext()

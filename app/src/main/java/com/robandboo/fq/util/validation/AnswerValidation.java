@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.R;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class AnswerValidation implements IValidation<String> {
     private AppCompatActivity appCompatActivity;
 
@@ -17,6 +20,8 @@ public class AnswerValidation implements IValidation<String> {
 
     private String answerText;
 
+    @Getter
+    @Setter
     private boolean isVote;
 
     public AnswerValidation(AppCompatActivity appCompatActivity) {

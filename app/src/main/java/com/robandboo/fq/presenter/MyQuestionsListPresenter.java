@@ -38,21 +38,16 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                 new TopicExpandableListAdapter(new ArrayList<>());
         topicsExpandableListView.setAdapter(topicExpandableListAdapter);
         topicsExpandableListView
-                .setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                topicExpandableListAdapter.updateTopicFromServerByGroupId(groupPosition);
-            }
-        });
+                .setOnGroupExpandListener(groupPosition -> {
+                    topicExpandableListAdapter.updateTopicFromServerByGroupId(groupPosition);
+                });
     }
 
     public void loadTopicsFromPage(int page) {
         List<Question> questions =
                 myQuestionsLocalRepository.readAllQuestionsFromPage(page);
         List<Topic> topics = new ArrayList<>();
-        for (Question question : questions) {
-            topics.add(new Topic(question, new ArrayList<>()));
-        }
+        questions.forEach(question -> topics.add(new Topic(question, new ArrayList<>())));
         topicExpandableListAdapter.setNewItems(topics);
     }
 

@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.robandboo.fq.R;
 import com.robandboo.fq.callback.GetRandomQuestionCallback;
 import com.robandboo.fq.callback.SendAnswerCallback;
-import com.robandboo.fq.callback.RollChangeManagerWhenVotingCallback;
 import com.robandboo.fq.chain.AnswerToQuestionChainManager;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Answer;
@@ -26,10 +25,9 @@ import com.robandboo.fq.util.validation.AnswerValidation;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout> {
     private LinearLayout answerToQuestionLayout;
@@ -42,6 +40,7 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private EditText answerEditText;
 
+    @Getter
     private Question currentQuestion;
 
     private TextView questionsQuantityTextView;
@@ -72,15 +71,17 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private String voteErrorMessage;
 
-    private Map<String, Long> imageCodeToFileId;
-
     @Getter
-    private boolean skipValidation;
+    @Setter
+    private Boolean skipValidationOnce;
+
+    private GetRandomQuestionCallback getRandomQuestionCallback;
 
     public AnswerToQuestionsPresenter(
             LinearLayout answerToQuestionLayout,
             AppCompatActivity appCompatActivity) {
-        skipValidation = false;
+        currentQuestion = new Question();
+        skipValidationOnce = Boolean.FALSE;
         this.answerToQuestionLayout = answerToQuestionLayout;
         voteErrorMessage = answerToQuestionLayout.getContext().getResources()
                 .getString(R.string.voteError);
@@ -97,7 +98,6 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         failureToSendAnswerErrorMessage =
                 answerToQuestionLayout.getContext().getResources()
                         .getString(R.string.failureToSendAnswerErrorMessage);
-        currentQuestion = null;
         answerToQuestionChainManager =
                 new AnswerToQuestionChainManager(this);
         answerTextEnterWatcher =
@@ -110,32 +110,19 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
                 .getString(R.string.questionLoading);
         imageView1 = answerToQuestionLayout.findViewById(R.id.answerImage1);
         imageView2 = answerToQuestionLayout.findViewById(R.id.answerImage2);
-        imageView1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeVote(imageCodeToFileId.get("image1"));
+        imageView1.setOnClickListener((view) -> {
+            if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+                skipValidationOnce = Boolean.TRUE;
             }
+            getRandomQuestionCallback.makeVote("image1");
         });
-        imageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeVote(imageCodeToFileId.get("image2"));
+        imageView2.setOnClickListener((view) -> {
+            if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+                skipValidationOnce = Boolean.TRUE;
             }
+            ArrayList<Object> objects = new ArrayList<>();
+            getRandomQuestionCallback.makeVote("image2");
         });
-    }
-
-    private void makeVote(Long fileId) {
-        if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
-            skipValidation = true;
-            List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
-            RollChangeManagerWhenVotingCallback rollChangeManagerWhenVotingCallback = RollChangeManagerWhenVotingCallback.builder()
-                    .voteErrorMessage(voteErrorMessage)
-                    .answerToQuestionLayout(answerToQuestionLayout)
-                    .chainManager(chainManager).build();
-            answerService.saveVote(fileId).enqueue(rollChangeManagerWhenVotingCallback);
-        } else {
-            skipValidation = false;
-        }
     }
 
     @Override
@@ -146,18 +133,23 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
     public Question loadRandomQuestion() {
         final Question resultQuestion = new Question();
         GetRandomQuestionCallback getRandomQuestionCallback = GetRandomQuestionCallback.builder()
+                .resultQuestion(resultQuestion)
+                .questionTextView(questionTextView)
+                .answerEditText(answerEditText)
                 .currentQuestion(currentQuestion)
+                .answerTextEnterWatcher(answerTextEnterWatcher)
                 .failureToLoadQuestionErrorMessage(failureToLoadQuestionErrorMessage)
                 .questionService(questionService)
-                .questionTextView(questionTextView)
-                .resultQuestion(resultQuestion)
-                .answerEditText(answerEditText)
-                .answerTextEnterWatcher(answerTextEnterWatcher)
+                .imageView1(imageView1)
+                .imageView2(imageView2)
                 .currentBitmap1(currentBitmap1)
                 .currentBitmap2(currentBitmap2)
-                .imageCodeToFileId(imageCodeToFileId)
-                .imageView1(imageView1)
-                .imageView2(imageView2).build();
+                .skipValidation(skipValidationOnce)
+                .voteErrorMessage(voteErrorMessage)
+                .answerToQuestionLayout(answerToQuestionLayout)
+                .chainManager(chainManager)
+                .answerService(answerService).build();
+        this.getRandomQuestionCallback = getRandomQuestionCallback;
         questionService.getRandomQuestion().enqueue(getRandomQuestionCallback);
         return resultQuestion;
     }
@@ -195,9 +187,11 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         answer.setText(answerEditText.getText().toString());
         answerValidation.setDataForValidation(
                 answerEditText.getText().toString(),
-                QuestionType.VOTE.isA(currentQuestion.getQuestionType())
+                (currentQuestion != null) &&
+                        QuestionType.VOTE.isA(currentQuestion.getQuestionType())
         );
-        if (!QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+        if (currentQuestion != null &&
+                !QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
             SendAnswerCallback sendAnswerCallback = SendAnswerCallback.builder()
                     .answerToQuestionLayout(answerToQuestionLayout)
                     .failureToSendAnswerErrorMessage(failureToSendAnswerErrorMessage).build();

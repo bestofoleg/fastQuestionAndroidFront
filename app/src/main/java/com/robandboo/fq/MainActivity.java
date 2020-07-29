@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Point screenSize;
 
+    public static ChainManager chainManager;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,8 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 20,20, 300,
                 new SwipeVector(-1, 0)
         );
-        ChainManager chainManager = new ChainManager(states);
-        answerToQuestionsPresenter.setChainManager(chainManager);
+        chainManager = new ChainManager(states);
         SwipeHandler swipeHandler = new SwipeHandler(swipeSettings);
         swipeHandler.setSwipeListener(
                 this,

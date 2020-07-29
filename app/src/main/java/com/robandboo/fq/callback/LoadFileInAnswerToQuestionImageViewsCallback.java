@@ -5,10 +5,16 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.robandboo.fq.chain.ChainManager;
+import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
+import com.robandboo.fq.service.AnswerService;
+import com.robandboo.fq.util.enumeration.QuestionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +31,27 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
     private ImageView imageView2;
     private Bitmap currentBitmap1;
     private Bitmap currentBitmap2;
+    private Question currentQuestion;
+    private Boolean skipValidation;
+    private String voteErrorMessage;
+    private LinearLayout answerToQuestionLayout;
+    private ChainManager chainManager;
+    private AnswerService answerService;
+
+    public void makeVote(String imageName) {
+        Long fileId = imageCodeToFileId.get(imageName);
+        if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+            skipValidation = Boolean.TRUE;
+            List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
+            RollChangeManagerWhenVotingCallback rollChangeManagerWhenVotingCallback = RollChangeManagerWhenVotingCallback.builder()
+                    .voteErrorMessage(voteErrorMessage)
+                    .answerToQuestionLayout(answerToQuestionLayout)
+                    .chainManager(chainManager).build();
+            answerService.saveVote(fileId).enqueue(rollChangeManagerWhenVotingCallback);
+        } else {
+            skipValidation = Boolean.FALSE;
+        }
+    }
 
     @Override
     public void onResponse(Call<List<QuestionFile>> call,

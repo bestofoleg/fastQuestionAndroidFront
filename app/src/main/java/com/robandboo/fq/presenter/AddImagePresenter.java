@@ -47,67 +47,55 @@ public class AddImagePresenter {
         startImage = imageToSend1.getDrawable();
         this.activity = activity;
         files = new File[2];
-        this.imageToSend1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent fileManagerIntent = new Intent();
-                fileManagerIntent.setType("image/*");
-                MainActivity.fileManagerReturnResultListener = (intent) -> {
-                    String path = intent.getStringExtra("imagePath");
-                    loadImage(imageToSend1, path);
-                    File file = new File(path);
-                    files[0] = file;
-                    dispatchVoiterState(isVoiterCheckBox);
-                    removeImage1.setVisibility(View.VISIBLE);
-                };
-                ImagePicker.with(activity)
-                        .setMultipleMode(false)
-                        .setShowCamera(true)
-                        .setCameraOnly(false)
-                        .setRequestCode(Config.RC_PICK_IMAGES)
-                        .start();
-            }
+        this.imageToSend1.setOnClickListener((view) -> {
+            Intent fileManagerIntent = new Intent();
+            fileManagerIntent.setType("image/*");
+            MainActivity.fileManagerReturnResultListener = (intent) -> {
+                String path = intent.getStringExtra("imagePath");
+                loadImage(imageToSend1, path);
+                File file = new File(path);
+                files[0] = file;
+                dispatchVoiterState(isVoiterCheckBox);
+                removeImage1.setVisibility(View.VISIBLE);
+            };
+            ImagePicker.with(activity)
+                    .setMultipleMode(false)
+                    .setShowCamera(true)
+                    .setCameraOnly(false)
+                    .setRequestCode(Config.RC_PICK_IMAGES)
+                    .start();
         });
-        this.imageToSend2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent fileManagerIntent = new Intent();
-                fileManagerIntent.setType("image/*");
-                MainActivity.fileManagerReturnResultListener = (intent) -> {
-                    String path = intent.getStringExtra("imagePath");
-                    loadImage(imageToSend2, path);
-                    File file = new File(path);
-                    files[1] = file;
-                    dispatchVoiterState(isVoiterCheckBox);
-                    removeImage2.setVisibility(View.VISIBLE);
-                };
-                ImagePicker.with(activity)
-                        .setMultipleMode(false)
-                        .setShowCamera(true)
-                        .setCameraOnly(false)
-                        .setRequestCode(Config.RC_PICK_IMAGES)
-                        .start();
-            }
+        this.imageToSend2.setOnClickListener((view) -> {
+            Intent fileManagerIntent = new Intent();
+            fileManagerIntent.setType("image/*");
+            MainActivity.fileManagerReturnResultListener = (intent) -> {
+                String path = intent.getStringExtra("imagePath");
+                loadImage(imageToSend2, path);
+                File file = new File(path);
+                files[1] = file;
+                dispatchVoiterState(isVoiterCheckBox);
+                removeImage2.setVisibility(View.VISIBLE);
+            };
+            ImagePicker.with(activity)
+                    .setMultipleMode(false)
+                    .setShowCamera(true)
+                    .setCameraOnly(false)
+                    .setRequestCode(Config.RC_PICK_IMAGES)
+                    .start();
         });
         this.removeImage1 = activity.findViewById(R.id.removeImageFromQuestionButton1);
         this.removeImage2 = activity.findViewById(R.id.removeImageFromQuestionButton2);
 
-        removeImage1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearImage(0);
-                removeImage1.setVisibility(View.GONE);
-                dispatchVoiterState(isVoiterCheckBox);
-            }
+        removeImage1.setOnClickListener((view) -> {
+            clearImage(0);
+            removeImage1.setVisibility(View.GONE);
+            dispatchVoiterState(isVoiterCheckBox);
         });
 
-        removeImage2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearImage(1);
-                removeImage2.setVisibility(View.GONE);
-                dispatchVoiterState(isVoiterCheckBox);
-            }
+        removeImage2.setOnClickListener((view) -> {
+            clearImage(1);
+            removeImage2.setVisibility(View.GONE);
+            dispatchVoiterState(isVoiterCheckBox);
         });
     }
 

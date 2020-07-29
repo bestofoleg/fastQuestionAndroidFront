@@ -32,7 +32,6 @@ public class SingleQuestionPageState implements IState {
     @Override
     public void start() {
         singleQuestionAnswersPresenter.viewAllImagesForQuestion(fileIDataBridgeFinish.getData());
-        //singleQuestionAnswersPresenter.updateData(questionIDataBridgeFinish.getData());
         singleQuestionAnswersPresenter.focus();
     }
 
