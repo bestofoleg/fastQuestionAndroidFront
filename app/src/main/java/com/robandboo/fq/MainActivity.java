@@ -202,14 +202,11 @@ public class MainActivity extends AppCompatActivity {
                 (ViewGroup) findViewById(R.id.mainLayout),
                 new NextStateSwipeListener(chainManager));
         ImageView myQuestionsButton = findViewById(R.id.myQuestionsButton);
-        myQuestionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityManager activityManager =
-                        new ActivityManager(MainActivity.this);
-                activityManager
-                        .changeActivityTo(MyQuestionsActivity.class);
-            }
+        myQuestionsButton.setOnClickListener(view -> {
+            ActivityManager activityManager =
+                    new ActivityManager(MainActivity.this);
+            activityManager
+                    .changeActivityTo(MyQuestionsActivity.class);
         });
         EditText askQuestionEditText = findViewById(R.id.questionTextEdit);
         askQuestionEditText.addTextChangedListener(new QuestionTextEnterWatcher(
@@ -228,41 +225,27 @@ public class MainActivity extends AppCompatActivity {
         ImageView answerImageView1 = findViewById(R.id.answerImage1);
         ImageView answerImageView2 = findViewById(R.id.answerImage2);
 
-        answerImageView1.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1();
-                if (bitmap != null) {
-                    fullScreenImage(bitmap);
-                }
-                return true;
+        answerImageView1.setOnLongClickListener(view -> {
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1();
+            if (bitmap != null) {
+                fullScreenImage(bitmap);
             }
+            return true;
         });
 
-        answerImageView2.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2();
-                if (bitmap != null) {
-                    fullScreenImage(bitmap);
-                }
-                return true;
+        answerImageView2.setOnLongClickListener(view -> {
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2();
+            if (bitmap != null) {
+                fullScreenImage(bitmap);
             }
+            return true;
         });
         ImageView singleQuestionView1 = findViewById(R.id.questionImage1);
         ImageView singleQuestionView2 = findViewById(R.id.questionImage2);
-        singleQuestionView1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(0));
-            }
-        });
-        singleQuestionView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(1));
-            }
-        });
+        singleQuestionView1.setOnClickListener(view ->
+                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(0)));
+        singleQuestionView2.setOnClickListener(view ->
+                fullScreenImage(singleQuestionAnswersPresenter.getBitmaps().get(1)));
     }
 
     private void fullScreenImage(Bitmap bitmap) {
@@ -283,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
+        if (Config.RC_PICK_IMAGES == requestCode  && RESULT_OK == resultCode && data != null) {
             List<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
             if (!images.isEmpty()) {
                 data.putExtra("imagePath", images.get(0).getPath());
