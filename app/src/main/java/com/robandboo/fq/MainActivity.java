@@ -67,12 +67,17 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.back7,
             R.drawable.back8,
             R.drawable.back9,
-            R.drawable.back10
+            R.drawable.back10,
+            R.drawable.back11,
+            R.drawable.back12,
+            R.drawable.back13,
+            R.drawable.back14,
+            R.drawable.back15
     };
 
     public static void changeBackground() {
         Random random = new Random();
-        int backgroundId = random.nextInt(9);
+        int backgroundId = random.nextInt(backgroundResourcesIds.length);
         Glide
                 .with(activityLayout.getContext())
                 .load(backgroundResourcesIds[backgroundId])
