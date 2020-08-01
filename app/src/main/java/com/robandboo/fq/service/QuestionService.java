@@ -21,7 +21,7 @@ public interface QuestionService {
     Call<Question> getRandomQuestion();
 
     @GET("/api/v1/question/get/question/{id}")
-    Call<Question> getQuestionById(@Path("id") int id);
+    Call<Question> getQuestionById(@Path("id") Long id);
 
     @POST("/api/v1/question/saveQuestion")
     Call<Question> saveQuestion(@Body Question question);
@@ -29,12 +29,12 @@ public interface QuestionService {
     @Multipart
     @POST("/api/v1/question/save/question/file/{id}")
     Call<ResponseBody> saveFile(
-            @Path("id") int id,
+            @Path("id") Long id,
             @Part MultipartBody.Part file
     );
 
     @GET("/api/v1/question/get/file/{id}")
-    Call<List<QuestionFile>> loadFile(@Path("id") int id);
+    Call<List<QuestionFile>> loadFile(@Path("id") Long id);
 
     @GET("/api/v1/question/get/file/{id}")
     Call<List<QuestionFile>> getFileByQuestionId(@Path("id") int id);

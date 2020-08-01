@@ -79,7 +79,7 @@ public class GetRandomQuestionCallback implements Callback<Question> {
         loadFileCallback.makeVote(imageName);
     }
 
-    private void loadImages(int questionId) {
+    private void loadImages(Long questionId) {
         LoadFileInAnswerToQuestionImageViewsCallback loadFileInAnswerToQuestionImageViewsCallback = LoadFileInAnswerToQuestionImageViewsCallback.builder()
                 .currentBitmap1(currentBitmap1)
                 .currentBitmap2(currentBitmap2)

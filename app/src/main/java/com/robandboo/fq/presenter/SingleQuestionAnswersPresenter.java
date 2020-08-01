@@ -143,6 +143,7 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLa
         } else {
             if (question.getId() != null) {
                 setVisibilityForVotingRateTextViews(true);
+                questionTextView.setText(question.getText());
                 GetQuestionByIdCallback getQuestionByIdCallback = GetQuestionByIdCallback.builder()
                         .firstImageVotingCountTextView(firstImageVotingCountTextView)
                         .secondImageVotingCountTextView(secondImageVotingCountTextView).build();

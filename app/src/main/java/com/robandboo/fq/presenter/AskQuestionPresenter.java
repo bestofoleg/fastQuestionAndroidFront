@@ -14,6 +14,8 @@ import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.validation.QuestionValidation;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -60,19 +62,34 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
         askedQuestion.setQuestionType((isVoteCheckBox.isChecked())?
                                 QuestionType.VOTE.toString() : QuestionType.TEXT.toString());
         questionValidation.setDataForValidation(askQuestionEditText.getText().toString());
-        if (questionValidation.validateWithoutToast()) {
-            SaveQuestionCallback callback = SaveQuestionCallback.builder()
-                    .addImagePresenter(addImagePresenter)
-                    .askedQuestion(askedQuestion)
-                    .askLayout(askLayout)
-                    .errorSendAskMessage(errorSendAskMessage)
-                    .questionsLocalRepository(questionsLocalRepository)
-                    .questionService(questionService)
-                    .singleQuestionAnswersPresenter(singleQuestionAnswersPresenter)
-                    .build();
-            questionService.saveQuestion(askedQuestion).enqueue(callback);
+        /*
+        * если сообщение пустое и не голосовалка - не отправить
+        * если сообщение пустое и голосовалка - отправить
+        * если не пустое - валидировать и отправить
+        * */
+        if (StringUtils.isBlank(askedQuestion.getText())) {
+            if (QuestionType.VOTE.isA(askedQuestion.getQuestionType())) {
+                makeSaveQuestionRequest(askedQuestion);
+            }
+        } else {
+            if (questionValidation.validateWithoutToast()) {
+                makeSaveQuestionRequest(askedQuestion);
+            }
         }
         return askedQuestion;
+    }
+
+    private void makeSaveQuestionRequest(Question askedQuestion) {
+        SaveQuestionCallback callback = SaveQuestionCallback.builder()
+                .addImagePresenter(addImagePresenter)
+                .askedQuestion(askedQuestion)
+                .askLayout(askLayout)
+                .errorSendAskMessage(errorSendAskMessage)
+                .questionsLocalRepository(questionsLocalRepository)
+                .questionService(questionService)
+                .singleQuestionAnswersPresenter(singleQuestionAnswersPresenter)
+                .build();
+        questionService.saveQuestion(askedQuestion).enqueue(callback);
     }
 
     public void clearQuestionEditText() {

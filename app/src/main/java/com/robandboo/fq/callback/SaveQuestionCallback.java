@@ -67,7 +67,7 @@ public class SaveQuestionCallback implements Callback<Question> {
         t.printStackTrace();
     }
 
-    private void saveFile(int questionId, File file, int fileIndex) {
+    private void saveFile(Long questionId, File file, int fileIndex) {
         RequestBody imageBody =
                 RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData(

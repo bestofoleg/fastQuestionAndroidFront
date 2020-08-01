@@ -276,7 +276,7 @@ public class MyQuestionsLocalRepository {
                         /*object.put(filePath1ParamName, "");
                         object.put(filePath2ParamName, "");*/
                         questions.add(new Question(
-                                object.getInt(idParamName),
+                                object.getLong(idParamName),
                                 object.getString(textParamName),
                                 (String) checkParameterAndGetByName(object, filePath1ParamName),
                                 (String) checkParameterAndGetByName(object, filePath2ParamName),

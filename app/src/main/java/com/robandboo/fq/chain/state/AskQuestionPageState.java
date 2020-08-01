@@ -44,7 +44,11 @@ public class AskQuestionPageState implements IState {
     public boolean work() {
         questionDataBridgeStart.setData(askQuestionPresenter.sendQuestion(answerValidation));
         fileDataBridge.setData(askQuestionPresenter.getImageFilesFromAddImagePresenter());
-        return answerValidation.validate();
+        boolean isValid = true;
+        if (!answerValidation.textIsEmpty()) {
+            isValid = answerValidation.validate();
+        }
+        return isValid;
     }
 
     @Override

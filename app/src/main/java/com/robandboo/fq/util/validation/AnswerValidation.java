@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.R;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,6 +57,11 @@ public class AnswerValidation implements IValidation<String> {
     @Override
     public void setDataForValidation(String data) {
         this.answerText = data;
+    }
+
+    @Override
+    public boolean textIsEmpty() {
+        return StringUtils.isBlank(answerText != null? answerText.trim(): null);
     }
 
     @Override

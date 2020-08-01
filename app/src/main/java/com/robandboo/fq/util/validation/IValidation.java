@@ -5,4 +5,5 @@ public interface IValidation <T>{
     boolean validateWithoutToast();
     void setDataForValidation(T data,  boolean isVote);
     void setDataForValidation(String data);
+    boolean textIsEmpty();
 }

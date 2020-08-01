@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Question {
-    private Integer id;
+    private Long id;
 
     private String text;
 
@@ -29,12 +29,12 @@ public class Question {
 
     private Map<Long, Long> fileIds;
 
-    public Question(int id, String text) {
+    public Question(Long id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    public Question(int id, String text, String filePath1, String filePath2, String questionType) {
+    public Question(Long id, String text, String filePath1, String filePath2, String questionType) {
         this.id = id;
         this.text = text;
         this.filePath1 = filePath1;

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.R;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class QuestionValidation implements IValidation <String>{
     private AppCompatActivity appCompatActivity;
 
@@ -47,6 +49,11 @@ public class QuestionValidation implements IValidation <String>{
     @Override
     public void setDataForValidation(String data) {
         this.questionText = data;
+    }
+
+    @Override
+    public boolean textIsEmpty() {
+        return StringUtils.isBlank(questionText != null? questionText.trim(): null);
     }
 
     @Override

@@ -4,19 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.robandboo.fq.listener.LoadTopicsPageClickListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.presenter.MyQuestionsListPresenter;
-
-import java.util.Random;
+import com.robandboo.fq.util.activity.ActivityManager;
 
 public class MyQuestionsActivity extends AppCompatActivity {
     private MyQuestionsListPresenter myQuestionsListPresenter;
@@ -31,9 +31,20 @@ public class MyQuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_my_questions);
-        LinearLayout myQuestionsLayout = findViewById(R.id.mainMyQuestionsLayout);
+        LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
+        LinearLayout myQuestionList = findViewById(R.id.questionLists);
+        LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
+        ImageView backBtn = findViewById(R.id.backToQListImgBtn);
+        backBtn.setOnClickListener(view -> {
+            mySingleQuestion.setVisibility(View.GONE);
+            myQuestionList.setVisibility(View.VISIBLE);
+        });
         myQuestionsListPresenter =
-                new MyQuestionsListPresenter(myQuestionsLayout);
+                new MyQuestionsListPresenter(
+                        myQuestionsLayout,
+                        mySingleQuestion,
+                        myQuestionList
+                );
         myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
         myQuestionsConfig =
                 myQuestionsLocalRepository.readMyQuestionsConfig();
