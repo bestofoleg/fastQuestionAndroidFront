@@ -5,20 +5,30 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.callback.GetAnswersForSingleMyQuestionCallback;
 import com.robandboo.fq.dto.Question;
+import com.robandboo.fq.dto.QuestionFile;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.NetworkSingleton;
+import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.ui.adapter.TopicExpandableListAdapter;
 import com.robandboo.fq.util.enumeration.QuestionType;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout> {
     private AnswerService answerService;
@@ -47,11 +57,18 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
 
     private LinearLayout answersListLayout;
 
+    private Question currentSinglePageQuestion;
+
+    private QuestionService questionService;
+
     public MyQuestionsListPresenter(
             LinearLayout myQuestionsListRootLayout,
             LinearLayout single,
             LinearLayout questionsList
     ) {
+        questionService = NetworkSingleton.getInstance()
+                .getRetrofit()
+                .create(QuestionService.class);
         singleQuestionTitle = single.findViewById(R.id.questionText);
         singleImageView1 = single.findViewById(R.id.imageView1);
         singleImageView2 = single.findViewById(R.id.imageView2);
@@ -139,16 +156,51 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
         topicExpandableListAdapter.setNewItems(topics);*/
     }
 
+    public void updateCurrentSingleQuestionPage() {
+        if (currentSinglePageQuestion != null) {
+            updateAnswersOnSingleQuestionTopic(currentSinglePageQuestion);
+        }
+    }
+
     private void updateAnswersOnSingleQuestionTopic(Question question) {
+        answersListLayout.removeAllViews();
         Long questionId = question.getId();
+        currentSinglePageQuestion = question;
         if (!QuestionType.VOTE.isA(question.getQuestionType())) {
             GetAnswersForSingleMyQuestionCallback getAnswersForSingleMyQuestionCallback =
                     GetAnswersForSingleMyQuestionCallback.builder()
                             .answersList(answersListLayout).build();
             answerService.getAnswerByQuestionId(questionId)
                     .enqueue(getAnswersForSingleMyQuestionCallback);
+            singleVote1.setText("");
+            singleVote2.setText("");
+            singleVote1.setVisibility(View.GONE);
+            singleVote2.setVisibility(View.GONE);
         } else {
-            //TODO: handle vote logic for view votes in my single question
+            questionService.getQuestionById(questionId).enqueue(new Callback<Question>() {
+                @Override
+                public void onResponse(Call<Question> call, Response<Question> response) {
+                    if (response.body() != null) {
+                        Map<Long, Long> fileIds = response.body().getFileIds();
+                        if (fileIds != null) {
+                            Toast.makeText(
+                                    answersListLayout.getContext(),
+                                    "Это заглушка! Голоса выводятся в случайном порядке!",
+                                    Toast.LENGTH_SHORT).show();
+                            ArrayList<Long> ids = new ArrayList<>(fileIds.keySet());
+                            singleVote1.setText(String.valueOf(fileIds.get(ids.get(0))));
+                            singleVote2.setText(String.valueOf(fileIds.get(ids.get(1))));
+                            singleVote1.setVisibility(View.VISIBLE);
+                            singleVote2.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Question> call, Throwable t) {
+
+                }
+            });
         }
     }
 

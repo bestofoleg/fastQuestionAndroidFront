@@ -37,5 +37,5 @@ public interface QuestionService {
     Call<List<QuestionFile>> loadFile(@Path("id") Long id);
 
     @GET("/api/v1/question/get/file/{id}")
-    Call<List<QuestionFile>> getFileByQuestionId(@Path("id") int id);
+    Call<List<QuestionFile>> getFileByQuestionId(@Path("id") Long id);
 }

@@ -25,6 +25,8 @@ public class MyQuestionsActivity extends AppCompatActivity {
 
     private MyQuestionsConfig myQuestionsConfig;
 
+    private ImageView updateSingleQuestionBtn;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
         LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
         LinearLayout myQuestionList = findViewById(R.id.questionLists);
         LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
+        updateSingleQuestionBtn = mySingleQuestion.findViewById(R.id.updateSingleQuestion);
         ImageView backBtn = findViewById(R.id.backToQListImgBtn);
         backBtn.setOnClickListener(view -> {
             mySingleQuestion.setVisibility(View.GONE);
@@ -66,6 +69,9 @@ public class MyQuestionsActivity extends AppCompatActivity {
         clearMyQuestionsCacheBtn.setOnClickListener(view -> {
             myQuestionsLocalRepository.clearAllData();
             restartActivity();
+        });
+        updateSingleQuestionBtn.setOnClickListener(view -> {
+            myQuestionsListPresenter.updateCurrentSingleQuestionPage();
         });
     }
 
