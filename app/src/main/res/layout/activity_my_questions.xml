@@ -42,16 +42,28 @@
 
                     <ImageView
                         android:id="@+id/updateSingleQuestion"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:background="@android:color/black"
                         app:srcCompat="@android:drawable/ic_popup_sync" />
 
-                    <TextView
-                        android:id="@+id/questionText"
+                    <LinearLayout
+                        android:id="@+id/titleContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:textSize="24sp" />
+                        android:layout_marginLeft="80dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/questionText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="24sp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/imagesContainer"
@@ -156,7 +168,7 @@
                     android:id="@+id/clearMyQuestionsCacheBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="Очистить кеш"
                     android:textSize="10sp" />
@@ -184,7 +196,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/pages" />
+                            android:text="@string/pages"
+                            android:textColor="@android:color/black" />
                     </LinearLayout>
 
                 </LinearLayout>

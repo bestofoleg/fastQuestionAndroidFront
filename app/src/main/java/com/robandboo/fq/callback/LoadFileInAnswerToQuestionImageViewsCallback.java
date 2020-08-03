@@ -13,6 +13,7 @@ import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.util.enumeration.QuestionType;
+import com.robandboo.fq.util.wrapper.Wrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +30,8 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
     private Map<String, Long> imageCodeToFileId;
     private ImageView imageView1;
     private ImageView imageView2;
-    private Bitmap currentBitmap1;
-    private Bitmap currentBitmap2;
+    private Wrapper<Bitmap> currentBitmap1;
+    private Wrapper<Bitmap> currentBitmap2;
     private Question currentQuestion;
     private Boolean skipValidation;
     private String voteErrorMessage;
@@ -69,7 +70,7 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
             Bitmap bitmap1 = BitmapFactory.decodeByteArray(
                     bytes1, 0, bytes1.length
             );
-            currentBitmap1 = bitmap1;
+            currentBitmap1.setData(bitmap1);
             Glide
                     .with(imageView1)
                     .load(bitmap1)
@@ -85,7 +86,7 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
                 Bitmap bitmap2 = BitmapFactory.decodeByteArray(
                         bytes2, 0, bytes2.length
                 );
-                currentBitmap2 = bitmap2;
+                currentBitmap2.setData(bitmap2);
                 Glide
                         .with(imageView2)
                         .load(bitmap2)

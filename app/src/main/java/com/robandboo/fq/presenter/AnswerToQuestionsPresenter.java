@@ -22,6 +22,7 @@ import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.validation.AnswerValidation;
+import com.robandboo.fq.util.wrapper.Wrapper;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import java.util.ArrayList;
@@ -63,9 +64,13 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private ImageView imageView2;
 
-    private Bitmap currentBitmap1;
+    @Getter
+    @Setter
+    private Wrapper<Bitmap> currentBitmap1;
 
-    private Bitmap currentBitmap2;
+    @Getter
+    @Setter
+    private Wrapper<Bitmap> currentBitmap2;
 
     private ChainManager chainManager;
 
@@ -80,6 +85,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
     public AnswerToQuestionsPresenter(
             LinearLayout answerToQuestionLayout,
             AppCompatActivity appCompatActivity) {
+        currentBitmap1 = new Wrapper<>();
+        currentBitmap2 = new Wrapper<>();
         currentQuestion = new Question();
         skipValidationOnce = Boolean.FALSE;
         this.answerToQuestionLayout = answerToQuestionLayout;
@@ -152,22 +159,6 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
         this.getRandomQuestionCallback = getRandomQuestionCallback;
         questionService.getRandomQuestion().enqueue(getRandomQuestionCallback);
         return resultQuestion;
-    }
-
-    public Bitmap getCurrentBitmap1() {
-        return currentBitmap1;
-    }
-
-    public void setCurrentBitmap1(Bitmap currentBitmap1) {
-        this.currentBitmap1 = currentBitmap1;
-    }
-
-    public Bitmap getCurrentBitmap2() {
-        return currentBitmap2;
-    }
-
-    public void setCurrentBitmap2(Bitmap currentBitmap2) {
-        this.currentBitmap2 = currentBitmap2;
     }
 
     public void transferImagesToLoadState() {

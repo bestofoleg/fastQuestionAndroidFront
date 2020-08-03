@@ -5,8 +5,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.callback.SaveQuestionCallback;
+import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.NetworkSingleton;
@@ -66,9 +68,12 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
         * если сообщение пустое и не голосовалка - не отправить
         * если сообщение пустое и голосовалка - отправить
         * если не пустое - валидировать и отправить
+        * если сообщение пустое, но есть хотя бы одна пикча, то отправить
         * */
         if (StringUtils.isBlank(askedQuestion.getText())) {
-            if (QuestionType.VOTE.isA(askedQuestion.getQuestionType())) {
+            if (QuestionType.VOTE.isA(askedQuestion.getQuestionType()) ||
+                addImagePresenter.getImageFiles().get(0) != null ||
+                addImagePresenter.getImageFiles().get(1) != null) {
                 makeSaveQuestionRequest(askedQuestion);
             }
         } else {

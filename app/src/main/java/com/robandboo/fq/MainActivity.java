@@ -1,7 +1,9 @@
 package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     public static LayoutInflater MAIN_INFLATER;
 
     private static CoordinatorLayout activityLayout;
+
+    public static Activity MAIN_ACTIVITY_STATIC_LINK;
 
     public static final int[] backgroundResourcesIds = new int[] {
             R.drawable.back1,
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MAIN_ACTIVITY_STATIC_LINK = this;
         Display display = getWindowManager().getDefaultDisplay();
         screenSize = new Point();
         display.getSize(screenSize);
@@ -231,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView answerImageView2 = findViewById(R.id.answerImage2);
 
         answerImageView1.setOnLongClickListener(view -> {
-            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1();
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1().getData();
             if (bitmap != null) {
                 fullScreenImage(bitmap);
             }
@@ -239,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         answerImageView2.setOnLongClickListener(view -> {
-            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2();
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2().getData();
             if (bitmap != null) {
                 fullScreenImage(bitmap);
             }
@@ -279,5 +285,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.findViewById(android.R.id.content);
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

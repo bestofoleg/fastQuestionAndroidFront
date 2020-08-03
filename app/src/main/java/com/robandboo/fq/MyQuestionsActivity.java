@@ -1,10 +1,19 @@
 package com.robandboo.fq;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,10 +22,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.robandboo.fq.listener.LoadTopicsPageClickListener;
+import com.robandboo.fq.listener.TouchFullScreenImageControlListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.presenter.MyQuestionsListPresenter;
 import com.robandboo.fq.util.activity.ActivityManager;
+
+import java.io.File;
 
 public class MyQuestionsActivity extends AppCompatActivity {
     private MyQuestionsListPresenter myQuestionsListPresenter;
@@ -27,9 +39,14 @@ public class MyQuestionsActivity extends AppCompatActivity {
 
     private ImageView updateSingleQuestionBtn;
 
+    private Point screenSize;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Display display = getWindowManager().getDefaultDisplay();
+        screenSize = new Point();
+        display.getSize(screenSize);
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_my_questions);
@@ -58,6 +75,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
             TextView href = new TextView(pagesView.getContext());
             href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
             href.setTextSize(24f);
+            href.setTextColor(Color.BLACK);
             href.setPadding(50, 0, 0, 0);
             href.setOnClickListener(new LoadTopicsPageClickListener(
                     i,
@@ -73,6 +91,24 @@ public class MyQuestionsActivity extends AppCompatActivity {
         updateSingleQuestionBtn.setOnClickListener(view -> {
             myQuestionsListPresenter.updateCurrentSingleQuestionPage();
         });
+        ImageView imageView1 = mySingleQuestion.findViewById(R.id.imageView1);
+        imageView1.setOnClickListener(view -> {
+            File file = new File(myQuestionsListPresenter.getFilePath1());
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory
+                        .decodeFile(file.getAbsolutePath());
+                fullScreenImage(bitmap);
+            }
+        });
+        ImageView imageView2 = mySingleQuestion.findViewById(R.id.imageView2);
+        imageView2.setOnClickListener(view -> {
+            File file = new File(myQuestionsListPresenter.getFilePath2());
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory
+                        .decodeFile(file.getAbsolutePath());
+                fullScreenImage(bitmap);
+            }
+        });
     }
 
     private void restartActivity() {
@@ -84,5 +120,21 @@ public class MyQuestionsActivity extends AppCompatActivity {
     public void loadLastPage() {
         myQuestionsListPresenter
                 .loadTopicsFromPage(myQuestionsConfig.getPageNumber());
+    }
+
+    private void fullScreenImage(Bitmap bitmap) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View content = getLayoutInflater().inflate(R.layout.image_full_screen_view, null);
+        dialog.setContentView(content);
+        ImageView popupImageView = dialog.findViewById(R.id.fullScreenImageView);
+        content.setOnTouchListener(
+                new TouchFullScreenImageControlListener(dialog, popupImageView, screenSize)
+        );
+        popupImageView.setImageBitmap(bitmap);
+        dialog.getWindow().setBackgroundDrawable(null);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.show();
     }
 }

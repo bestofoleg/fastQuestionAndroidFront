@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -20,12 +21,15 @@ import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.ui.adapter.TopicExpandableListAdapter;
 import com.robandboo.fq.util.enumeration.QuestionType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +64,12 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
     private Question currentSinglePageQuestion;
 
     private QuestionService questionService;
+
+    @Getter
+    private String filePath1;
+
+    @Getter
+    private String filePath2;
 
     public MyQuestionsListPresenter(
             LinearLayout myQuestionsListRootLayout,
@@ -105,10 +115,25 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
             String hiddenMulidot = topic.getContext().getResources()
                     .getString(R.string.hiddenMulidot);
             TextView questionTextView = topic.findViewById(R.id.topicQuestion);
-            /**/
+            LinearLayout.LayoutParams questionTextViewLayoutParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+            questionTextViewLayoutParams.setMargins(10, 10, 0,0);
+            questionTextView.setLayoutParams(questionTextViewLayoutParams);
+            questionTextView.setTextColor(Color.BLACK);
             String questionText = question.getText();
-            String questionTitle =
-                    questionText.substring(0, questionText.length() % 30) + hiddenMulidot;
+            String questionTitle = "";
+            if (questionText.length() > 30) {
+                questionTitle =
+                        questionText.substring(0, questionText.length() % 27) + hiddenMulidot;
+            } else {
+                questionTitle = questionText;
+            }
+            if (StringUtils.isBlank(questionText)) {
+                questionTitle = "[в вопросе нет текста]";
+            }
             questionTextView.setText(questionTitle);
             topic.setOnClickListener(view -> {
                 questionsList.setVisibility(View.GONE);
@@ -122,8 +147,8 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
 
     private void loadAllInSingleQuestionPage(Question question) {
         singleQuestionTitle.setText(question.getText());
-        String filePath1 = question.getFilePath1();
-        String filePath2 = question.getFilePath2();
+        filePath1 = question.getFilePath1();
+        filePath2 = question.getFilePath2();
         File file1 = new File(filePath1 != null? filePath1: "");
         File file2 = new File(filePath2 != null? filePath2: "");
         if (file1.exists()) {

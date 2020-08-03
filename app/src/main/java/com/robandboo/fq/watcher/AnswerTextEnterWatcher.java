@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.chain.AnswerToQuestionChainManager;
 import com.robandboo.fq.dto.Answer;
@@ -90,6 +91,7 @@ public class AnswerTextEnterWatcher implements TextWatcher {
                                     @Override
                                     public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
                                         answerToQuestionChainManager.startLoadAnswersMode(response.body());
+                                        MainActivity.hideKeyboard(MainActivity.MAIN_ACTIVITY_STATIC_LINK);
                                     }
 
                                     @Override

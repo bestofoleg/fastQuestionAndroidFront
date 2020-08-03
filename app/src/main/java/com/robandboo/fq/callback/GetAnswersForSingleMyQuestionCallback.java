@@ -1,5 +1,6 @@
 package com.robandboo.fq.callback;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,15 +23,27 @@ public class GetAnswersForSingleMyQuestionCallback implements Callback<List<Answ
     @Override
     public void onResponse(Call<List<Answer>> call, Response<List<Answer>> response) {
         if(response.body() != null) {
-            response.body().forEach(answer -> {
+            if (!response.body().isEmpty()) {
+                response.body().forEach(answer -> {
+                    View root = MainActivity.MAIN_INFLATER.inflate(
+                            R.layout.answer_on_single_question_layout,
+                            null, false
+                    ).getRootView();
+                    TextView answerTextView = root.findViewById(R.id.singleAnswerText);
+                    answerTextView.setText("- " + answer.getText());
+                    answerTextView.setTextColor(Color.BLACK);
+                    answersList.addView(root);
+                });
+            } else {
                 View root = MainActivity.MAIN_INFLATER.inflate(
                         R.layout.answer_on_single_question_layout,
                         null, false
                 ).getRootView();
                 TextView answerTextView = root.findViewById(R.id.singleAnswerText);
-                answerTextView.setText("- " + answer.getText());
+                answerTextView.setTextColor(Color.BLACK);
+                answerTextView.setText(R.string.emptyAnswersDataMessage);
                 answersList.addView(root);
-            });
+            }
         }
     }
 

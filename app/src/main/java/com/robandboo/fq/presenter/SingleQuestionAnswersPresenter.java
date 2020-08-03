@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.R;
 import com.robandboo.fq.callback.GetAnswerByQuestionIdCallback;
 import com.robandboo.fq.callback.GetQuestionByIdCallback;

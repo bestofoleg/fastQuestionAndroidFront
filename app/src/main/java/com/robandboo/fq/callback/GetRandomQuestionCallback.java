@@ -13,6 +13,7 @@ import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.enumeration.QuestionType;
+import com.robandboo.fq.util.wrapper.Wrapper;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import lombok.Builder;
@@ -31,8 +32,8 @@ public class GetRandomQuestionCallback implements Callback<Question> {
     private QuestionService questionService;
     private ImageView imageView1;
     private ImageView imageView2;
-    private Bitmap currentBitmap1;
-    private Bitmap currentBitmap2;
+    private Wrapper<Bitmap> currentBitmap1;
+    private Wrapper<Bitmap> currentBitmap2;
     private LoadFileInAnswerToQuestionImageViewsCallback loadFileCallback;
     private Boolean skipValidation;
     private String voteErrorMessage;
