@@ -60,8 +60,10 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private String questionIsLoadingMessage;
 
+    @Getter
     private ImageView imageView1;
 
+    @Getter
     private ImageView imageView2;
 
     @Getter
@@ -139,6 +141,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     public Question loadRandomQuestion() {
         final Question resultQuestion = new Question();
+        currentBitmap1.setData(null);
+        currentBitmap2.setData(null);
         GetRandomQuestionCallback getRandomQuestionCallback = GetRandomQuestionCallback.builder()
                 .resultQuestion(resultQuestion)
                 .questionTextView(questionTextView)
