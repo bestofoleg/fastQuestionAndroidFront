@@ -16,6 +16,8 @@ import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.wrapper.Wrapper;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
+import java.util.Map;
+
 import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +42,7 @@ public class GetRandomQuestionCallback implements Callback<Question> {
     private LinearLayout answerToQuestionLayout;
     private ChainManager chainManager;
     private AnswerService answerService;
+    private Map<String, Long> imageCodeToFileId;
 
     @Override
     public void onResponse(Call<Question> call, Response<Question> response) {

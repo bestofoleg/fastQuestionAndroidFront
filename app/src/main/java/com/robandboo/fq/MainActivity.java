@@ -104,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static ChainManager chainManager;
 
+    private ImageView imageAfterEnterClick1;
+
+    private ImageView imageAfterEnterClick2;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
         activityLayout = findViewById(R.id.activityMainLayout);
         changeBackground();
         LinearLayout answerLayout = findViewById(R.id.answerLayout);
+        LinearLayout userAnswersLayout = answerLayout.findViewById(R.id.usersAnswersLayout);
+        imageAfterEnterClick1 = userAnswersLayout.findViewById(R.id.image1);
+        imageAfterEnterClick2 = userAnswersLayout.findViewById(R.id.image2);
         LinearLayout askLayout = findViewById(R.id.questionLayout);
         AnswerToQuestionsPresenter answerToQuestionsPresenter =
                 new AnswerToQuestionsPresenter(answerLayout, this);
@@ -243,8 +250,23 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+        imageAfterEnterClick1.setOnLongClickListener(view -> {
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap1().getData();
+            if (bitmap != null) {
+                fullScreenImage(bitmap);
+            }
+            return true;
+        });
 
         answerImageView2.setOnLongClickListener(view -> {
+            Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2().getData();
+            if (bitmap != null) {
+                fullScreenImage(bitmap);
+            }
+            return true;
+        });
+
+        imageAfterEnterClick2.setOnLongClickListener(view -> {
             Bitmap bitmap = answerToQuestionsPresenter.getCurrentBitmap2().getData();
             if (bitmap != null) {
                 fullScreenImage(bitmap);

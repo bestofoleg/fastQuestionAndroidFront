@@ -94,13 +94,19 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
                 imageCodeToFileId.put("image2", questionFiles.get(1).getId());
             } else {
                 imageView2.setVisibility(View.GONE);
-                currentBitmap2 = null;
+                if (currentBitmap2.getData() != null) {
+                    currentBitmap2.getData().recycle();
+                }
             }
         } else {
             imageView1.setVisibility(View.GONE);
             imageView2.setVisibility(View.GONE);
-            currentBitmap1 = null;
-            currentBitmap2 = null;
+            if (currentBitmap1.getData() != null) {
+                currentBitmap1.getData().recycle();
+            }
+            if (currentBitmap2.getData() != null) {
+                currentBitmap2.getData().recycle();
+            }
         }
     }
 

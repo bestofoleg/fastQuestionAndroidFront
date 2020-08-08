@@ -1,6 +1,5 @@
 package com.robandboo.fq.chain;
 
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -80,22 +79,23 @@ public class AnswerToQuestionChainManager {
         sendAnswerModeLayout.startAnimation(outsideAnim);
         TextView questionTitleTextViewInAnswersLayout =
                 questionTitleLayout.findViewById(R.id.questionTitle);
-        Bitmap bitmap1 = answerToQuestionsPresenter.getCurrentBitmap1().getData();
-        Bitmap bitmap2 = answerToQuestionsPresenter.getCurrentBitmap1().getData();
-        if (bitmap1 != null) {
+
+        if (answerToQuestionsPresenter.getCurrentBitmap1().getData() != null &&
+                !answerToQuestionsPresenter.getCurrentBitmap1().getData().isRecycled()) {
             Glide
                     .with(allAnswersImageView1)
-                    .load(bitmap1)
+                    .load(answerToQuestionsPresenter.getCurrentBitmap1().getData())
                     .into(allAnswersImageView1);
             allAnswersImageView1.setVisibility(View.VISIBLE);
         } else {
             allAnswersImageView1.setVisibility(View.GONE);
         }
 
-        if (bitmap2 != null) {
+        if (answerToQuestionsPresenter.getCurrentBitmap2().getData() != null &&
+                !answerToQuestionsPresenter.getCurrentBitmap2().getData().isRecycled()) {
             Glide
                     .with(allAnswersImageView2)
-                    .load(bitmap2)
+                    .load(answerToQuestionsPresenter.getCurrentBitmap2().getData())
                     .into(allAnswersImageView2);
             allAnswersImageView2.setVisibility(View.VISIBLE);
         } else {

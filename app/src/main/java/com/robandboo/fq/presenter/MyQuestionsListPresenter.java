@@ -1,12 +1,13 @@
 package com.robandboo.fq.presenter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.robandboo.fq.MainActivity;
@@ -16,6 +17,7 @@ import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.service.AnswerService;
+import com.robandboo.fq.service.FileService;
 import com.robandboo.fq.service.NetworkSingleton;
 import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.ui.adapter.TopicExpandableListAdapter;
@@ -24,10 +26,9 @@ import com.robandboo.fq.util.enumeration.QuestionType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 import retrofit2.Call;
@@ -71,11 +72,16 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
     @Getter
     private String filePath2;
 
+    private FileService fileService;
+
     public MyQuestionsListPresenter(
             LinearLayout myQuestionsListRootLayout,
             LinearLayout single,
             LinearLayout questionsList
     ) {
+        fileService = NetworkSingleton.getInstance()
+                .getRetrofit()
+                .create(FileService.class);
         questionService = NetworkSingleton.getInstance()
                 .getRetrofit()
                 .create(QuestionService.class);
@@ -208,7 +214,45 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                     if (response.body() != null) {
                         Map<Long, Long> fileIds = response.body().getFileIds();
                         if (fileIds != null) {
-                            Toast.makeText(
+                            ImageView[] imageViews = new ImageView[2];
+                            imageViews[0] = singleImageView1;
+                            imageViews[1] = singleImageView2;
+                            TextView[] votes = new TextView[2];
+                            votes[0] = singleVote1;
+                            votes[1] = singleVote2;
+                            AtomicInteger imagesCounter = new AtomicInteger();
+                            AtomicInteger votesCounter = new AtomicInteger();
+                            fileIds.forEach((fileId, votesQuantity) -> {
+                                fileService.getFileById(fileId).enqueue(new Callback<QuestionFile>() {
+                                    @Override
+                                    public void onResponse(Call<QuestionFile> call, Response<QuestionFile> response) {
+                                        if (response.body() != null) {
+                                            String data = response.body().getData();
+                                            byte [] binaryData = data.getBytes();
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                                                    binaryData,
+                                                    0,
+                                                    binaryData.length
+                                            );
+                                            ImageView imageView = imageViews[imagesCounter.get()];
+                                            Glide
+                                                    .with(imageView)
+                                                    .load(bitmap)
+                                                    .into(imageView);
+                                            votes[votesCounter.get()].setText(
+                                                    String.valueOf(votesQuantity)
+                                            );
+                                            votes[votesCounter.get()].setVisibility(View.VISIBLE);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<QuestionFile> call, Throwable t) {}
+                                });
+                            });
+                            imagesCounter.getAndIncrement();
+                            votesCounter.getAndIncrement();
+                            /*Toast.makeText(
                                     answersListLayout.getContext(),
                                     "Это заглушка! Голоса выводятся в случайном порядке!",
                                     Toast.LENGTH_SHORT).show();
@@ -216,7 +260,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                             singleVote1.setText(String.valueOf(fileIds.get(ids.get(0))));
                             singleVote2.setText(String.valueOf(fileIds.get(ids.get(1))));
                             singleVote1.setVisibility(View.VISIBLE);
-                            singleVote2.setVisibility(View.VISIBLE);
+                            singleVote2.setVisibility(View.VISIBLE);*/
                         }
                     }
                 }
