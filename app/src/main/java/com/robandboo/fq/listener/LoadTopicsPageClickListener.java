@@ -9,6 +9,8 @@ public class LoadTopicsPageClickListener implements View.OnClickListener {
 
     private MyQuestionsListPresenter myQuestionsListPresenter;
 
+    private Runnable runnable;
+
     public LoadTopicsPageClickListener(int page, MyQuestionsListPresenter myQuestionsListPresenter) {
         this.page = page;
         this.myQuestionsListPresenter = myQuestionsListPresenter;

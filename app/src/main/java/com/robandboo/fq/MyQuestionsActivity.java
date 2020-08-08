@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -26,7 +25,6 @@ import com.robandboo.fq.listener.TouchFullScreenImageControlListener;
 import com.robandboo.fq.localdata.entity.MyQuestionsConfig;
 import com.robandboo.fq.localdata.repository.MyQuestionsLocalRepository;
 import com.robandboo.fq.presenter.MyQuestionsListPresenter;
-import com.robandboo.fq.util.activity.ActivityManager;
 
 import java.io.File;
 
@@ -44,71 +42,82 @@ public class MyQuestionsActivity extends AppCompatActivity {
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_questions);
         Display display = getWindowManager().getDefaultDisplay();
         screenSize = new Point();
         display.getSize(screenSize);
-        super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_my_questions);
-        LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
-        LinearLayout myQuestionList = findViewById(R.id.questionLists);
-        LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
-        updateSingleQuestionBtn = mySingleQuestion.findViewById(R.id.updateSingleQuestion);
-        ImageView backBtn = findViewById(R.id.backToQListImgBtn);
-        backBtn.setOnClickListener(view -> {
-            mySingleQuestion.setVisibility(View.GONE);
-            myQuestionList.setVisibility(View.VISIBLE);
-        });
-        myQuestionsListPresenter =
-                new MyQuestionsListPresenter(
-                        myQuestionsLayout,
-                        mySingleQuestion,
-                        myQuestionList
-                );
-        myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
-        myQuestionsConfig =
-                myQuestionsLocalRepository.readMyQuestionsConfig();
-        loadLastPage();
-        LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
-        for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i --) {
-            //TODO:transfer to fragment file
-            TextView href = new TextView(pagesView.getContext());
-            href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
-            href.setTextSize(24f);
-            href.setTextColor(Color.BLACK);
-            href.setPadding(50, 0, 0, 0);
-            href.setOnClickListener(new LoadTopicsPageClickListener(
-                    i,
-                    myQuestionsListPresenter
-            ));
-            pagesView.addView(href);
-        }
-        Button clearMyQuestionsCacheBtn = findViewById(R.id.clearMyQuestionsCacheBtn);
-        clearMyQuestionsCacheBtn.setOnClickListener(view -> {
-            myQuestionsLocalRepository.clearAllData();
-            restartActivity();
-        });
-        updateSingleQuestionBtn.setOnClickListener(view -> {
-            myQuestionsListPresenter.updateCurrentSingleQuestionPage();
-        });
-        ImageView imageView1 = mySingleQuestion.findViewById(R.id.imageView1);
-        imageView1.setOnClickListener(view -> {
-            File file = new File(myQuestionsListPresenter.getFilePath1());
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory
-                        .decodeFile(file.getAbsolutePath());
-                fullScreenImage(bitmap);
-            }
-        });
-        ImageView imageView2 = mySingleQuestion.findViewById(R.id.imageView2);
-        imageView2.setOnClickListener(view -> {
-            File file = new File(myQuestionsListPresenter.getFilePath2());
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory
-                        .decodeFile(file.getAbsolutePath());
-                fullScreenImage(bitmap);
-            }
-        });
+
+        Runnable initUISettingsRunnable = () -> {
+            LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
+            LinearLayout myQuestionList = findViewById(R.id.questionLists);
+            LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
+            ImageView backBtn = findViewById(R.id.backToQListImgBtn);
+            backBtn.setOnClickListener(view -> {
+                mySingleQuestion.setVisibility(View.GONE);
+                myQuestionList.setVisibility(View.VISIBLE);
+            });
+            myQuestionsListPresenter =
+                    new MyQuestionsListPresenter(
+                            myQuestionsLayout,
+                            mySingleQuestion,
+                            myQuestionList
+                    );
+            Runnable loadAllPagesHrefs = () -> {
+                myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
+                myQuestionsConfig =
+                        myQuestionsLocalRepository.readMyQuestionsConfig();
+                Runnable loadLastPageRunnable = this::loadLastPage;
+                Thread loadLastPageThread = new Thread(loadLastPageRunnable);
+                loadLastPageThread.start();
+                LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
+                for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i--) {
+                    //TODO:transfer to fragment file
+                    TextView href = new TextView(pagesView.getContext());
+                    href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
+                    href.setTextSize(24f);
+                    href.setTextColor(Color.BLACK);
+                    href.setPadding(50, 0, 0, 0);
+                    href.setOnClickListener(new LoadTopicsPageClickListener(
+                            i,
+                            myQuestionsListPresenter
+                    ));
+                    pagesView.addView(href);
+                }
+                Button clearMyQuestionsCacheBtn = findViewById(R.id.clearMyQuestionsCacheBtn);
+                clearMyQuestionsCacheBtn.setOnClickListener(view -> {
+                    myQuestionsLocalRepository.clearAllData();
+                    restartActivity();
+                });
+            };
+            Thread loadAllPagesHrefsThread = new Thread(loadAllPagesHrefs);
+            loadAllPagesHrefsThread.start();
+            updateSingleQuestionBtn = mySingleQuestion.findViewById(R.id.updateSingleQuestion);
+            updateSingleQuestionBtn.setOnClickListener(view -> {
+                myQuestionsListPresenter.updateCurrentSingleQuestionPage();
+            });
+            ImageView imageView1 = mySingleQuestion.findViewById(R.id.imageView1);
+            imageView1.setOnClickListener(view -> {
+                File file = new File(myQuestionsListPresenter.getFilePath1());
+                if (file.exists()) {
+                    Bitmap bitmap = BitmapFactory
+                            .decodeFile(file.getAbsolutePath());
+                    fullScreenImage(bitmap);
+                }
+            });
+            ImageView imageView2 = mySingleQuestion.findViewById(R.id.imageView2);
+            imageView2.setOnClickListener(view -> {
+                File file = new File(myQuestionsListPresenter.getFilePath2());
+                if (file.exists()) {
+                    Bitmap bitmap = BitmapFactory
+                            .decodeFile(file.getAbsolutePath());
+                    fullScreenImage(bitmap);
+                }
+            });
+        };
+        Thread initUISettingsThread = new Thread(initUISettingsRunnable);
+        initUISettingsThread.start();
     }
 
     private void restartActivity() {

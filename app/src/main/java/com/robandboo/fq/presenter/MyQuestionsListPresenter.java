@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout> {
+public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> {
     private AnswerService answerService;
 
     private LinearLayout myQuestionsListRootLayout;
@@ -126,7 +126,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
-            questionTextViewLayoutParams.setMargins(10, 10, 0,0);
+            questionTextViewLayoutParams.setMargins(10, 10, 0, 0);
             questionTextView.setLayoutParams(questionTextViewLayoutParams);
             questionTextView.setTextColor(Color.BLACK);
             String questionText = question.getText();
@@ -155,8 +155,8 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
         singleQuestionTitle.setText(question.getText());
         filePath1 = question.getFilePath1();
         filePath2 = question.getFilePath2();
-        File file1 = new File(filePath1 != null? filePath1: "");
-        File file2 = new File(filePath2 != null? filePath2: "");
+        File file1 = new File(filePath1 != null ? filePath1 : "");
+        File file2 = new File(filePath2 != null ? filePath2 : "");
         if (file1.exists()) {
             Glide
                     .with(singleImageView1)
@@ -182,9 +182,6 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
         List<Question> questions =
                 myQuestionsLocalRepository.readAllQuestionsFromPage(page);
         addAllQuestionTopics(myQuestionsListRootLayout, questions);
-        /*List<Topic> topics = new ArrayList<>();
-        questions.forEach(question -> topics.add(new Topic(question, new ArrayList<>())));
-        topicExpandableListAdapter.setNewItems(topics);*/
     }
 
     public void updateCurrentSingleQuestionPage() {
@@ -228,7 +225,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                                     public void onResponse(Call<QuestionFile> call, Response<QuestionFile> response) {
                                         if (response.body() != null) {
                                             String data = response.body().getData();
-                                            byte [] binaryData = data.getBytes();
+                                            byte[] binaryData = data.getBytes();
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(
                                                     binaryData,
                                                     0,
@@ -247,7 +244,8 @@ public class MyQuestionsListPresenter implements ILayoutPresenter <LinearLayout>
                                     }
 
                                     @Override
-                                    public void onFailure(Call<QuestionFile> call, Throwable t) {}
+                                    public void onFailure(Call<QuestionFile> call, Throwable t) {
+                                    }
                                 });
                             });
                             imagesCounter.getAndIncrement();
