@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -116,6 +117,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
     }
 
     private void addAllQuestionTopics(LinearLayout root, List<Question> questions) {
+        Collections.reverse(questions);
         questions.forEach(question -> {
             View topic = MainActivity.MAIN_INFLATER.inflate(
                     R.layout.topic_question_layout, null, false
@@ -245,6 +247,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
                             .load(bitmap)
                             .into(singleImageView1);
                     singleVote1.setText(String.valueOf(firstEntry.getValue()));
+                    singleVote1.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -268,6 +271,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
                             .load(bitmap)
                             .into(singleImageView2);
                     singleVote2.setText(String.valueOf(secondEntry.getValue()));
+                    singleVote2.setVisibility(View.VISIBLE);
                 }
             }
 
