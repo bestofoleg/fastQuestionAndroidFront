@@ -5,12 +5,10 @@ import com.robandboo.fq.chain.state.IState;
 
 import java.util.List;
 
-public final class ChainManager {
+public class ChainManager {
     private List<IState> states;
 
     private int statePointer;
-
-    private static ChainManager instance;
 
     public ChainManager(List <IState> states) {
         this.states = states;

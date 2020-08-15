@@ -127,6 +127,7 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLa
     }
 
     public void updateData(final Question question) {
+        if (question == null) {return;}
         if (!QuestionType.VOTE.isA(question.getQuestionType())) {
             setVisibilityForVotingRateTextViews(false);
             GetAnswerByQuestionIdCallback getAnswerByQuestionIdCallback =
@@ -165,5 +166,9 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLa
         } else {
             singleQuestionLayout.setVisibility(View.GONE);
         }
+    }
+
+    public void viewNoQuestionTitle() {
+        questionTextView.setText("Нет вопроса? Как жаль...");
     }
 }

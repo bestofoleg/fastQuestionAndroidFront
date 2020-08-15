@@ -222,13 +222,18 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
 
                 @Override
                 public void onFailure(Call<Question> call, Throwable t) {
-
                 }
             });
         }
     }
 
     private void loadFilesAndVotesByFileId(Map <Long, Long> fileIdToVotesQuantity) {
+        Glide.with(singleImageView1)
+                .load(R.drawable.loading)
+                .into(singleImageView1);
+        Glide.with(singleImageView2)
+                .load(R.drawable.loading)
+                .into(singleImageView2);
         List<Map.Entry<Long, Long>> idsToVotesList = new ArrayList<>(fileIdToVotesQuantity.entrySet());
         Map.Entry<Long, Long> firstEntry = idsToVotesList.get(0);
         fileService.getFileById(firstEntry.getKey()).enqueue(new Callback<QuestionFile>() {

@@ -75,6 +75,8 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
                 addImagePresenter.getImageFiles().get(0) != null ||
                 addImagePresenter.getImageFiles().get(1) != null) {
                 makeSaveQuestionRequest(askedQuestion);
+            } else {
+                singleQuestionAnswersPresenter.viewNoQuestionTitle();
             }
         } else {
             if (questionValidation.validateWithoutToast()) {
