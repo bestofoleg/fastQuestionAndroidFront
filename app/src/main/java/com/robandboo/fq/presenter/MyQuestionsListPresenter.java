@@ -3,6 +3,7 @@ package com.robandboo.fq.presenter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import com.robandboo.fq.util.enumeration.QuestionType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -211,54 +213,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
                     if (response.body() != null) {
                         Map<Long, Long> fileIds = response.body().getFileIds();
                         if (fileIds != null) {
-                            ImageView[] imageViews = new ImageView[2];
-                            imageViews[0] = singleImageView1;
-                            imageViews[1] = singleImageView2;
-                            TextView[] votes = new TextView[2];
-                            votes[0] = singleVote1;
-                            votes[1] = singleVote2;
-                            AtomicInteger imagesCounter = new AtomicInteger();
-                            AtomicInteger votesCounter = new AtomicInteger();
-                            fileIds.forEach((fileId, votesQuantity) -> {
-                                fileService.getFileById(fileId).enqueue(new Callback<QuestionFile>() {
-                                    @Override
-                                    public void onResponse(Call<QuestionFile> call, Response<QuestionFile> response) {
-                                        if (response.body() != null) {
-                                            String data = response.body().getData();
-                                            byte[] binaryData = data.getBytes();
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(
-                                                    binaryData,
-                                                    0,
-                                                    binaryData.length
-                                            );
-                                            ImageView imageView = imageViews[imagesCounter.get()];
-                                            Glide
-                                                    .with(imageView)
-                                                    .load(bitmap)
-                                                    .into(imageView);
-                                            votes[votesCounter.get()].setText(
-                                                    String.valueOf(votesQuantity)
-                                            );
-                                            votes[votesCounter.get()].setVisibility(View.VISIBLE);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<QuestionFile> call, Throwable t) {
-                                    }
-                                });
-                            });
-                            imagesCounter.getAndIncrement();
-                            votesCounter.getAndIncrement();
-                            /*Toast.makeText(
-                                    answersListLayout.getContext(),
-                                    "Это заглушка! Голоса выводятся в случайном порядке!",
-                                    Toast.LENGTH_SHORT).show();
-                            ArrayList<Long> ids = new ArrayList<>(fileIds.keySet());
-                            singleVote1.setText(String.valueOf(fileIds.get(ids.get(0))));
-                            singleVote2.setText(String.valueOf(fileIds.get(ids.get(1))));
-                            singleVote1.setVisibility(View.VISIBLE);
-                            singleVote2.setVisibility(View.VISIBLE);*/
+                            loadFilesAndVotesByFileId(fileIds);
                         }
                     }
                 }
@@ -269,6 +224,56 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
                 }
             });
         }
+    }
+
+    private void loadFilesAndVotesByFileId(Map <Long, Long> fileIdToVotesQuantity) {
+        List<Map.Entry<Long, Long>> idsToVotesList = new ArrayList<>(fileIdToVotesQuantity.entrySet());
+        Map.Entry<Long, Long> firstEntry = idsToVotesList.get(0);
+        fileService.getFileById(firstEntry.getKey()).enqueue(new Callback<QuestionFile>() {
+            @Override
+            public void onResponse(Call<QuestionFile> call, Response<QuestionFile> response) {
+                if (response.body() != null) {
+                    QuestionFile questionFile = response.body();
+                    byte[] bytes = Base64.decode(
+                            questionFile.getData().getBytes(),
+                            Base64.DEFAULT
+                    );
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(
+                            bytes, 0, bytes.length
+                    );
+                    Glide.with(singleImageView1)
+                            .load(bitmap)
+                            .into(singleImageView1);
+                    singleVote1.setText(String.valueOf(firstEntry.getValue()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuestionFile> call, Throwable t) {}
+        });
+        Map.Entry<Long, Long> secondEntry = idsToVotesList.get(1);
+        fileService.getFileById(secondEntry.getKey()).enqueue(new Callback<QuestionFile>() {
+            @Override
+            public void onResponse(Call<QuestionFile> call, Response<QuestionFile> response) {
+                if (response.body() != null) {
+                    QuestionFile questionFile = response.body();
+                    byte[] bytes = Base64.decode(
+                            questionFile.getData().getBytes(),
+                            Base64.DEFAULT
+                    );
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(
+                            bytes, 0, bytes.length
+                    );
+                    Glide.with(singleImageView2)
+                            .load(bitmap)
+                            .into(singleImageView2);
+                    singleVote2.setText(String.valueOf(secondEntry.getValue()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuestionFile> call, Throwable t) {}
+        });
     }
 
     @Override

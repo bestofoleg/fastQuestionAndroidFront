@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface FileService {
-    @GET("/api/v1/question/get/file/{id}")
+    @GET("/api/v1/question/get/file/by-file/{id}")
     Call<QuestionFile> getFileById(@Path("id") Long id);
 }
