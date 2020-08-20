@@ -4,8 +4,8 @@
     <integer name="minMulilineTextSize">2</integer>
     <integer name="minQuestionSize">4</integer>
     <integer name="minAnswerSize">2</integer>
-    <integer name="maxQuestionSize">64</integer>
-    <integer name="maxAnswerSize">128</integer>
+    <integer name="maxQuestionSize">380</integer>
+    <integer name="maxAnswerSize">380</integer>
     <integer name="defaultAnswersQuantity">3</integer>
     <integer name="maxMyQuestionsQuantityInPage">15</integer>
 </resources>

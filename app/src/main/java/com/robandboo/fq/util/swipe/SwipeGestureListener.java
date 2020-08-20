@@ -11,10 +11,15 @@ public class SwipeGestureListener implements GestureDetector.OnGestureListener {
 
     private ViewGroup view;
 
+    private static final long SWIPE_DELAY = 1000L;
+
+    private long lastSwipeTime;
+
     public SwipeGestureListener(SwipeSettings swipeSettings, OnSwipeListener onSwipeListener, ViewGroup view) {
         this.swipeSettings = swipeSettings;
         this.onSwipeListener = onSwipeListener;
         this.view = view;
+        lastSwipeTime = System.currentTimeMillis();
     }
 
     @Override
@@ -43,26 +48,31 @@ public class SwipeGestureListener implements GestureDetector.OnGestureListener {
     }
 
     @Override
-    public boolean onFling(MotionEvent firstEvent, MotionEvent secondEvent, float velocityX, float velocityY){
-        SwipeVector swipeVector = swipeSettings.getSwipeVector();
+    public boolean onFling(MotionEvent firstEvent, MotionEvent secondEvent,
+                           float velocityX, float velocityY) {
+        long currentTime = System.currentTimeMillis();
+        if ((currentTime - lastSwipeTime) > SWIPE_DELAY) {
+            lastSwipeTime = currentTime;
+            SwipeVector swipeVector = swipeSettings.getSwipeVector();
 
-        float diffX = firstEvent.getX() - secondEvent.getX();
-        float diffY = firstEvent.getY() - secondEvent.getY();
+            float diffX = firstEvent.getX() - secondEvent.getX();
+            float diffY = firstEvent.getY() - secondEvent.getY();
 
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            //horizontalSwipe
-            if (Math.abs(diffX) > swipeSettings.getMinDistance() &&
-                    Math.abs(velocityX) > swipeSettings.getMinSwipeVelocity()) {
-                if (velocityX * swipeVector.getX() > 0) {
-                    onSwipeListener.onSwipe(view);
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                //horizontalSwipe
+                if (Math.abs(diffX) > swipeSettings.getMinDistance() &&
+                        Math.abs(velocityX) > swipeSettings.getMinSwipeVelocity()) {
+                    if (velocityX * swipeVector.getX() > 0) {
+                        onSwipeListener.onSwipe(view);
+                    }
                 }
-            }
-        } else {
-            //verticalSwipe
-            if (Math.abs(diffY) > swipeSettings.getMinDistance() &&
-                    Math.abs(velocityY) > swipeSettings.getMinSwipeVelocity()) {
-                if (velocityY * swipeVector.getY() > 0) {
-                    onSwipeListener.onSwipe(view);
+            } else {
+                //verticalSwipe
+                if (Math.abs(diffY) > swipeSettings.getMinDistance() &&
+                        Math.abs(velocityY) > swipeSettings.getMinSwipeVelocity()) {
+                    if (velocityY * swipeVector.getY() > 0) {
+                        onSwipeListener.onSwipe(view);
+                    }
                 }
             }
         }
