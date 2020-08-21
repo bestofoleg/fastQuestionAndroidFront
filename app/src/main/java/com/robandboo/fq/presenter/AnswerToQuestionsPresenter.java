@@ -195,6 +195,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
             } else {
                 answerTextEnterWatcher.setSkipAnswerSending(false);
             }
+        } else {
+            answerTextEnterWatcher.setSkipAnswerSending(false);
         }
     }
 
