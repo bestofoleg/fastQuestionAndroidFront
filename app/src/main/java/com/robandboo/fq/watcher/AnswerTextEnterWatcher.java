@@ -19,6 +19,8 @@ import com.robandboo.fq.util.validation.AnswerValidation;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +38,10 @@ public class AnswerTextEnterWatcher implements TextWatcher {
 
     private AppCompatActivity appCompatActivity;
 
+    @Getter
+    @Setter
+    private boolean skipAnswerSending;
+
     public AnswerTextEnterWatcher(
             EditText editText,
             AnswerToQuestionChainManager answerToQuestionChainManager
@@ -48,6 +54,7 @@ public class AnswerTextEnterWatcher implements TextWatcher {
         failureToSendAnswerErrorMessage =
                 editText.getContext().getResources()
                         .getString(R.string.failureToSendAnswerErrorMessage);
+        skipAnswerSending = false;
     }
 
     public Question getQuestion() {
@@ -75,8 +82,8 @@ public class AnswerTextEnterWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable text) {
         if (text.toString().contains("\n")) {
+            skipAnswerSending = true;
             editText.setText(text.toString().replaceAll("\n", ""));
-            List<Answer> answers = new ArrayList<>();
             Answer answer = new Answer();
             answer.setQuestion(question);
             answer.setText(editText.getText().toString());

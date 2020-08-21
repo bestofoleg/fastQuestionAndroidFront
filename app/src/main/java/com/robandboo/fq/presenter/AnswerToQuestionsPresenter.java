@@ -190,7 +190,11 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
             SendAnswerCallback sendAnswerCallback = SendAnswerCallback.builder()
                     .answerToQuestionLayout(answerToQuestionLayout)
                     .failureToSendAnswerErrorMessage(failureToSendAnswerErrorMessage).build();
-            answerService.saveAnswer(answer).enqueue(sendAnswerCallback);
+            if (!answerTextEnterWatcher.isSkipAnswerSending()) {
+                answerService.saveAnswer(answer).enqueue(sendAnswerCallback);
+            } else {
+                answerTextEnterWatcher.setSkipAnswerSending(false);
+            }
         }
     }
 

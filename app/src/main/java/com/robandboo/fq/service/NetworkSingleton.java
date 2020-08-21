@@ -1,5 +1,8 @@
 package com.robandboo.fq.service;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -9,7 +12,14 @@ public final class NetworkSingleton {
     private Retrofit retrofit;
 
     private NetworkSingleton() {
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(15000, TimeUnit.MILLISECONDS)
+                .writeTimeout(15000, TimeUnit.MILLISECONDS)
+                .readTimeout(15000, TimeUnit.MILLISECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
         retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
