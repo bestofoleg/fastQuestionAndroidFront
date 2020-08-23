@@ -68,9 +68,7 @@ public class MyQuestionsActivity extends AppCompatActivity {
                 myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
                 myQuestionsConfig =
                         myQuestionsLocalRepository.readMyQuestionsConfig();
-                Runnable loadLastPageRunnable = this::loadLastPage;
-                Thread loadLastPageThread = new Thread(loadLastPageRunnable);
-                loadLastPageThread.start();
+                runOnUiThread(this::loadLastPage);
                 LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
                 for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i--) {
                     //TODO:transfer to fragment file
