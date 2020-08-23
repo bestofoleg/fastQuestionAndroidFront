@@ -13,9 +13,9 @@ public final class NetworkSingleton {
 
     private NetworkSingleton() {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(15000, TimeUnit.MILLISECONDS)
-                .writeTimeout(15000, TimeUnit.MILLISECONDS)
-                .readTimeout(15000, TimeUnit.MILLISECONDS)
+                .connectTimeout(60000, TimeUnit.MILLISECONDS)
+                .writeTimeout(60000, TimeUnit.MILLISECONDS)
+                .readTimeout(60000, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(false)
                 .build();
         retrofit = new Retrofit.Builder()

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FQ</string>
+    <string name="app_name">Fast Question</string>
     <string name="appTitle">Fast Question</string>
     <string name="questionLoading">Загружается вопрос...</string>
     <string name="answerButtonText">Ответить</string>
