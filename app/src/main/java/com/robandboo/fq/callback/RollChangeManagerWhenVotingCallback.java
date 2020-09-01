@@ -6,16 +6,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.robandboo.fq.MainActivity;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Question;
-import com.robandboo.fq.dto.QuestionFile;
-import com.robandboo.fq.service.AnswerService;
 import com.robandboo.fq.service.QuestionService;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import lombok.Builder;
 import retrofit2.Call;
@@ -45,20 +40,20 @@ public class RollChangeManagerWhenVotingCallback implements Callback<Void> {
                     vote2.setVisibility(View.VISIBLE);
                     Map<Long, Long> fileIds = question.getFileIds();
                     Long image1Id = imageCodeToFileId.get("image1");
-                    vote1.setText(String.valueOf(fileIds.get(image1Id)));
+                    Long imageVotesCount1 = fileIds.get(image1Id);
+                    vote1.setText(String.valueOf(imageVotesCount1));
                     Long image2Id = imageCodeToFileId.get("image2");
-                    vote2.setText(String.valueOf(fileIds.get(image2Id)));
-                    if (Objects.nonNull(image1Id) && Objects.nonNull(image2Id)) {
-                        if (image1Id.compareTo(image2Id) > 0) {
-                            vote1.setTypeface(Typeface.DEFAULT_BOLD);
-                        }
-                        if (image1Id.compareTo(image2Id) < 0) {
-                            vote2.setTypeface(Typeface.DEFAULT_BOLD);
-                        }
-                        if (image1Id.equals(image2Id)) {
-                            vote1.setTypeface(Typeface.DEFAULT);
-                            vote2.setTypeface(Typeface.DEFAULT);
-                        }
+                    Long imageVotesCount2 = fileIds.get(image2Id);
+                    vote2.setText(String.valueOf(imageVotesCount2));
+                    if (imageVotesCount1.compareTo(imageVotesCount2) > 0) {
+                        vote1.setTypeface(null, Typeface.BOLD);
+                    }
+                    if (imageVotesCount1.compareTo(imageVotesCount2) < 0) {
+                        vote2.setTypeface(null, Typeface.BOLD);
+                    }
+                    if (imageVotesCount1.equals(imageVotesCount2)) {
+                        vote1.setTypeface(Typeface.DEFAULT);
+                        vote2.setTypeface(Typeface.DEFAULT);
                     }
                 }
             }
