@@ -82,6 +82,7 @@ public class AnswerTextEnterWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable text) {
         if (text.toString().contains("\n")) {
+            editText.setEnabled(Boolean.FALSE);
             skipAnswerSending = true;
             editText.setText(text.toString().replaceAll("\n", ""));
             Answer answer = new Answer();

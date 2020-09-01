@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.robandboo.fq.R;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.service.AnswerService;
@@ -17,6 +19,7 @@ import com.robandboo.fq.util.wrapper.Wrapper;
 import com.robandboo.fq.watcher.AnswerTextEnterWatcher;
 
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.Builder;
 import retrofit2.Call;
@@ -43,6 +46,8 @@ public class GetRandomQuestionCallback implements Callback<Question> {
     private ChainManager chainManager;
     private AnswerService answerService;
     private Map<String, Long> imageCodeToFileId;
+    private TextView vote1;
+    private TextView vote2;
 
     @Override
     public void onResponse(Call<Question> call, Response<Question> response) {
@@ -52,6 +57,7 @@ public class GetRandomQuestionCallback implements Callback<Question> {
         resultQuestion.setQuestionType(response.body().getQuestionType());
         resultQuestion.setFileIds(response.body().getFileIds());
         questionTextView.setText(resultQuestion.getText());
+        answerEditText.setEnabled(Boolean.TRUE);
         if (resultQuestion != null &&
                 QuestionType.VOTE.isA(resultQuestion.getQuestionType())) {
             answerEditText.setVisibility(View.GONE);
@@ -80,10 +86,22 @@ public class GetRandomQuestionCallback implements Callback<Question> {
     }
 
     public void makeVote(String imageName) {
-        loadFileCallback.makeVote(imageName);
+        if (Objects.nonNull(loadFileCallback)) {
+            loadFileCallback.makeVote(imageName);
+        }
     }
 
     private void loadImages(Long questionId) {
+        imageView1.setVisibility(View.VISIBLE);
+        imageView2.setVisibility(View.VISIBLE);
+        Glide
+                .with(imageView1)
+                .load(R.drawable.loading)
+                .into(imageView1);
+        Glide
+                .with(imageView2)
+                .load(R.drawable.loading)
+                .into(imageView2);
         LoadFileInAnswerToQuestionImageViewsCallback loadFileInAnswerToQuestionImageViewsCallback = LoadFileInAnswerToQuestionImageViewsCallback.builder()
                 .currentBitmap1(currentBitmap1)
                 .currentBitmap2(currentBitmap2)
@@ -94,7 +112,11 @@ public class GetRandomQuestionCallback implements Callback<Question> {
                 .voteErrorMessage(voteErrorMessage)
                 .answerToQuestionLayout(answerToQuestionLayout)
                 .chainManager(chainManager)
-                .answerService(answerService).build();
+                .answerService(answerService)
+                .imageCodeToFileId(imageCodeToFileId)
+                .questionService(questionService)
+                .vote1(vote1)
+                .vote2(vote2).build();
         loadFileCallback = loadFileInAnswerToQuestionImageViewsCallback;
         questionService.loadFile(questionId).enqueue(loadFileInAnswerToQuestionImageViewsCallback);
     }

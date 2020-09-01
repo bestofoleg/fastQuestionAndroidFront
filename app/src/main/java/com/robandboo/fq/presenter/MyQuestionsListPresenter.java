@@ -103,17 +103,6 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
                 .getRetrofit().create(AnswerService.class);
         myQuestionsLocalRepository =
                 new MyQuestionsLocalRepository(myQuestionsListRootLayout.getContext());
-        /*
-        topicsExpandableListView =
-                new ExpandableListView(myQuestionsListRootLayout.getContext());
-        myQuestionsListRootLayout.addView(topicsExpandableListView);
-        topicExpandableListAdapter =
-                new TopicExpandableListAdapter(new ArrayList<>());
-        topicsExpandableListView.setAdapter(topicExpandableListAdapter);
-        topicsExpandableListView
-                .setOnGroupExpandListener(groupPosition -> {
-                    topicExpandableListAdapter.updateTopicFromServerByGroupId(groupPosition);
-                });*/
     }
 
     private void addAllQuestionTopics(LinearLayout root, List<Question> questions) {
@@ -122,7 +111,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
             View topic = MainActivity.MAIN_INFLATER.inflate(
                     R.layout.topic_question_layout, null, false
             ).getRootView();
-            String hiddenMulidot = topic.getContext().getResources()
+            String hiddenMultidot = topic.getContext().getResources()
                     .getString(R.string.hiddenMulidot);
             TextView questionTextView = topic.findViewById(R.id.topicQuestion);
             LinearLayout.LayoutParams questionTextViewLayoutParams =
@@ -137,7 +126,7 @@ public class MyQuestionsListPresenter implements ILayoutPresenter<LinearLayout> 
             String questionTitle = "";
             if (questionText.length() > 30) {
                 questionTitle =
-                        questionText.substring(0, questionText.length() % 27) + hiddenMulidot;
+                        questionText.substring(0, questionText.length() % 27) + hiddenMultidot;
             } else {
                 questionTitle = questionText;
             }

@@ -49,73 +49,65 @@ public class MyQuestionsActivity extends AppCompatActivity {
         display.getSize(screenSize);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Runnable initUISettingsRunnable = () -> {
-            LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
-            LinearLayout myQuestionList = findViewById(R.id.questionLists);
-            LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
-            ImageView backBtn = findViewById(R.id.backToQListImgBtn);
-            backBtn.setOnClickListener(view -> {
-                mySingleQuestion.setVisibility(View.GONE);
-                myQuestionList.setVisibility(View.VISIBLE);
-            });
-            myQuestionsListPresenter =
-                    new MyQuestionsListPresenter(
-                            myQuestionsLayout,
-                            mySingleQuestion,
-                            myQuestionList
-                    );
-            Runnable loadAllPagesHrefs = () -> {
-                myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
-                myQuestionsConfig =
-                        myQuestionsLocalRepository.readMyQuestionsConfig();
-                runOnUiThread(this::loadLastPage);
-                LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
-                for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i--) {
-                    //TODO:transfer to fragment file
-                    TextView href = new TextView(pagesView.getContext());
-                    href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
-                    href.setTextSize(24f);
-                    href.setTextColor(Color.BLACK);
-                    href.setPadding(50, 0, 0, 0);
-                    href.setOnClickListener(new LoadTopicsPageClickListener(
-                            i,
-                            myQuestionsListPresenter
-                    ));
-                    pagesView.addView(href);
-                }
-                Button clearMyQuestionsCacheBtn = findViewById(R.id.clearMyQuestionsCacheBtn);
-                clearMyQuestionsCacheBtn.setOnClickListener(view -> {
-                    myQuestionsLocalRepository.clearAllData();
-                    restartActivity();
-                });
-            };
-            Thread loadAllPagesHrefsThread = new Thread(loadAllPagesHrefs);
-            loadAllPagesHrefsThread.start();
-            updateSingleQuestionBtn = mySingleQuestion.findViewById(R.id.updateSingleQuestion);
-            updateSingleQuestionBtn.setOnClickListener(view -> {
-                myQuestionsListPresenter.updateCurrentSingleQuestionPage();
-            });
-            ImageView imageView1 = mySingleQuestion.findViewById(R.id.imageView1);
-            imageView1.setOnClickListener(view -> {
-                File file = new File(myQuestionsListPresenter.getFilePath1());
-                if (file.exists()) {
-                    Bitmap bitmap = BitmapFactory
-                            .decodeFile(file.getAbsolutePath());
-                    fullScreenImage(bitmap);
-                }
-            });
-            ImageView imageView2 = mySingleQuestion.findViewById(R.id.imageView2);
-            imageView2.setOnClickListener(view -> {
-                File file = new File(myQuestionsListPresenter.getFilePath2());
-                if (file.exists()) {
-                    Bitmap bitmap = BitmapFactory
-                            .decodeFile(file.getAbsolutePath());
-                    fullScreenImage(bitmap);
-                }
-            });
-        };
-        Thread initUISettingsThread = new Thread(initUISettingsRunnable);
-        initUISettingsThread.start();
+        LinearLayout myQuestionsLayout = findViewById(R.id.myQuestionsAllScrolledContent);
+        LinearLayout myQuestionList = findViewById(R.id.questionLists);
+        LinearLayout mySingleQuestion = findViewById(R.id.singleQuestion);
+        ImageView backBtn = findViewById(R.id.backToQListImgBtn);
+        backBtn.setOnClickListener(view -> {
+            mySingleQuestion.setVisibility(View.GONE);
+            myQuestionList.setVisibility(View.VISIBLE);
+        });
+        myQuestionsListPresenter =
+                new MyQuestionsListPresenter(
+                        myQuestionsLayout,
+                        mySingleQuestion,
+                        myQuestionList
+                );
+        myQuestionsLocalRepository = new MyQuestionsLocalRepository(this);
+        myQuestionsConfig =
+                myQuestionsLocalRepository.readMyQuestionsConfig();
+        loadLastPage();
+        LinearLayout pagesView = findViewById(R.id.topicsPagesLayout);
+        for (int i = myQuestionsConfig.getPageNumber(); i >= 1; i--) {
+            //TODO:transfer to fragment file
+            TextView href = new TextView(pagesView.getContext());
+            href.setText(String.valueOf(myQuestionsConfig.getPageNumber() - i + 1));
+            href.setTextSize(24f);
+            href.setTextColor(Color.BLACK);
+            href.setPadding(50, 0, 0, 0);
+            href.setOnClickListener(new LoadTopicsPageClickListener(
+                    i,
+                    myQuestionsListPresenter
+            ));
+            pagesView.addView(href);
+        }
+        Button clearMyQuestionsCacheBtn = findViewById(R.id.clearMyQuestionsCacheBtn);
+        clearMyQuestionsCacheBtn.setOnClickListener(view -> {
+            myQuestionsLocalRepository.clearAllData();
+            restartActivity();
+        });
+        updateSingleQuestionBtn = mySingleQuestion.findViewById(R.id.updateSingleQuestion);
+        updateSingleQuestionBtn.setOnClickListener(view -> {
+            myQuestionsListPresenter.updateCurrentSingleQuestionPage();
+        });
+        ImageView imageView1 = mySingleQuestion.findViewById(R.id.imageView1);
+        imageView1.setOnClickListener(view -> {
+            File file = new File(myQuestionsListPresenter.getFilePath1());
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory
+                        .decodeFile(file.getAbsolutePath());
+                fullScreenImage(bitmap);
+            }
+        });
+        ImageView imageView2 = mySingleQuestion.findViewById(R.id.imageView2);
+        imageView2.setOnClickListener(view -> {
+            File file = new File(myQuestionsListPresenter.getFilePath2());
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory
+                        .decodeFile(file.getAbsolutePath());
+                fullScreenImage(bitmap);
+            }
+        });
     }
 
     private void restartActivity() {

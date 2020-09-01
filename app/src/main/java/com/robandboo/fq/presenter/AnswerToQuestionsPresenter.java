@@ -84,9 +84,15 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
 
     private GetRandomQuestionCallback getRandomQuestionCallback;
 
+    private TextView resultVotes1;
+
+    private TextView resultVotes2;
+
     public AnswerToQuestionsPresenter(
             LinearLayout answerToQuestionLayout,
             AppCompatActivity appCompatActivity) {
+        resultVotes1 = answerToQuestionLayout.findViewById(R.id.resultVote1);
+        resultVotes2 = answerToQuestionLayout.findViewById(R.id.resultVote2);
         currentBitmap1 = new Wrapper<>();
         currentBitmap2 = new Wrapper<>();
         currentQuestion = new Question();
@@ -140,6 +146,8 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
     }
 
     public Question loadRandomQuestion() {
+        resultVotes1.setVisibility(View.GONE);
+        resultVotes2.setVisibility(View.GONE);
         final Question resultQuestion = new Question();
         currentBitmap1.setData(null);
         currentBitmap2.setData(null);
@@ -159,7 +167,9 @@ public class AnswerToQuestionsPresenter implements ILayoutPresenter<LinearLayout
                 .voteErrorMessage(voteErrorMessage)
                 .answerToQuestionLayout(answerToQuestionLayout)
                 .chainManager(chainManager)
-                .answerService(answerService).build();
+                .answerService(answerService)
+                .vote1(resultVotes1)
+                .vote2(resultVotes2).build();
         this.getRandomQuestionCallback = getRandomQuestionCallback;
         questionService.getRandomQuestion().enqueue(getRandomQuestionCallback);
         return resultQuestion;

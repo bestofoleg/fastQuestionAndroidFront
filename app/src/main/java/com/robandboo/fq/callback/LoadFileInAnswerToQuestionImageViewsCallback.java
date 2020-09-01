@@ -6,12 +6,15 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.robandboo.fq.R;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
 import com.robandboo.fq.service.AnswerService;
+import com.robandboo.fq.service.QuestionService;
 import com.robandboo.fq.util.enumeration.QuestionType;
 import com.robandboo.fq.util.wrapper.Wrapper;
 
@@ -38,16 +41,27 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
     private LinearLayout answerToQuestionLayout;
     private ChainManager chainManager;
     private AnswerService answerService;
+    private QuestionService questionService;
+    private TextView vote1;
+    private TextView vote2;
+    private boolean isVoted = false;
 
     public void makeVote(String imageName) {
         Long fileId = imageCodeToFileId.get(imageName);
-        if (QuestionType.VOTE.isA(currentQuestion.getQuestionType())) {
+        if (QuestionType.VOTE.isA(currentQuestion.getQuestionType()) && !isVoted) {
+            isVoted = true;
             skipValidation = Boolean.TRUE;
             List<Long> fileIds = new ArrayList<>(currentQuestion.getFileIds().keySet());
             RollChangeManagerWhenVotingCallback rollChangeManagerWhenVotingCallback = RollChangeManagerWhenVotingCallback.builder()
                     .voteErrorMessage(voteErrorMessage)
                     .answerToQuestionLayout(answerToQuestionLayout)
-                    .chainManager(chainManager).build();
+                    .chainManager(chainManager)
+                    .bestPictureId(fileId)
+                    .questionService(questionService)
+                    .currentQuestion(currentQuestion)
+                    .imageCodeToFileId(imageCodeToFileId)
+                    .vote1(vote1)
+                    .vote2(vote2).build();
             answerService.saveVote(fileId).enqueue(rollChangeManagerWhenVotingCallback);
         } else {
             skipValidation = Boolean.FALSE;

@@ -170,5 +170,7 @@ public class SingleQuestionAnswersPresenter implements ILayoutPresenter<LinearLa
 
     public void viewNoQuestionTitle() {
         questionTextView.setText("Нет вопроса? Как жаль...");
+        firstImageVotingCountTextView.setVisibility(View.GONE);
+        secondImageVotingCountTextView.setVisibility(View.GONE);
     }
 }
