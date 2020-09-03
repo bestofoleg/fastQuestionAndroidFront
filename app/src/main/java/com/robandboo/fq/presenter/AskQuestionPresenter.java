@@ -1,5 +1,6 @@
 package com.robandboo.fq.presenter;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.List;
 
+import id.zelory.compressor.Compressor;
 import lombok.Setter;
 
 public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
@@ -43,9 +45,18 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
     @Setter
     private SingleQuestionAnswersPresenter singleQuestionAnswersPresenter;
 
+
+    private Compressor fileCompressor;
+
     public AskQuestionPresenter(LinearLayout askLayout, AddImagePresenter addImagePresenter) {
         this.askLayout = askLayout;
         this.addImagePresenter = addImagePresenter;
+        fileCompressor = new Compressor.Builder(askLayout.getContext())
+                .setMaxHeight(2048)
+                .setMaxWidth(2048)
+                .setQuality(75)
+                .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                .build();
         isVoteCheckBox = askLayout.findViewById(R.id.isVoiter);
         askQuestionEditText = askLayout.findViewById(R.id.questionTextEdit);
         questionService = NetworkSingleton.getInstance().getRetrofit()
@@ -95,6 +106,7 @@ public class AskQuestionPresenter implements ILayoutPresenter <LinearLayout>{
                 .questionsLocalRepository(questionsLocalRepository)
                 .questionService(questionService)
                 .singleQuestionAnswersPresenter(singleQuestionAnswersPresenter)
+                .fileCompressor(fileCompressor)
                 .build();
         questionService.saveQuestion(askedQuestion).enqueue(callback);
     }

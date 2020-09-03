@@ -23,7 +23,7 @@ public class RollChangeManagerWhenVotingCallback implements Callback<Void> {
     private ChainManager chainManager;
     private String voteErrorMessage;
     private Question currentQuestion;
-    private Long bestPictureId;
+    private Long chosenPictureId;
     private Map<String, Long> imageCodeToFileId;
     private QuestionService questionService;
     private TextView vote1;
@@ -45,15 +45,13 @@ public class RollChangeManagerWhenVotingCallback implements Callback<Void> {
                     Long image2Id = imageCodeToFileId.get("image2");
                     Long imageVotesCount2 = fileIds.get(image2Id);
                     vote2.setText(String.valueOf(imageVotesCount2));
-                    if (imageVotesCount1.compareTo(imageVotesCount2) > 0) {
+                    vote1.setTypeface(Typeface.DEFAULT);
+                    vote2.setTypeface(Typeface.DEFAULT);
+                    if (image1Id.equals(chosenPictureId)) {
                         vote1.setTypeface(null, Typeface.BOLD);
                     }
-                    if (imageVotesCount1.compareTo(imageVotesCount2) < 0) {
+                    if (image2Id.equals(chosenPictureId)) {
                         vote2.setTypeface(null, Typeface.BOLD);
-                    }
-                    if (imageVotesCount1.equals(imageVotesCount2)) {
-                        vote1.setTypeface(Typeface.DEFAULT);
-                        vote2.setTypeface(Typeface.DEFAULT);
                     }
                 }
             }

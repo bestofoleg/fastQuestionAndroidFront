@@ -1,5 +1,6 @@
 package com.robandboo.fq.callback;
 
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.robandboo.fq.service.QuestionService;
 import java.io.File;
 import java.util.List;
 
+import id.zelory.compressor.Compressor;
 import lombok.Builder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -29,6 +31,7 @@ public class SaveQuestionCallback implements Callback<Question> {
     private QuestionService questionService;
     private Question askedQuestion;
     private SingleQuestionAnswersPresenter singleQuestionAnswersPresenter;
+    private Compressor fileCompressor;
 
     @Override
     public void onResponse(Call<Question> call, Response<Question> response) {
@@ -68,6 +71,9 @@ public class SaveQuestionCallback implements Callback<Question> {
     }
 
     private void saveFile(Long questionId, File file, int fileIndex) {
+        Log.i("MEMORY", "file before compress: size = " + file.length());
+        file = fileCompressor.compressToFile(file);
+        Log.i("MEMORY", "file after compress: size = " + file.length());
         RequestBody imageBody =
                 RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData(

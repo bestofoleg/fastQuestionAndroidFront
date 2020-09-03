@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.robandboo.fq.R;
 import com.robandboo.fq.chain.ChainManager;
 import com.robandboo.fq.dto.Question;
 import com.robandboo.fq.dto.QuestionFile;
@@ -56,7 +55,7 @@ public class LoadFileInAnswerToQuestionImageViewsCallback implements Callback<Li
                     .voteErrorMessage(voteErrorMessage)
                     .answerToQuestionLayout(answerToQuestionLayout)
                     .chainManager(chainManager)
-                    .bestPictureId(fileId)
+                    .chosenPictureId(fileId)
                     .questionService(questionService)
                     .currentQuestion(currentQuestion)
                     .imageCodeToFileId(imageCodeToFileId)
